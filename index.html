@@ -3,789 +3,425 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0B0F17">
+  <meta name="theme-color" content="#091318">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="أوكير O CARE">
   <title>أوكير O CARE - منظومة إدارة الصيدلية</title>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
-    /* ==========================================
-       الثيمات الـ 5 الاحترافية + ثيم Slate & Mint
-       ========================================== */
-    :root, :root[data-theme="royal-obsidian"] {
-      --bg: #090C10;
-      --card: #121721;
-      --card-alt: #181F2C;
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --border: #263042;
-      --primary: #D4AF37;
-      --primary-dark: #B5902B;
-      --primary-light: rgba(212, 175, 55, 0.16);
-      --navy: #0D131F;
-      --accent: #10B981;
-      --danger: #EF4444;
-      --header-grad: linear-gradient(145deg, #161E2E 0%, #090C10 100%);
-      --banner-grad: linear-gradient(135deg, #D4AF37 0%, #9A7B1C 100%);
-      --banner-text: #090C10;
-    }
+    :root, :root[data-theme="slate-mint"] { --bg:#091318; --shell:linear-gradient(180deg,#0D1F27 0%,#081217 100%); --card:rgba(18,37,46,0.92); --card-solid:#12252E; --card-alt:#17313D; --text:#F0FDF4; --muted:#86A8B2; --border:rgba(45,212,191,0.2); --primary:#10B981; --glow:rgba(16,185,129,0.35); --light:rgba(16,185,129,0.15); --accent:#F59E0B; --danger:#EF4444; --banner:linear-gradient(135deg,#D9B166 0%,#B38738 100%); --banner-txt:#091318; --btn-txt:#06120E; }
+    :root[data-theme="royal-obsidian"] { --bg:#080A0F; --shell:linear-gradient(180deg,#121722 0%,#080A0F 100%); --card:rgba(20,25,36,0.94); --card-solid:#141924; --card-alt:#1C2332; --text:#F8FAFC; --muted:#94A3B8; --border:rgba(212,175,55,0.24); --primary:#D4AF37; --glow:rgba(212,175,55,0.32); --light:rgba(212,175,55,0.15); --accent:#10B981; --danger:#EF4444; --banner:linear-gradient(135deg,#E5C158 0%,#AA821A 100%); --banner-txt:#080A0F; --btn-txt:#080A0F; }
+    :root[data-theme="clinical-daylight"] { --bg:#EEF2F6; --shell:linear-gradient(180deg,#F8FAFC 0%,#EEF2F6 100%); --card:#FFFFFF; --card-solid:#FFFFFF; --card-alt:#F1F5F9; --text:#0F172A; --muted:#64748B; --border:#CBD5E1; --primary:#0D9488; --glow:rgba(13,148,136,0.25); --light:#CCFBF1; --accent:#D97706; --danger:#EF4444; --banner:linear-gradient(135deg,#0B1957 0%,#0D9488 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
+    :root[data-theme="emerald-glass"] { --bg:#031A15; --shell:linear-gradient(180deg,#062F26 0%,#031A15 100%); --card:rgba(9,48,39,0.92); --card-solid:#093027; --card-alt:#0E4236; --text:#ECFDF5; --muted:#6EE7B7; --border:rgba(52,211,153,0.25); --primary:#34D399; --glow:rgba(52,211,153,0.35); --light:rgba(52,211,153,0.16); --accent:#FBBF24; --danger:#F87171; --banner:linear-gradient(135deg,#D9B166 0%,#A37A2D 100%); --banner-txt:#031A15; --btn-txt:#031A15; }
+    :root[data-theme="titanium-coral"] { --bg:#111216; --shell:linear-gradient(180deg,#1B1D24 0%,#111216 100%); --card:rgba(29,31,39,0.94); --card-solid:#1D1F27; --card-alt:#272A35; --text:#FAFAFA; --muted:#A1A1AA; --border:rgba(251,113,133,0.24); --primary:#FB7185; --glow:rgba(251,113,133,0.32); --light:rgba(251,113,133,0.15); --accent:#38BDF8; --danger:#EF4444; --banner:linear-gradient(135deg,#FB7185 0%,#E11D48 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
+    :root[data-theme="velvet-amethyst"] { --bg:#0D0818; --shell:linear-gradient(180deg,#1C1132 0%,#0D0818 100%); --card:rgba(30,19,54,0.92); --card-solid:#1E1336; --card-alt:#2A1B4A; --text:#F5F3FF; --muted:#C4B5FD; --border:rgba(168,85,247,0.25); --primary:#A855F7; --glow:rgba(168,85,247,0.35); --light:rgba(168,85,247,0.16); --accent:#F472B6; --danger:#EF4444; --banner:linear-gradient(135deg,#9333EA 0%,#6B21A8 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
 
-    :root[data-theme="slate-mint"] {
-      --bg: #0B131E;
-      --card: #132030;
-      --card-alt: #1A2B40;
-      --text: #F1F5F9;
-      --muted: #94A3B8;
-      --border: #233852;
-      --primary: #10B981;
-      --primary-dark: #059669;
-      --primary-light: rgba(16, 185, 129, 0.16);
-      --navy: #0F1E2E;
-      --accent: #F59E0B;
-      --danger: #EF4444;
-      --header-grad: linear-gradient(145deg, #15273B 0%, #0B131E 100%);
-      --banner-grad: linear-gradient(135deg, #D97706 0%, #B45309 100%);
-      --banner-text: #FFFFFF;
-    }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',Tahoma,system-ui,sans-serif; -webkit-tap-highlight-color:transparent; }
+    body { background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; }
+    .app-shell { width:100%; max-width:480px; min-height:100vh; background:var(--shell); position:relative; padding-bottom:96px; box-shadow:0 0 50px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow-x:hidden; }
+    #scanFlashOverlay { position:fixed; inset:0; background:rgba(16,185,129,0.42); z-index:100001; pointer-events:none; opacity:0; transition:opacity 0.18s; }
+    #scanFlashOverlay.flash { opacity:1; }
 
-    :root[data-theme="clinical-daylight"] {
-      --bg: #F1F5F9;
-      --card: #FFFFFF;
-      --card-alt: #F8FAFC;
-      --text: #0F172A;
-      --muted: #64748B;
-      --border: #E2E8F0;
-      --primary: #0D9488;
-      --primary-dark: #0F766E;
-      --primary-light: #CCFBF1;
-      --navy: #0B1957;
-      --accent: #2563EB;
-      --danger: #EF4444;
-      --header-grad: linear-gradient(135deg, #0B1957 0%, #0D9488 100%);
-      --banner-grad: linear-gradient(135deg, #0B1957 0%, #1E3A8A 100%);
-      --banner-text: #FFFFFF;
-    }
+    #loginOverlay { position:fixed; inset:0; background:var(--shell); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:22px; }
+    .login-glass-box { width:100%; max-width:370px; background:var(--card); backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:30px; padding:32px 22px 24px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.55); }
+    .fp-ring { width:66px; height:66px; border-radius:50%; margin:0 auto 12px; background:var(--light); border:1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px var(--glow); color:var(--primary); }
+    .inp-wrap { margin-bottom:12px; text-align:right; }
+    .inp-wrap label { display:block; font-size:0.74rem; font-weight:700; color:var(--muted); margin-bottom:5px; }
+    .inp-box { display:flex; align-items:center; background:var(--card-alt); border:1.5px solid var(--border); border-radius:14px; padding:0 12px; }
+    .inp-box input { width:100%; border:none; background:transparent; color:var(--text); padding:12px 6px; font-size:0.88rem; outline:none; }
+    .btn-glow { width:100%; background:var(--primary); color:var(--btn-txt); border:none; padding:13px; border-radius:15px; font-weight:900; font-size:0.94rem; cursor:pointer; box-shadow:0 6px 20px var(--glow); display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:6px; }
 
-    :root[data-theme="emerald-glass"] {
-      --bg: #041F1A;
-      --card: #083028;
-      --card-alt: #0C3F35;
-      --text: #ECFDF5;
-      --muted: #6EE7B7;
-      --border: #115E50;
-      --primary: #34D399;
-      --primary-dark: #10B981;
-      --primary-light: rgba(52, 211, 153, 0.18);
-      --navy: #052620;
-      --accent: #FBBF24;
-      --danger: #F87171;
-      --header-grad: linear-gradient(145deg, #0A3D33 0%, #041F1A 100%);
-      --banner-grad: linear-gradient(135deg, #10B981 0%, #047857 100%);
-      --banner-text: #FFFFFF;
-    }
+    header.top-header { padding:14px 14px 10px; background:rgba(0,0,0,0.2); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:800; }
+    .h-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .b-mini { display:flex; align-items:center; gap:9px; }
+    .b-icon { width:36px; height:36px; border-radius:11px; background:var(--light); border:1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:900; font-size:0.9rem; box-shadow:0 0 12px var(--glow); }
+    .h-tools { display:flex; align-items:center; gap:6px; }
+    .circle-btn { position:relative; width:35px; height:35px; border-radius:11px; background:var(--card-alt); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .notif-dot { position:absolute; top:-4px; right:-4px; background:var(--danger); color:#FFF; font-size:0.62rem; font-weight:900; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; }
+    .role-tag { font-size:0.68rem; font-weight:800; padding:5px 9px; border-radius:10px; background:var(--light); color:var(--primary); border:1px solid var(--primary); }
+    .exit-btn { background:rgba(239,68,68,0.16); color:#FCA5A5; border:1px solid rgba(239,68,68,0.35); padding:5px 9px; border-radius:10px; font-size:0.68rem; font-weight:800; cursor:pointer; }
 
-    :root[data-theme="titanium-coral"] {
-      --bg: #121316;
-      --card: #1C1E24;
-      --card-alt: #252830;
-      --text: #FAFAFA;
-      --muted: #A1A1AA;
-      --border: #323642;
-      --primary: #FB7185;
-      --primary-dark: #E11D48;
-      --primary-light: rgba(251, 113, 133, 0.16);
-      --navy: #181A20;
-      --accent: #38BDF8;
-      --danger: #EF4444;
-      --header-grad: linear-gradient(145deg, #23262F 0%, #121316 100%);
-      --banner-grad: linear-gradient(135deg, #FB7185 0%, #E11D48 100%);
-      --banner-text: #FFFFFF;
-    }
+    .laser-bar { display:flex; align-items:center; gap:8px; background:var(--card-alt); border:1.5px solid var(--border); border-radius:16px; padding:5px 12px 5px 6px; }
+    .laser-bar input { flex:1; background:transparent; border:none; color:var(--text); font-size:0.85rem; padding:7px 4px; outline:none; }
+    .laser-btn { width:40px; height:36px; border-radius:12px; background:var(--primary); color:var(--btn-txt); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 14px var(--glow); }
 
-    :root[data-theme="velvet-amethyst"] {
-      --bg: #0F0A1C;
-      --card: #1A1230;
-      --card-alt: #241942;
-      --text: #F5F3FF;
-      --muted: #C4B5FD;
-      --border: #362663;
-      --primary: #A855F7;
-      --primary-dark: #7E22CE;
-      --primary-light: rgba(168, 85, 247, 0.18);
-      --navy: #150E28;
-      --accent: #EC4899;
-      --danger: #EF4444;
-      --header-grad: linear-gradient(145deg, #27174A 0%, #0F0A1C 100%);
-      --banner-grad: linear-gradient(135deg, #9333EA 0%, #6B21A8 100%);
-      --banner-text: #FFFFFF;
-    }
+    .pills-bar { display:flex; gap:6px; overflow-x:auto; padding:10px 12px 6px; scrollbar-width:none; }
+    .pills-bar::-webkit-scrollbar { display:none; }
+    .pill-tab { flex:0 0 auto; padding:7px 13px; border-radius:12px; background:var(--card); border:1px solid var(--border); color:var(--muted); font-size:0.74rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:5px; }
+    .pill-tab.active { background:var(--primary); color:var(--btn-txt); border-color:var(--primary); box-shadow:0 4px 14px var(--glow); }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text); display: flex; justify-content: center; min-height: 100vh; transition: background 0.25s, color 0.25s; }
-    .app-shell { width: 100%; max-width: 500px; min-height: 100vh; background: var(--bg); position: relative; padding-bottom: 95px; box-shadow: 0 0 45px rgba(0,0,0,0.35); display: flex; flex-direction: column; }
+    .bento-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:14px; margin:8px 12px; box-shadow:0 8px 24px rgba(0,0,0,0.22); }
+    .bento-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .bento-head h3 { font-size:0.88rem; font-weight:900; color:var(--text); }
 
-    /* وميض الشاشة عند المسح الليزري */
-    #scanFlashOverlay { position: fixed; inset: 0; background: rgba(16, 185, 129, 0.38); z-index: 100001; pointer-events: none; opacity: 0; transition: opacity 0.18s ease; }
-    #scanFlashOverlay.flash { opacity: 1; }
+    .inv-stack { display:flex; flex-direction:column; gap:9px; padding:4px 12px 18px; }
+    .inv-bento { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:11px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .inv-thumb { width:48px; height:48px; border-radius:13px; background:var(--card-alt); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; font-weight:900; color:var(--primary); font-size:0.9rem; }
+    .inv-thumb img { width:100%; height:100%; object-fit:cover; }
+    .inv-info { flex:1; min-width:0; }
+    .inv-title { font-size:0.84rem; font-weight:900; color:var(--text); margin-bottom:3px; line-height:1.3; }
+    .inv-codes { font-size:0.7rem; color:var(--muted); margin-bottom:5px; }
+    .b-chip { font-size:0.65rem; font-weight:800; padding:2px 7px; border-radius:7px; display:inline-block; margin-left:4px; }
+    .b-fia { background:rgba(168,85,247,0.16); color:#C084FC; border:1px solid rgba(168,85,247,0.3); }
+    .b-exp { background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); }
+    .inv-left { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+    .price-tag { font-size:0.85rem; font-weight:900; color:var(--accent); background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.32); padding:3px 9px; border-radius:9px; }
+    .btn-add-p { background:var(--primary); color:var(--btn-txt); border:none; padding:6px 10px; border-radius:9px; font-size:0.72rem; font-weight:900; cursor:pointer; }
+    .btn-sub { background:var(--card-alt); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:9px; font-size:0.7rem; font-weight:800; cursor:pointer; }
 
-    /* شاشة تسجيل الدخول */
-    #loginOverlay { position: fixed; inset: 0; background: var(--header-grad); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .login-card { background: var(--card); width: 100%; max-width: 390px; border-radius: 26px; padding: 28px 22px; box-shadow: 0 25px 55px rgba(0,0,0,0.45); text-align: center; border: 1px solid var(--border); }
-    .ocare-logo-wrap { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-alt); padding: 9px 18px; border-radius: 18px; border: 1px solid var(--border); }
-    .ocare-text-ar { font-size: 1.45rem; font-weight: 900; color: var(--text); }
-    .ocare-text-en { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: 1px; }
-    .login-card h2 { font-size: 1.3rem; font-weight: 800; color: var(--text); margin: 14px 0 6px; }
-    .login-card p { font-size: 0.78rem; color: var(--muted); margin-bottom: 18px; }
-    .form-group { text-align: right; margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 0.76rem; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 13px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 0.88rem; outline: none; background: var(--card-alt); color: var(--text); }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
-    .btn-main { width: 100%; background: var(--primary); color: #FFF; border: none; padding: 13px; border-radius: 14px; font-weight: 800; font-size: 0.92rem; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.2); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-    :root[data-theme="royal-obsidian"] .btn-main { color: #090C10; }
-    .login-footer-rights { margin-top: 18px; color: var(--muted); font-size: 0.76rem; font-weight: 700; text-align: center; }
+    .gold-banner { margin:10px 12px; background:var(--banner); color:var(--banner-txt); border-radius:22px; padding:18px 16px; text-align:center; box-shadow:0 12px 28px rgba(0,0,0,0.35); }
+    .gold-banner .val { font-size:1.95rem; font-weight:900; margin:2px 0; }
+    .calc-row { background:var(--card-alt); border:1px solid var(--border); border-radius:16px; padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .stepper { display:inline-flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:3px 6px; }
+    .stepper button { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-weight:900; cursor:pointer; }
+    .stepper span { min-width:22px; text-align:center; font-size:0.82rem; font-weight:900; }
 
-    /* الترويسة */
-    header { background: var(--header-grad); padding: 16px 14px 20px; border-bottom-left-radius: 26px; border-bottom-right-radius: 26px; color: #FFF; border-bottom: 1px solid var(--border); }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .header-brand { display: flex; align-items: center; gap: 8px; }
-    .header-brand h1 { font-size: 1.12rem; font-weight: 900; color: #FFF; }
-    .header-brand p { font-size: 0.75rem; color: var(--muted); }
-    .header-actions { display: flex; align-items: center; gap: 6px; }
-    .icon-badge-btn { position: relative; background: rgba(255,255,255,0.12); color: #FFF; border: 1px solid rgba(255,255,255,0.15); width: 36px; height: 36px; border-radius: 12px; cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
-    .notif-dot { position: absolute; top: -4px; right: -4px; background: var(--danger); color: #FFF; font-size: 0.65rem; font-weight: 900; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid var(--navy); }
-    .role-pill { font-size: 0.7rem; padding: 5px 9px; border-radius: 12px; background: var(--primary-light); color: var(--primary); font-weight: 800; border: 1px solid var(--primary); }
-    :root[data-theme="clinical-daylight"] .role-pill { background: rgba(255,255,255,0.2); color: #FFF; border-color: rgba(255,255,255,0.3); }
-    .btn-exit { background: rgba(239,68,68,0.25); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.4); padding: 5px 9px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
+    .bo-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
+    .bo-card { background:var(--card-alt); border:1.5px solid var(--border); border-radius:20px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; }
+    .bo-card.printed { opacity:0.48; border-style:dashed; }
+    .bo-num { font-size:1.8rem; font-weight:900; text-align:center; padding:10px 6px; border-radius:14px; background:var(--light); color:var(--primary); border:1.5px solid var(--primary); }
+    .bo-card:nth-child(even) .bo-num { background:rgba(245,158,11,0.15); color:#F59E0B; border-color:rgba(245,158,11,0.45); }
+    .bo-pill { font-size:0.66rem; font-weight:800; padding:4px 8px; border-radius:8px; text-align:center; cursor:pointer; background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.35); }
+    .bo-pill.done { background:rgba(16,185,129,0.2); color:#34D399; border-color:rgba(16,185,129,0.4); }
 
-    /* شريط البحث ورمز الماسح الليزري */
-    .search-bar { position: relative; display: flex; align-items: center; }
-    .search-bar input { width: 100%; padding: 12px 38px 12px 50px; border-radius: 18px; border: 1.5px solid var(--border); outline: none; font-size: 0.88rem; background: var(--card); color: var(--text); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
-    .search-bar .s-icon { position: absolute; right: 13px; font-size: 1rem; pointer-events: none; }
-    .laser-scan-btn { position: absolute; left: 6px; border: 1.5px solid var(--primary); background: var(--primary-light); color: var(--primary); border-radius: 13px; width: 38px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px rgba(16,185,129,0.25); }
-    .laser-icon-svg { width: 22px; height: 22px; display: inline-block; vertical-align: middle; }
+    .rep-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:12px; }
+    .rep-box { background:var(--card-alt); border:1px solid var(--border); border-radius:18px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:7px; }
+    .rep-box h4 { font-size:0.77rem; font-weight:900; }
+    .brands-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:300px; overflow-y:auto; padding:4px; }
+    .brand-card { background:var(--card-alt); border:1px solid var(--border); border-radius:14px; padding:10px 6px; text-align:center; cursor:pointer; }
+    .brand-av { width:38px; height:38px; border-radius:50%; background:var(--light); color:var(--primary); border:1px solid var(--primary); font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 5px; }
 
-    /* شريط التبويبات */
-    .module-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 10px 12px 6px; scrollbar-width: none; }
-    .module-tabs::-webkit-scrollbar { display: none; }
-    .mod-btn { flex: 0 0 auto; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); font-size: 0.75rem; font-weight: 800; color: var(--muted); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
-    .mod-btn.active { background: var(--primary); color: #FFF; border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    :root[data-theme="royal-obsidian"] .mod-btn.active { color: #090C10; }
+    .theme-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:8px; }
+    .theme-tile { padding:10px; border-radius:14px; border:1.5px solid var(--border); background:var(--card-alt); cursor:pointer; display:flex; align-items:center; gap:8px; }
+    .theme-tile.active { border-color:var(--primary); background:var(--light); }
+    .theme-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:2px solid rgba(255,255,255,0.4); }
+    .theme-tile span { font-size:0.72rem; font-weight:800; }
+    .sw-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); gap:10px; }
+    .sw-row:last-child { border-bottom:none; }
+    .sw-row strong { display:block; font-size:0.79rem; }
+    .sw-row small { font-size:0.68rem; color:var(--muted); }
+    .sw-toggle { position:relative; width:44px; height:24px; flex-shrink:0; display:inline-block; }
+    .sw-toggle input { opacity:0; width:0; height:0; }
+    .sw-slider { position:absolute; cursor:pointer; inset:0; background:var(--card-alt); border:1px solid var(--border); border-radius:24px; transition:0.25s; }
+    .sw-slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:2px; background:var(--muted); border-radius:50%; transition:0.25s; }
+    .sw-toggle input:checked + .sw-slider { background:var(--light); border-color:var(--primary); }
+    .sw-toggle input:checked + .sw-slider:before { transform:translateX(19px); background:var(--primary); }
 
-    /* البطاقات والأقسام */
-    .section-card { background: var(--card); border-radius: 18px; padding: 15px; margin: 8px 12px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-    .section-title { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .products-list { display: flex; flex-direction: column; gap: 8px; padding: 4px 12px 16px; }
-    .prod-card { background: var(--card); border-radius: 16px; padding: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .prod-thumb { width: 48px; height: 48px; border-radius: 12px; background: var(--card-alt); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; font-weight: 900; color: var(--primary); font-size: 0.95rem; }
-    .prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .prod-info { flex: 1; min-width: 0; }
-    .prod-name { font-size: 0.85rem; font-weight: 800; color: var(--text); margin-bottom: 3px; line-height: 1.35; }
-    .prod-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 5px; }
-    .prod-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-    .tag { font-size: 0.67rem; padding: 2px 7px; border-radius: 6px; font-weight: 800; }
-    .tag-fia { background: rgba(168, 85, 247, 0.16); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.3); }
-    .tag-price { background: rgba(245, 158, 11, 0.18); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .tag-batch { background: rgba(56, 189, 248, 0.16); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); }
-    :root[data-theme="clinical-daylight"] .tag-fia { background: #F3E8FF; color: #7E22CE; }
-    :root[data-theme="clinical-daylight"] .tag-price { background: #FEF3C7; color: #B45309; }
-    :root[data-theme="clinical-daylight"] .tag-batch { background: #EFF6FF; color: #1D4ED8; }
-    .prod-actions { display: flex; flex-direction: column; gap: 5px; }
-    .mini-act-btn { border: 1px solid var(--border); background: var(--card-alt); color: var(--text); padding: 6px 9px; border-radius: 9px; font-size: 0.72rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+    nav.bottom-dock { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:var(--card-solid); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; padding:7px 6px 12px; box-shadow:0 -8px 25px rgba(0,0,0,0.4); z-index:900; }
+    .dock-btn { border:none; background:transparent; color:var(--muted); font-size:0.67rem; font-weight:800; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
+    .dock-btn.active { color:var(--primary); }
+    .dock-btn span.ico { font-size:1.15rem; }
+    .dock-fab { position:relative; top:-15px; width:54px; height:54px; border-radius:18px; background:var(--primary); color:var(--btn-txt); border:4px solid var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 22px var(--glow); }
 
-    /* صفحة حاسبة الأسعار المستقلة */
-    .price-hero-card { margin: 10px 12px; background: var(--banner-grad); color: var(--banner-text); border-radius: 20px; padding: 18px 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); text-align: center; }
-    .price-hero-card h3 { font-size: 0.82rem; font-weight: 800; opacity: 0.9; margin-bottom: 4px; }
-    .price-hero-total { font-size: 2rem; font-weight: 900; letter-spacing: 0.5px; }
-    .price-hero-sub { font-size: 0.75rem; font-weight: 700; opacity: 0.85; margin-top: 4px; }
-
-    /* كشف الباركود والأرقام البارزة */
-    .barcode-order-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 15px; padding: 11px 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-    .barcode-order-item.printed { opacity: 0.5; border-style: dashed; }
-    .big-item-num { font-size: 1.35rem; font-weight: 900; color: var(--primary); background: var(--primary-light); padding: 6px 12px; border-radius: 11px; border: 1.5px solid var(--primary); min-width: 64px; text-align: center; }
-    .bo-details { flex: 1; font-size: 0.73rem; color: var(--muted); }
-    .bo-details strong { font-size: 0.82rem; color: var(--text); display: block; margin-bottom: 2px; }
-    .qty-stepper { display: flex; align-items: center; gap: 4px; }
-    .qty-stepper button { width: 27px; height: 27px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-alt); color: var(--text); font-weight: 900; cursor: pointer; }
-    .qty-stepper input { width: 42px; text-align: center; padding: 4px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-alt); color: var(--text); font-weight: 800; font-size: 0.82rem; }
-
-    /* شبكة الشركات والعلامات */
-    .brands-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 360px; overflow-y: auto; padding: 4px; }
-    .brand-card { background: var(--card-alt); border: 1px solid var(--border); border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; }
-    .brand-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); font-weight: 900; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; }
-    .brand-name { font-size: 0.75rem; font-weight: 800; color: var(--text); }
-    .brand-cnt { font-size: 0.65rem; color: var(--muted); }
-
-    /* بطاقات اختيار الثيم في الإعدادات */
-    .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
-    .theme-option-card { padding: 10px; border-radius: 13px; border: 2px solid var(--border); background: var(--card-alt); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-    .theme-option-card.active { border-color: var(--primary); background: var(--primary-light); }
-    .theme-swatch { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
-    .theme-option-card span { font-size: 0.74rem; font-weight: 800; color: var(--text); }
-
-    /* مفتاح التبديل (Switch) في الإعدادات */
-    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
-    .setting-row:last-child { border-bottom: none; }
-    .setting-row strong { display: block; color: var(--text); font-size: 0.82rem; }
-    .setting-row small { color: var(--muted); font-size: 0.7rem; }
-
-    /* الشريط السفلي والماسح العائم */
-    .app-footer-rights { margin-top: auto; padding: 14px 12px 20px; text-align: center; font-size: 0.74rem; font-weight: 700; color: var(--muted); border-top: 1px solid var(--border); background: var(--card); }
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 7px 6px 11px; box-shadow: 0 -6px 20px rgba(0,0,0,0.25); z-index: 900; }
-    .nav-btn { border: none; background: transparent; color: var(--muted); font-size: 0.68rem; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
-    .nav-btn.active { color: var(--primary); }
-    .nav-btn span.ico { font-size: 1.15rem; }
-    .nav-scan-fab { position: relative; top: -15px; width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: #FFF; border: 4px solid var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 22px rgba(16,185,129,0.4); }
-    :root[data-theme="royal-obsidian"] .nav-scan-fab { color: #090C10; }
-
-    /* النوافذ المنبثقة والماسح الليزري */
-    #previewModal, #scannerModal, #addCustomProductModal { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 14px; }
-    .preview-box { background: var(--card); color: var(--text); width: 100%; max-width: 480px; max-height: 88vh; border-radius: 22px; border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .preview-head { background: var(--navy); color: #FFF; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .preview-body { padding: 14px; overflow-y: auto; flex: 1; }
-    .scanner-laser-line { position: absolute; left: 10%; right: 10%; top: 50%; height: 2.5px; background: #10B981; box-shadow: 0 0 12px #10B981, 0 0 24px #10B981; z-index: 20; pointer-events: none; animation: laserSweep 1.8s infinite ease-in-out; }
-    @keyframes laserSweep { 0%, 100% { transform: translateY(-45px); } 50% { transform: translateY(45px); } }
-    .toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: var(--card); color: var(--text); border: 1.5px solid var(--primary); padding: 10px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; z-index: 100000; opacity: 0; pointer-events: none; transition: 0.25s; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
-    .toast.show { opacity: 1; }
+    #previewModal, #scannerModal, #addCustomProductModal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:14px; }
+    .modal-box { background:var(--card-solid); color:var(--text); width:100%; max-width:460px; max-height:88vh; border-radius:24px; border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+    .modal-head { background:rgba(0,0,0,0.25); padding:14px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+    .modal-body { padding:14px; overflow-y:auto; flex:1; }
+    .laser-line { position:absolute; left:8%; right:8%; top:50%; height:2.5px; background:#10B981; box-shadow:0 0 12px #10B981,0 0 24px #10B981; z-index:20; pointer-events:none; animation:sweep 1.7s infinite ease-in-out; }
+    @keyframes sweep { 0%,100%{transform:translateY(-45px);} 50%{transform:translateY(45px);} }
+    .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:var(--card-solid); color:var(--text); border:1.5px solid var(--primary); padding:10px 18px; border-radius:20px; font-size:0.8rem; font-weight:800; z-index:100000; opacity:0; pointer-events:none; transition:0.25s; }
+    .toast.show { opacity:1; }
   </style>
 </head>
-<body data-theme="royal-obsidian">
-
-  <!-- وميض الشاشة عند نجاح المسح -->
+<body data-theme="slate-mint">
   <div id="scanFlashOverlay"></div>
 
-  <!-- تعريف رمز ماسح الباركود الليزري الموحد -->
   <svg style="display:none;">
-    <symbol id="icon-laser-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-      <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-      <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-      <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-      <line x1="7" y1="8" x2="7" y2="16"/>
-      <line x1="10" y1="8" x2="10" y2="16"/>
-      <line x1="14" y1="8" x2="14" y2="16"/>
-      <line x1="17" y1="8" x2="17" y2="16"/>
+    <symbol id="icon-laser-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+      <line x1="7" y1="8" x2="7" y2="16"/><line x1="10" y1="8" x2="10" y2="16"/><line x1="14" y1="8" x2="14" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/>
       <line x1="4" y1="12" x2="20" y2="12" stroke="#10B981" stroke-width="2.4"/>
     </symbol>
   </svg>
 
-  <!-- شاشة تسجيل الدخول (نظيفة بدون أي تلميح للرمز) -->
+  <!-- 1. شاشة تسجيل الدخول -->
   <div id="loginOverlay">
-    <div class="login-card">
-      <div class="ocare-logo-wrap">
-        <span class="ocare-text-ar">أوكير</span>
-        <svg width="36" height="36" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="28" fill="none" stroke="#F97316" stroke-width="10" stroke-dasharray="45 130" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="28" fill="none" stroke="#0284C7" stroke-width="10" stroke-dasharray="45 130" stroke-dashoffset="-45" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="28" fill="none" stroke="#EC4899" stroke-width="10" stroke-dasharray="45 130" stroke-dashoffset="-90" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="28" fill="none" stroke="#7C3AED" stroke-width="10" stroke-dasharray="45 130" stroke-dashoffset="-135" stroke-linecap="round"/>
-        </svg>
-        <span class="ocare-text-en">CARE</span>
+    <div class="login-glass-box">
+      <div class="fp-ring">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
       </div>
-      <h2>تسجيل الدخول</h2>
-      <p>أدخل الاسم أو البريد الإلكتروني ورمز المرور</p>
-
+      <div style="font-size:1.75rem;font-weight:900;letter-spacing:2px;color:var(--primary);">O CARE</div>
+      <div style="font-size:1.35rem;font-weight:900;margin-bottom:20px;">أوكير</div>
       <form onsubmit="handleLogin(event); return false;">
-        <div class="form-group">
-          <label>البريد الإلكتروني أو الاسم *</label>
-          <input type="text" id="loginEmail" placeholder="example@gmail.com أو اسمك" onkeydown="if(event.key==='Enter') handleLogin(event)">
+        <div class="inp-wrap">
+          <label>اسم المستخدم أو البريد المعتمد *</label>
+          <div class="inp-box"><span>👤</span><input type="text" id="loginEmail" placeholder="أدخل اسمك أو بريدك المسجل"></div>
         </div>
-        <div class="form-group">
-          <label>كلمة المرور / الرمز السري *</label>
-          <input type="password" id="loginPass" placeholder="أدخل رمز الدخول" onkeydown="if(event.key==='Enter') handleLogin(event)">
+        <div class="inp-wrap">
+          <label>رمز الدخول *</label>
+          <div class="inp-box"><span>🔒</span><input type="password" id="loginPass" placeholder="أدخل رمز المرور"></div>
         </div>
-        <button type="button" class="btn-main" onclick="handleLogin(event)">تسجيل الدخول</button>
+        <button type="button" class="btn-glow" onclick="handleLogin(event)">تسجيل الدخول</button>
       </form>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:0.73rem;color:var(--muted);">🛡️ الدخول متاح فقط للحسابات المعتمدة لدى الإدارة</div>
     </div>
-    <div class="login-footer-rights">جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد</div>
+    <div style="margin-top:16px;font-size:0.73rem;color:var(--muted);font-weight:700;">جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد</div>
   </div>
 
   <div class="app-shell">
-    <!-- الترويسة (بدون كلمة متزامن) -->
-    <header>
-      <div class="header-top">
-        <div class="header-brand">
-          <svg width="34" height="34" viewBox="0 0 100 100" style="background:#fff; border-radius:10px; padding:3px;">
-            <circle cx="50" cy="50" r="30" fill="none" stroke="#F97316" stroke-width="12" stroke-dasharray="45 130"/>
-            <circle cx="50" cy="50" r="30" fill="none" stroke="#0284C7" stroke-width="12" stroke-dasharray="45 130" stroke-dashoffset="-45"/>
-            <circle cx="50" cy="50" r="30" fill="none" stroke="#EC4899" stroke-width="12" stroke-dasharray="45 130" stroke-dashoffset="-90"/>
-            <circle cx="50" cy="50" r="30" fill="none" stroke="#7C3AED" stroke-width="12" stroke-dasharray="45 130" stroke-dashoffset="-135"/>
-          </svg>
-          <div>
-            <h1>أوكير O CARE</h1>
-            <p id="userGreeting">مرحباً 👋</p>
-          </div>
+    <header class="top-header">
+      <div class="h-row">
+        <div class="b-mini">
+          <div class="b-icon">OC</div>
+          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
         </div>
-        <div class="header-actions">
-          <button class="icon-badge-btn" onclick="switchTab('notes')" title="ملاحظات الشفت والتنبيهات">
-            🔔<span class="notif-dot" id="notifBadge">0</span>
-          </button>
-          <span class="role-pill" id="roleBadge">مطور</span>
-          <button class="btn-exit" onclick="handleLogout()">خروج</button>
+        <div class="h-tools">
+          <button class="circle-btn" onclick="switchTab('notes')">🔔<span class="notif-dot" id="notifBadge">0</span></button>
+          <span class="role-tag" id="roleBadge">مطور</span>
+          <button class="exit-btn" onclick="handleLogout()">خروج</button>
         </div>
       </div>
-
-      <div class="search-bar">
-        <span class="s-icon">🔍</span>
-        <input type="text" id="mainSearch" placeholder="ابحث بالاسم أو الباركود أو رقم الصنف..." oninput="renderInventory()">
-        <button class="laser-scan-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري">
-          <svg class="laser-icon-svg"><use href="#icon-laser-scanner"></use></svg>
-        </button>
+      <div class="laser-bar">
+        <button class="laser-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري"><svg width="22" height="22"><use href="#icon-laser-scanner"></use></svg></button>
+        <input type="text" id="mainSearch" placeholder="شريط البحث بالاسم أو الباركود أو الرقم..." oninput="renderInventory()">
+        <span style="color:var(--muted);">🔍</span>
       </div>
     </header>
 
-    <!-- شريط الأقسام (مع فصل حاسبة الأسعار في صفحة مستقلة) -->
-    <div class="module-tabs">
-      <button class="mod-btn active" id="tabBtn_inventory" onclick="switchTab('inventory')">📦 المخزون والبحث</button>
-      <button class="mod-btn" id="tabBtn_pricing" onclick="switchTab('pricing')">💰 حاسبة الأسعار</button>
-      <button class="mod-btn" id="tabBtn_expiry" onclick="switchTab('expiry')">📅 تسجيل التواريخ</button>
-      <button class="mod-btn" id="tabBtn_barcodeOrder" onclick="switchTab('barcodeOrder')">🏷️ أمر الباركود</button>
-      <button class="mod-btn" id="tabBtn_shortages" onclick="switchTab('shortages')">🏥 النواقص والفروع</button>
-      <button class="mod-btn" id="tabBtn_notes" onclick="switchTab('notes')">📝 ملاحظات الشفت</button>
-      <button class="mod-btn" id="tabBtn_reports" onclick="switchTab('reports')">📊 التقارير (5)</button>
-      <button class="mod-btn" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
+    <div class="pills-bar">
+      <button class="pill-tab active" id="tabBtn_inventory" onclick="switchTab('inventory')">📦 المخزون والبحث</button>
+      <button class="pill-tab" id="tabBtn_pricing" onclick="switchTab('pricing')">💰 حاسبة الأسعار</button>
+      <button class="pill-tab" id="tabBtn_expiry" onclick="switchTab('expiry')">📅 تواريخ الصلاحية</button>
+      <button class="pill-tab" id="tabBtn_barcodeOrder" onclick="switchTab('barcodeOrder')">🏷️ طباعة الباركود</button>
+      <button class="pill-tab" id="tabBtn_shortages" onclick="switchTab('shortages')">🏥 النواقص والفروع</button>
+      <button class="pill-tab" id="tabBtn_notes" onclick="switchTab('notes')">📝 تسليم الشفت</button>
+      <button class="pill-tab" id="tabBtn_reports" onclick="switchTab('reports')">📊 التقارير</button>
+      <button class="pill-tab" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
     </div>
 
-    <!-- 1. قسم المخزون العام والبحث -->
+    <!-- 1. المخزون (الإجمالي مخفي عن الموظف ويظهر للمطور فقط) -->
     <div id="view_inventory">
-      <div class="section-card" style="padding:11px 14px; margin-bottom:4px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <div>
-            <strong style="font-size:0.84rem;">إجمالي المخزون (<span id="totalLoadedCount">0</span>)</strong>
-            <div style="font-size:0.72rem; color:var(--muted);" id="filteredCountLbl">جاهز للبحث والمسح الليزري</div>
-          </div>
-          <button class="mini-act-btn" style="background:var(--primary); color:#fff; padding:7px 11px; border:none;" onclick="openAddCustomProductModal()">➕ إضافة صنف</button>
+      <div class="bento-card" id="adminInventoryHeaderCard" style="display:none;padding:11px 14px;margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><strong style="font-size:0.82rem;">إجمالي المخزون (<span id="totalLoadedCount">0</span>)</strong><div style="font-size:0.7rem;color:var(--muted);" id="filteredCountLbl">خاص بالمطور</div></div>
+          <button class="btn-add-p" onclick="openAddCustomProductModal()">+ إضافة صنف</button>
         </div>
       </div>
-      <div class="products-list" id="inventoryList"></div>
+      <div class="inv-stack" id="inventoryList"></div>
     </div>
 
-    <!-- 2. صفحة حاسبة وعرض الأسعار المستقلة -->
+    <!-- 2. حاسبة الأسعار المستقلة -->
     <div id="view_pricing" style="display:none;">
-      <div class="price-hero-card">
-        <h3>إجمالي سلة فحص وعرض الأسعار</h3>
-        <div class="price-hero-total"><span id="priceCalcTotal">0.00</span> ر.س</div>
-        <div class="price-hero-sub" id="priceCalcSubCount">0 أصناف في السلة (شامل الضريبة)</div>
+      <div class="gold-banner">
+        <div style="font-size:0.8rem;font-weight:800;">إجمالي السعر:</div>
+        <div class="val"><span id="priceCalcTotal">0.00</span> ر.س</div>
+        <div style="font-size:0.73rem;font-weight:800;" id="priceCalcSubCount">(0 أصناف - شامل الضريبة)</div>
       </div>
-
-      <div class="section-card">
-        <div style="display:flex; gap:8px; margin-bottom:12px;">
-          <button class="btn-main" style="flex:1;" onclick="openScanner('price')">
-            <svg class="laser-icon-svg"><use href="#icon-laser-scanner"></use></svg>
-            <span>مسح صنف للسعر</span>
-          </button>
-          <button class="mini-act-btn" style="background:rgba(239,68,68,0.18); color:#F87171; border-color:rgba(239,68,68,0.35); padding:0 14px;" onclick="clearPriceCalc()">🗑️ تفريغ</button>
-        </div>
-
-        <div class="form-group">
-          <label>إضافة صنف للسلة بالبحث المباشر:</label>
-          <input type="text" id="priceSearchInp" placeholder="ابحث بالاسم أو رقم الصنف أو الباركود..." oninput="searchForSubModule('pricing', this.value)">
-          <div id="priceSearchResults" style="max-height:140px; overflow-y:auto; border:1px solid var(--border); border-radius:10px; margin-top:4px; display:none; background:var(--card-alt);"></div>
-        </div>
-
-        <div class="section-title" style="margin-top:10px;">
-          <span>الأصناف المحددة في السلة</span>
-          <button class="mini-act-btn" onclick="sharePriceInvoice()">📤 مشاركة / طباعة الفاتورة</button>
+      <div class="bento-card">
+        <div style="margin-bottom:10px;">
+          <input type="text" id="priceSearchInp" placeholder="ابحث عن صنف لإضافته للسلة..." oninput="searchForSubModule('pricing', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <div id="priceSearchResults" style="max-height:140px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-top:4px;display:none;background:var(--card-solid);"></div>
         </div>
         <div id="priceCalcList"></div>
+        <button class="btn-glow" style="margin-top:10px;" onclick="openScanner('price')"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg><span>مسح صنف للسعر (ليزري)</span></button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+          <button class="btn-sub" style="padding:10px;color:#38BDF8;" onclick="sharePriceInvoice()">📤 مشاركة / طباعة الفاتورة</button>
+          <button class="btn-sub" style="padding:10px;color:#FCA5A5;" onclick="clearPriceCalc()">🗑️ تفريغ السلة</button>
+        </div>
       </div>
     </div>
 
-    <!-- 3. قسم تسجيل التواريخ والدفعات المتعددة -->
+    <!-- 3. تواريخ الصلاحية -->
     <div id="view_expiry" style="display:none;">
-      <div class="section-card">
-        <div class="section-title">
-          <span>📅 تسجيل تواريخ الصلاحية (يدعم كود الأدوية)</span>
-          <button class="mini-act-btn" style="background:var(--primary); color:#fff; border:none;" onclick="openScanner('expiry')">
-            <svg class="laser-icon-svg"><use href="#icon-laser-scanner"></use></svg> مسح الباركود
-          </button>
-        </div>
-        <div class="form-group">
-          <label>ابحث عن الصنف لتسجيل تاريخه:</label>
-          <input type="text" id="expSearchInp" placeholder="اكتب اسم الصنف أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)">
-          <div id="expSearchResults" style="max-height:130px; overflow-y:auto; border:1px solid var(--border); border-radius:10px; margin-top:4px; display:none; background:var(--card-alt);"></div>
-        </div>
-        <div class="form-group">
-          <label>الصنف المختار:</label>
-          <input type="text" id="expSelectedName" readonly placeholder="اختر صنفاً من البحث أو الماسح الليزري" style="font-weight:800;">
-          <input type="hidden" id="expSelectedUid">
-        </div>
-        <label style="font-size:0.75rem; font-weight:700; color:var(--muted); display:block; margin-bottom:6px;">الدفعات (تاريخ الصلاحية + الكمية):</label>
+      <div class="bento-card">
+        <div class="bento-head"><h3>📅 تسجيل تواريخ الصلاحية</h3><button class="btn-add-p" onclick="openScanner('expiry')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح</button></div>
+        <input type="text" id="expSearchInp" placeholder="ابحث بالاسم أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
+        <div id="expSearchResults" style="max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;display:none;background:var(--card-solid);"></div>
+        <input type="text" id="expSelectedName" readonly placeholder="الصنف المختار سيظهر هنا..." style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--primary);background:var(--light);color:var(--text);font-weight:900;margin-bottom:10px;outline:none;">
+        <input type="hidden" id="expSelectedUid">
         <div id="expiryBatchesBox"></div>
-        <button type="button" class="mini-act-btn" style="width:100%; padding:9px; margin-bottom:10px; border:1.5px dashed var(--primary); color:var(--primary);" onclick="addExpiryBatchRow()">➕ إضافة دفعة وتاريخ آخر لنفس الصنف</button>
-        <button class="btn-main" onclick="saveItemExpiryBatches()">💾 حفظ التواريخ والكميات</button>
+        <button type="button" class="btn-sub" style="width:100%;padding:10px;margin-bottom:8px;border-style:dashed;border-color:var(--primary);color:var(--primary);" onclick="addExpiryBatchRow()">+ إضافة دفعة أخرى</button>
+        <button class="btn-glow" onclick="saveItemExpiryBatches()">💾 حفظ التواريخ والدفعات</button>
       </div>
-      <div class="section-card">
-        <div class="section-title"><span>الأصناف المسجلة تواريخها</span><span id="expRegisteredCount">0</span></div>
-        <div id="expRegisteredList"></div>
-      </div>
+      <div class="bento-card"><div class="bento-head"><h3>الأصناف المسجلة تواريخها</h3><span class="b-chip b-exp" id="expRegisteredCount">0</span></div><div id="expRegisteredList"></div></div>
     </div>
 
-    <!-- 4. قسم أمر طباعة الباركودات -->
+    <!-- 4. طباعة الباركود (المربعات الضخمة 2x2) -->
     <div id="view_barcodeOrder" style="display:none;">
-      <div class="section-card">
-        <div class="section-title">
-          <span>🏷️ كشف أوامر طباعة الباركودات</span>
-          <button class="mini-act-btn" style="background:var(--primary); color:#fff; border:none;" onclick="openScanner('barcodeOrder')">
-            <svg class="laser-icon-svg"><use href="#icon-laser-scanner"></use></svg> مسح فوري (+1)
-          </button>
-        </div>
-        <div style="display:flex; gap:6px; margin-bottom:10px;">
-          <select id="boGroupSelect" onchange="renderBarcodeOrders()" style="flex:1; padding:9px; border-radius:10px; border:1.5px solid var(--border); font-weight:700; background:var(--card-alt); color:var(--text);">
-            <option value="مجموعة 1">مجموعة أصناف رقم 1</option>
-            <option value="مجموعة 2">مجموعة أصناف رقم 2</option>
-            <option value="مجموعة 3">مجموعة أصناف رقم 3</option>
-            <option value="مجموعة 4">مجموعة أصناف رقم 4</option>
+      <div class="bento-card">
+        <div class="bento-head"><h3>🏷️ طباعة الباركود</h3><button class="btn-add-p" onclick="openScanner('barcodeOrder')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <select id="boGroupSelect" onchange="renderBarcodeOrders()" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;">
+            <option value="مجموعة 1">المجموعة النشطة: مجموعة 1</option><option value="مجموعة 2">المجموعة النشطة: مجموعة 2</option><option value="مجموعة 3">المجموعة النشطة: مجموعة 3</option><option value="مجموعة 4">المجموعة النشطة: مجموعة 4</option>
           </select>
-          <button class="mini-act-btn" id="btnClearPrintedBO" style="background:rgba(239,68,68,0.2); color:#F87171; display:none;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع (✔️)</button>
+          <button class="btn-sub" id="btnClearPrintedBO" style="display:none;color:#FCA5A5;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع</button>
         </div>
-        <div class="form-group">
-          <label>إضافة صنف للمجموعة الحالية (ينزل العدد 1 تلقائياً):</label>
-          <input type="text" id="boSearchInp" placeholder="ابحث بالاسم أو رقم الصنف أو الباركود..." oninput="searchForSubModule('barcodeOrder', this.value)">
-          <div id="boSearchResults" style="max-height:130px; overflow-y:auto; border:1px solid var(--border); border-radius:10px; margin-top:4px; display:none; background:var(--card-alt);"></div>
-        </div>
-        <div id="barcodeOrdersContainer"></div>
+        <input type="text" id="boSearchInp" placeholder="ابحث لإضافة رقم صنف للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+        <div id="boSearchResults" style="max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-top:4px;display:none;background:var(--card-solid);"></div>
+        <div class="bo-grid" id="barcodeOrdersContainer"></div>
       </div>
     </div>
 
-    <!-- 5. قسم النواقص السريعة وطلبات الفروع -->
+    <!-- 5. النواقص وطلبات الفروع -->
     <div id="view_shortages" style="display:none;">
-      <div class="section-card">
-        <div class="section-title">
-          <span>🏥 طلبات الفروع والنواقص السريعة</span>
-          <button class="mini-act-btn" style="background:var(--primary); color:#fff; border:none;" onclick="openScanner('shortages')">
-            <svg class="laser-icon-svg"><use href="#icon-laser-scanner"></use></svg> مسح فوري (+1)
-          </button>
-        </div>
-        <div class="form-group">
-          <label>حدد جهة الطلب / البحث:</label>
-          <select id="branchSelect" onchange="renderShortages()">
-            <option value="المستودع">📦 طلب من: المستودع الرئيسي</option>
-            <option value="فرع الشرائع">🏪 طلب من: فرع الشرائع</option>
-            <option value="فرع النوارية">🏪 طلب من: فرع النوارية</option>
-            <option value="نواقص المشتريات">⚠️ قائمة النواقص السريعة (مدير المشتريات)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>ابحث أو امسح الصنف لإضافته بالعدد (1) تلقائياً:</label>
-          <input type="text" id="shortSearchInp" placeholder="اسم الصنف أو رقم الصنف أو الباركود..." oninput="searchForSubModule('shortages', this.value)">
-          <div id="shortSearchResults" style="max-height:130px; overflow-y:auto; border:1px solid var(--border); border-radius:10px; margin-top:4px; display:none; background:var(--card-alt);"></div>
-        </div>
+      <div class="bento-card">
+        <div class="bento-head"><h3>🏥 النواقص وطلبات الفروع</h3><button class="btn-add-p" onclick="openScanner('shortages')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
+        <select id="branchSelect" onchange="renderShortages()" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;margin-bottom:10px;">
+          <option value="فرع الشرائع">🏪 فرع الشرائع</option><option value="فرع النوارية">🏪 فرع النوارية</option><option value="المستودع">📦 المستودع الرئيسي</option><option value="نواقص المشتريات">⚠️ قائمة النواقص السريعة</option>
+        </select>
+        <input type="text" id="shortSearchInp" placeholder="ابحث لإضافة الصنف للمواد المطلوبة..." oninput="searchForSubModule('shortages', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:10px;outline:none;">
+        <div id="shortSearchResults" style="max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;display:none;background:var(--card-solid);"></div>
         <div id="shortagesListContainer"></div>
       </div>
     </div>
 
-    <!-- 6. لوحة ملاحظات الشفت -->
+    <!-- 6. تسليم الشفت -->
     <div id="view_notes" style="display:none;">
-      <div class="section-card">
-        <div class="section-title"><span>📝 تسليم الشفت وملاحظات الزملاء</span></div>
-        <div class="form-group">
-          <label>توجيه الملاحظة والتنبيه إلى:</label>
-          <select id="noteTargetSelect">
-            <option value="الجميع">🔔 جميع الموظفين والشفت القادم</option>
-            <option value="المطور">🔒 المطور فقط</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>نص الملاحظة أو التوصية:</label>
-          <textarea id="noteTextInp" rows="3" placeholder="مثال: تم طلب 3 حليب من فرع الشرائع وتصل العصر..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>🖼️ إرفاق صورة مع الملاحظة:</label>
-          <input type="file" id="noteImgInp" accept="image/*" capture="environment" onchange="previewNoteImage(event)">
-          <img id="noteImgPreview" style="max-width:100%; max-height:140px; border-radius:10px; margin-top:6px; display:none;">
-        </div>
-        <button class="btn-main" onclick="addShiftNote()">🚀 إرسال الملاحظة وتنبيه الزملاء</button>
+      <div class="bento-card">
+        <div class="bento-head"><h3>📝 تسليم الشفت وملاحظات الزملاء</h3></div>
+        <select id="noteTargetSelect" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;margin-bottom:8px;">
+          <option value="الجميع">🔔 توجيه إلى: جميع الزملاء</option><option value="المطور">🔒 توجيه إلى: المطور فقط</option>
+        </select>
+        <textarea id="noteTextInp" rows="3" placeholder="كتابة الملاحظات اليومية..." style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;"></textarea>
+        <label class="btn-sub" style="display:block;text-align:center;padding:9px;margin-bottom:8px;cursor:pointer;">📷 إرفاق صورة مباشرة<input type="file" id="noteImgInp" accept="image/*" capture="environment" onchange="previewNoteImage(event)" style="display:none;"></label>
+        <img id="noteImgPreview" style="max-width:100%;max-height:140px;border-radius:10px;margin-bottom:8px;display:none;">
+        <button class="btn-glow" onclick="addShiftNote()">🚀 إرسال الملاحظة</button>
       </div>
-      <div class="section-card">
-        <div class="section-title"><span>سجل ملاحظات الشفتات</span></div>
-        <div id="shiftNotesContainer"></div>
-      </div>
+      <div class="bento-card"><div class="bento-head"><h3>سجل الملاحظات</h3></div><div id="shiftNotesContainer"></div></div>
     </div>
 
-    <!-- 7. منظومة التقارير الـ 5 الشاملة -->
+    <!-- 7. منظومة التقارير الـ 5 -->
     <div id="view_reports" style="display:none;">
-      <div class="section-card">
-        <div class="section-title"><span>📊 منظومة التقارير الـ 5 الرسمية</span></div>
-
-        <div class="prod-card" style="margin-bottom:10px; flex-direction:column; align-items:stretch;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong>1️⃣ تقرير تواريخ الصلاحية والدفعات</strong>
-            <button class="mini-act-btn" onclick="openReportPreview('expiry')">👁️ معاينة التقرير</button>
+      <div class="bento-card">
+        <div class="bento-head"><h3>📊 منظومة التقارير الـ 5 الرسمية</h3></div>
+        <div class="rep-grid">
+          <div class="rep-box">
+            <h4>1️⃣ تواريخ الصلاحية</h4>
+            <svg viewBox="0 0 100 28" style="width:100%;height:28px;"><path d="M0 24 Q 25 5, 50 18 T 100 6" fill="none" stroke="#10B981" stroke-width="2.5"/></svg>
+            <button class="btn-sub" onclick="openReportPreview('expiry')">👁️ معاينة</button>
+            <div class="admin-export-btns" style="display:flex;gap:5px;"><button class="btn-add-p" style="flex:1;background:#10B981;" onclick="exportReportExcel('expiry')">Excel</button><button class="btn-add-p" style="flex:1;background:#EF4444;color:#fff;" onclick="exportReportPDF('expiry')">PDF</button></div>
           </div>
-          <div class="admin-export-btns" style="display:flex; gap:6px;">
-            <button class="mini-act-btn" style="background:#16A34A; color:#fff; flex:1; border:none;" onclick="exportReportExcel('expiry')">📄 تحميل Excel</button>
-            <button class="mini-act-btn" style="background:#DC2626; color:#fff; flex:1; border:none;" onclick="exportReportPDF('expiry')">🖨️ طباعة PDF</button>
+          <div class="rep-box">
+            <h4>2️⃣ أوامر الباركود</h4>
+            <svg viewBox="0 0 100 28" style="width:100%;height:28px;"><path d="M0 22 Q 30 26, 55 10 T 100 5" fill="none" stroke="#F59E0B" stroke-width="2.5"/></svg>
+            <button class="btn-sub" onclick="openReportPreview('barcodeOrder')">👁️ معاينة</button>
+            <div class="admin-export-btns" style="display:flex;gap:5px;"><button class="btn-add-p" style="flex:1;background:#10B981;" onclick="exportReportExcel('barcodeOrder')">Excel</button><button class="btn-add-p" style="flex:1;background:#EF4444;color:#fff;" onclick="exportReportPDF('barcodeOrder')">PDF</button></div>
           </div>
-        </div>
-
-        <div class="prod-card" style="margin-bottom:10px; flex-direction:column; align-items:stretch;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong>2️⃣ تقرير أوامر طباعة الباركودات (رقم الصنف بارز)</strong>
-            <button class="mini-act-btn" onclick="openReportPreview('barcodeOrder')">👁️ معاينة التقرير</button>
+          <div class="rep-box">
+            <h4>3️⃣ النواقص والفروع</h4>
+            <svg viewBox="0 0 100 28" style="width:100%;height:28px;"><path d="M0 20 Q 20 8, 50 22 T 100 9" fill="none" stroke="#38BDF8" stroke-width="2.5"/></svg>
+            <button class="btn-sub" onclick="openReportPreview('shortages')">👁️ معاينة</button>
+            <div class="admin-export-btns" style="display:flex;gap:5px;"><button class="btn-add-p" style="flex:1;background:#10B981;" onclick="exportReportExcel('shortages')">Excel</button><button class="btn-add-p" style="flex:1;background:#EF4444;color:#fff;" onclick="exportReportPDF('shortages')">PDF</button></div>
           </div>
-          <div class="admin-export-btns" style="display:flex; gap:6px;">
-            <button class="mini-act-btn" style="background:#16A34A; color:#fff; flex:1; border:none;" onclick="exportReportExcel('barcodeOrder')">📄 تحميل Excel</button>
-            <button class="mini-act-btn" style="background:#DC2626; color:#fff; flex:1; border:none;" onclick="exportReportPDF('barcodeOrder')">🖨️ طباعة PDF</button>
-          </div>
-        </div>
-
-        <div class="prod-card" style="margin-bottom:10px; flex-direction:column; align-items:stretch;">
-          <strong style="margin-bottom:6px;">3️⃣ تقرير عرض الأصناف بالفئات (الوكيل / المورّد)</strong>
-          <div style="display:flex; gap:6px; margin-bottom:8px;">
-            <input type="text" id="fiaFilterInp" list="fiaDatalist" placeholder="ابحث باسم الفئة/المورد..." style="flex:1; padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-size:0.8rem;">
+          <div class="rep-box">
+            <h4>4️⃣ تقرير الفئات</h4>
+            <input type="text" id="fiaFilterInp" list="fiaDatalist" placeholder="اسم الفئة..." style="width:100%;padding:5px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.72rem;">
             <datalist id="fiaDatalist"></datalist>
-            <button class="mini-act-btn" onclick="openReportPreview('fia')">👁️ معاينة</button>
-          </div>
-          <div class="admin-export-btns" style="display:flex; gap:6px;">
-            <button class="mini-act-btn" style="background:#16A34A; color:#fff; flex:1; border:none;" onclick="exportReportExcel('fia')">📄 تحميل Excel</button>
-            <button class="mini-act-btn" style="background:#DC2626; color:#fff; flex:1; border:none;" onclick="exportReportPDF('fia')">🖨️ طباعة PDF</button>
+            <button class="btn-sub" onclick="openReportPreview('fia')">👁️ معاينة</button>
+            <div class="admin-export-btns" style="display:flex;gap:5px;"><button class="btn-add-p" style="flex:1;background:#10B981;" onclick="exportReportExcel('fia')">Excel</button><button class="btn-add-p" style="flex:1;background:#EF4444;color:#fff;" onclick="exportReportPDF('fia')">PDF</button></div>
           </div>
         </div>
-
-        <div class="prod-card" style="margin-bottom:10px; flex-direction:column; align-items:stretch;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <strong>4️⃣ تقارير العلامات التجارية (الشركات)</strong>
-            <span style="font-size:0.68rem; color:var(--muted);">انقر على الشركة للمعاينة</span>
-          </div>
-          <input type="text" id="brandSearchInp" placeholder="ابحث عن علامة تجارية (مثل: بيبي جوي، جرجنز، بيجن)..." oninput="renderBrandsGrid()" style="padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-size:0.8rem; margin-bottom:8px;">
-          <div class="brands-grid" id="brandsGridBox"></div>
-        </div>
-
-        <div class="prod-card" style="flex-direction:column; align-items:stretch;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong>5️⃣ تقرير النواقص وطلبات الفروع</strong>
-            <button class="mini-act-btn" onclick="openReportPreview('shortages')">👁️ معاينة التقرير</button>
-          </div>
-          <div class="admin-export-btns" style="display:flex; gap:6px;">
-            <button class="mini-act-btn" style="background:#16A34A; color:#fff; flex:1; border:none;" onclick="exportReportExcel('shortages')">📄 تحميل Excel</button>
-            <button class="mini-act-btn" style="background:#DC2626; color:#fff; flex:1; border:none;" onclick="exportReportPDF('shortages')">🖨️ طباعة PDF</button>
-          </div>
-        </div>
-
-        <div id="empReportRestrictionNotice" style="display:none; background:rgba(239,68,68,0.15); color:#FCA5A5; padding:10px; border-radius:10px; font-size:0.76rem; font-weight:700; text-align:center; margin-top:8px;">
-          🔒 تنزيل ملفات Excel و PDF مخصص لحساب المطور فقط. يمكنك استخدام زر "👁️ معاينة" لعرض البيانات.
-        </div>
+        <div class="bento-head"><h3>5️⃣ العلامات التجارية (الشركات)</h3></div>
+        <input type="text" id="brandSearchInp" placeholder="ابحث عن شركة (بيبي جوي، جرجنز، بيجن)..." oninput="renderBrandsGrid()" style="width:100%;padding:9px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
+        <div class="brands-grid" id="brandsGridBox"></div>
       </div>
     </div>
 
-    <!-- 8. لوحة إعدادات المطور الاحترافية الشاملة -->
+    <!-- 8. إعدادات المطور الشاملة -->
     <div id="view_settings" style="display:none;">
-
-      <!-- أ. تغيير الثيمات الـ 5 -->
-      <div class="section-card">
-        <div class="section-title"><span>🎨 اختيار الثيم والمظهر العام (5 ثيمات عالمية)</span></div>
-        <p style="font-size:0.73rem; color:var(--muted);">اختر الثيم المفضل ليتم تطبيقه وحفظه على جميع الأجهزة:</p>
+      <div class="bento-card">
+        <div class="bento-head"><h3>🎨 اختيار الثيم (5 ثيمات تفاعلية)</h3></div>
         <div class="theme-grid">
-          <div class="theme-option-card" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#090C10,#D4AF37);"></div>
-            <span>الفخامة الملكية (Obsidian & Gold)</span>
-          </div>
-          <div class="theme-option-card" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#0F172A,#10B981);"></div>
-            <span>الأردواز والنعناعي (Slate & Mint)</span>
-          </div>
-          <div class="theme-option-card" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div>
-            <span>البياض الطبي النقي (Daylight)</span>
-          </div>
-          <div class="theme-option-card" id="themeCard_emerald-glass" onclick="changeSystemTheme('emerald-glass', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#041F1A,#34D399);"></div>
-            <span>الزمرد الزجاجي (Emerald Glass)</span>
-          </div>
-          <div class="theme-option-card" id="themeCard_titanium-coral" onclick="changeSystemTheme('titanium-coral', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#18181B,#FB7185);"></div>
-            <span>تيتانيوم ومرجاني (Titanium)</span>
-          </div>
-          <div class="theme-option-card" id="themeCard_velvet-amethyst" onclick="changeSystemTheme('velvet-amethyst', true)">
-            <div class="theme-swatch" style="background:linear-gradient(135deg,#150E28,#A855F7);"></div>
-            <span>الأرجواني الملكي (Amethyst)</span>
-          </div>
+          <div class="theme-tile" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0D1F27,#10B981);"></div><span>Slate & Mint</span></div>
+          <div class="theme-tile" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#080A0F,#D4AF37);"></div><span>الفخامة الملكية</span></div>
+          <div class="theme-tile" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div><span>البياض الطبي</span></div>
+          <div class="theme-tile" id="themeCard_emerald-glass" onclick="changeSystemTheme('emerald-glass', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#031A15,#34D399);"></div><span>الزمرد الزجاجي</span></div>
+          <div class="theme-tile" id="themeCard_titanium-coral" onclick="changeSystemTheme('titanium-coral', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#111216,#FB7185);"></div><span>التيتانيوم</span></div>
+          <div class="theme-tile" id="themeCard_velvet-amethyst" onclick="changeSystemTheme('velvet-amethyst', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#1C1132,#A855F7);"></div><span>الأرجواني الملكي</span></div>
         </div>
       </div>
 
-      <!-- ب. إعدادات الماسح الليزري والصوت والفلاش ونظام الصيانة -->
-      <div class="section-card">
-        <div class="section-title"><span>⚡ إعدادات الماسح الليزري والنظام المتقدمة</span></div>
-        <div class="setting-row">
-          <div>
-            <strong>🔊 صوت الكاشير (Beep) عند المسح</strong>
-            <small>إصدار نغمة تأكيد فورية عند قراءة الباركود بنجاح</small>
-          </div>
-          <input type="checkbox" id="prefSoundBeep" checked onchange="saveScannerAndSystemPrefs()" style="width:20px; height:20px;">
-        </div>
-        <div class="setting-row">
-          <div>
-            <strong>🔦 وميض الشاشة وتفعيل الفلاش تلقائياً</strong>
-            <small>تأكيد بصري أخضر ومحاولة تشغيل كشاف الكاميرا في الإضاءة المنخفضة</small>
-          </div>
-          <input type="checkbox" id="prefFlashLight" checked onchange="saveScannerAndSystemPrefs()" style="width:20px; height:20px;">
-        </div>
-        <div class="setting-row">
-          <div>
-            <strong>💊 فك شفرة كود الأدوية (SFDA DataMatrix)</strong>
-            <small>قراءة الباركود المربع للأدوية واستخراج GTIN وتاريخ الصلاحية تلقائياً</small>
-          </div>
-          <input type="checkbox" id="prefSfdaParser" checked onchange="saveScannerAndSystemPrefs()" style="width:20px; height:20px;">
-        </div>
-        <div class="setting-row">
-          <div>
-            <strong>🛠️ وضع الصيانة والجرد (قفل تعديل الموظفين)</strong>
-            <small>يمنع الموظفين مؤقتاً من الحذف أو التعديل أثناء وقت الجرد</small>
-          </div>
-          <input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()" style="width:20px; height:20px;">
-        </div>
-      </div>
-
-      <!-- ج. ربط صور الأصناف من المتجر الإلكتروني -->
-      <div class="section-card">
-        <div class="section-title"><span>🖼️ ربط صور الأصناف من المتجر الإلكتروني</span></div>
-        <p style="font-size:0.73rem; color:var(--muted); margin-bottom:8px;">
-          ارفع ملف منتجات المتجر الإلكتروني (Excel أو CSV) الذي يحتوي على عمود <strong>الباركود</strong> وعمود <strong>الصورة / Image URL</strong> ليتم عرض صور المنتجات تلقائياً:
-        </p>
-        <input type="file" id="storeImagesFileInp" accept=".xlsx,.xls,.csv" onchange="handleStoreImagesUpload(event)" style="width:100%; padding:9px; border-radius:10px; border:1px dashed var(--primary); background:var(--card-alt); color:var(--text); font-size:0.78rem;">
-        <div id="linkedImagesCountBadge" style="font-size:0.74rem; color:var(--primary); font-weight:800; margin-top:6px;"></div>
-      </div>
-
-      <!-- د. إدارة حسابات الزملاء -->
-      <div class="section-card">
-        <div class="section-title"><span>👥 إدارة حسابات الزملاء والصلاحيات</span></div>
-        <div style="display:grid; grid-template-columns: 1.2fr 1fr 0.8fr auto; gap:6px; margin-bottom:10px;">
-          <input type="text" id="newEmpEmail" placeholder="إيميل أو معرف" style="padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-size:0.78rem;">
-          <input type="text" id="newEmpName" placeholder="الاسم" style="padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-size:0.78rem;">
-          <input type="text" id="newEmpCustomPin" placeholder="رمز خاص" style="padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-size:0.78rem;">
-          <button class="mini-act-btn" style="background:var(--primary); color:#fff; border:none;" onclick="addAuthorizedEmployee()">➕ إضافة</button>
+      <div class="bento-card">
+        <div class="bento-head"><h3>👥 إدارة حسابات الزملاء المعتمدين</h3></div>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">الدخول محصور فقط على الأسماء أو الإيميلات المضافة هنا:</p>
+        <div style="display:grid;grid-template-columns:1.1fr 1fr 0.8fr auto;gap:5px;margin-bottom:10px;">
+          <input type="text" id="newEmpEmail" placeholder="الإيميل أو المعرف" style="padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.74rem;">
+          <input type="text" id="newEmpName" placeholder="الاسم" style="padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.74rem;">
+          <input type="text" id="newEmpCustomPin" placeholder="رمز خاص" style="padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.74rem;">
+          <button class="btn-add-p" onclick="addAuthorizedEmployee()">+ إضافة</button>
         </div>
         <div id="authorizedEmployeesList"></div>
       </div>
 
-      <!-- هـ. إعدادات الرموز السرية -->
-      <div class="section-card">
-        <div class="section-title"><span>🔐 إعدادات الرموز السرية وبريد المطور</span></div>
-        <div class="form-group">
-          <label>بريد المطور المعتمد:</label>
-          <input type="email" id="setAdminEmail">
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div class="form-group">
-            <label>الرمز السري للمطور:</label>
-            <input type="text" id="setAdminPin">
-          </div>
-          <div class="form-group">
-            <label>رمز دخول الموظفين العام:</label>
-            <input type="text" id="setEmpPin">
-          </div>
-        </div>
-        <button class="btn-main" onclick="saveSecuritySettings()">💾 حفظ إعدادات الدخول</button>
+      <div class="bento-card">
+        <div class="bento-head"><h3>⚙️ خصائص النظام والماسح الليزري</h3></div>
+        <div class="sw-row"><div><strong>🔒 حصر الدخول على الحسابات المسجلة فقط</strong><small>منع أي موظف غير مضاف في القائمة أعلاه من الدخول</small></div><label class="sw-toggle"><input type="checkbox" id="prefStrictWhitelist" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
+        <div class="sw-row"><div><strong>🔊 صوت الكاشير (Beep) عند المسح</strong><small>إصدار نغمة تأكيد فورية عند قراءة الباركود</small></div><label class="sw-toggle"><input type="checkbox" id="prefSoundBeep" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
+        <div class="sw-row"><div><strong>🔦 وميض الفلاش عند المسح</strong><small>إضاءة تأكيد بصرية عند التقاط الباركود</small></div><label class="sw-toggle"><input type="checkbox" id="prefFlashLight" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
+        <div class="sw-row"><div><strong>💊 قراءة كود الأدوية (SFDA DataMatrix)</strong><small>استخراج الباركود وتاريخ الصلاحية من كود الأدوية المربع</small></div><label class="sw-toggle"><input type="checkbox" id="prefSfdaParser" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
+        <div class="sw-row"><div><strong>🛠️ وضع الجرد والصيانة (قفل تعديل الموظفين)</strong><small>إيقاف الحذف أو الإضافة للموظفين مؤقتاً أثناء الجرد</small></div><label class="sw-toggle"><input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
       </div>
 
-      <!-- و. سجل الرقابة والنشاطات (Audit Log) -->
-      <div class="section-card">
-        <div class="section-title">
-          <span>🕵️ سجل الرقابة وحركات الموظفين (Audit Log)</span>
-          <button class="mini-act-btn" onclick="clearAuditLogs()">مسح السجل</button>
-        </div>
-        <div id="auditLogsContainer" style="max-height:190px; overflow-y:auto; font-size:0.74rem;"></div>
+      <div class="bento-card">
+        <div class="bento-head"><h3>🖼️ ربط صور الأصناف من المتجر الإلكتروني</h3></div>
+        <input type="file" accept=".xlsx,.xls,.csv" onchange="handleStoreImagesUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
+        <div id="linkedImagesCountBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
-      <!-- ز. استخراج الإكسل والنسخ الاحتياطي -->
-      <div class="section-card">
-        <div class="section-title"><span>📥 استخراج الإكسل والنسخ الاحتياطي</span></div>
-        <button class="btn-main" style="background:#16A34A; color:#fff; margin-bottom:8px;" onclick="downloadFullClassifiedExcel()">📥 تنزيل ملف الإكسل الكامل (17,338 صنفاً) .xlsx</button>
-        <button class="btn-main" style="background:#2563EB; color:#fff; margin-bottom:8px;" onclick="downloadThreePartsExcel()">📥 تنزيل ملف الإكسل مقسماً إلى 3 أجزاء .xlsx</button>
-        <div style="display:flex; gap:8px;">
-          <button class="mini-act-btn" style="flex:1; padding:10px;" onclick="exportFullBackupJSON()">💾 تحميل نسخة احتياطية</button>
-          <label class="mini-act-btn" style="flex:1; padding:10px; cursor:pointer;">
-            📂 استعادة نسخة
-            <input type="file" accept=".json" onchange="importFullBackupJSON(event)" style="display:none;">
-          </label>
+      <div class="bento-card">
+        <div class="bento-head"><h3>🔐 التحكم بالرموز السرية</h3></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div><label style="font-size:0.72rem;color:var(--muted);">رمز المطور:</label><input type="text" id="setAdminPin" style="width:100%;padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);"></div>
+          <div><label style="font-size:0.72rem;color:var(--muted);">رمز الموظفين المعتمدين:</label><input type="text" id="setEmpPin" style="width:100%;padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);"></div>
         </div>
+        <button class="btn-glow" onclick="saveSecuritySettings()">💾 حفظ الرموز السرية</button>
+      </div>
+
+      <div class="bento-card">
+        <div class="bento-head"><h3>🕵️ سجل الرقابة (Audit Log)</h3><button class="btn-sub" onclick="clearAuditLogs()">مسح</button></div>
+        <div id="auditLogsContainer" style="max-height:150px;overflow-y:auto;font-size:0.73rem;margin-bottom:10px;"></div>
+        <button class="btn-glow" style="background:#10B981;color:#052E16;" onclick="downloadFullClassifiedExcel()">📥 تنزيل ملف الإكسل الكامل .xlsx</button>
       </div>
     </div>
 
-    <footer class="app-footer-rights" id="appFooterRights">
-      جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد
-    </footer>
-
-    <!-- شريط التنقل السفلي -->
-    <nav class="bottom-nav">
-      <button class="nav-btn active" id="bottomNav_inventory" onclick="switchTab('inventory')"><span class="ico">📦</span><span>المخزون</span></button>
-      <button class="nav-btn" id="bottomNav_pricing" onclick="switchTab('pricing')"><span class="ico">💰</span><span>الأسعار</span></button>
-      <div class="nav-scan-fab" onclick="openScanner('search')" title="الماسح الليزري">
-        <svg width="26" height="26"><use href="#icon-laser-scanner"></use></svg>
-      </div>
-      <button class="nav-btn" id="bottomNav_barcodeOrder" onclick="switchTab('barcodeOrder')"><span class="ico">🏷️</span><span>الباركود</span></button>
-      <button class="nav-btn" id="bottomNav_reports" onclick="switchTab('reports')"><span class="ico">📊</span><span>التقارير</span></button>
+    <nav class="bottom-dock">
+      <button class="dock-btn active" id="bottomNav_inventory" onclick="switchTab('inventory')"><span class="ico">📦</span><span>المخزون</span></button>
+      <button class="dock-btn" id="bottomNav_pricing" onclick="switchTab('pricing')"><span class="ico">💰</span><span>الأسعار</span></button>
+      <div class="dock-fab" onclick="openScanner('search')"><svg width="26" height="26"><use href="#icon-laser-scanner"></use></svg></div>
+      <button class="dock-btn" id="bottomNav_barcodeOrder" onclick="switchTab('barcodeOrder')"><span class="ico">🏷️</span><span>الباركود</span></button>
+      <button class="dock-btn" id="bottomNav_reports" onclick="switchTab('reports')"><span class="ico">📊</span><span>التقارير</span></button>
     </nav>
   </div>
 
-  <!-- نافذة إضافة صنف جديد -->
+  <!-- نافذة إضافة صنف -->
   <div id="addCustomProductModal">
-    <div class="preview-box">
-      <div class="preview-head">
-        <strong>➕ إضافة صنف جديد للمخزون</strong>
-        <button onclick="document.getElementById('addCustomProductModal').style.display='none'" style="background:transparent; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="preview-body">
-        <div class="form-group">
-          <label>رقم الصنف *</label>
-          <input type="text" id="cpItemNum" placeholder="مثال: 10945">
-        </div>
-        <div class="form-group">
-          <label>الباركود *</label>
-          <input type="text" id="cpBarcode" placeholder="امسح أو اكتب الباركود">
-        </div>
-        <div class="form-group">
-          <label>اسم الصنف *</label>
-          <input type="text" id="cpName" placeholder="اسم الصنف كاملاً">
-        </div>
-        <div class="form-group">
-          <label>الفئة / المورد</label>
-          <input type="text" id="cpFia" list="fiaDatalist" placeholder="مثال: مورد عام">
-        </div>
-        <div class="form-group">
-          <label>سعر البيع (ريال) *</label>
-          <input type="number" step="0.01" id="cpPrice" placeholder="0.00">
-        </div>
-        <div class="form-group">
-          <label>رابط صورة الصنف من المتجر (اختياري)</label>
-          <input type="url" id="cpImage" placeholder="https://...">
-        </div>
-        <button class="btn-main" onclick="saveNewCloudProduct()">💾 حفظ الصنف فوراً</button>
+    <div class="modal-box">
+      <div class="modal-head"><strong>➕ إضافة صنف جديد</strong><button onclick="document.getElementById('addCustomProductModal').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-body">
+        <div class="inp-wrap"><label>رقم الصنف *</label><div class="inp-box"><input type="text" id="cpItemNum"></div></div>
+        <div class="inp-wrap"><label>الباركود *</label><div class="inp-box"><input type="text" id="cpBarcode"></div></div>
+        <div class="inp-wrap"><label>اسم الصنف *</label><div class="inp-box"><input type="text" id="cpName"></div></div>
+        <div class="inp-wrap"><label>الفئة / المورد</label><div class="inp-box"><input type="text" id="cpFia" list="fiaDatalist"></div></div>
+        <div class="inp-wrap"><label>سعر البيع (ر.س) *</label><div class="inp-box"><input type="number" step="0.01" id="cpPrice"></div></div>
+        <div class="inp-wrap"><label>رابط الصورة (اختياري)</label><div class="inp-box"><input type="url" id="cpImage"></div></div>
+        <button class="btn-glow" onclick="saveNewCloudProduct()">💾 حفظ الصنف</button>
       </div>
     </div>
   </div>
 
-  <!-- نافذة المعاينة المباشرة للتقارير -->
+  <!-- نافذة معاينة التقارير -->
   <div id="previewModal">
-    <div class="preview-box">
-      <div class="preview-head">
-        <strong id="previewModalTitle">معاينة التقرير</strong>
-        <button onclick="closePreviewModal()" style="background:transparent; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="preview-body" id="previewModalContent"></div>
+    <div class="modal-box">
+      <div class="modal-head"><strong id="previewModalTitle">معاينة التقرير</strong><button onclick="document.getElementById('previewModal').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-body" id="previewModalContent"></div>
     </div>
   </div>
 
-  <!-- نافذة الماسح الليزري مع زر الكشاف (الفلاش) -->
+  <!-- نافذة الماسح الليزري + الكشاف -->
   <div id="scannerModal">
-    <div class="preview-box" style="background:#000; color:#fff;">
-      <div class="preview-head">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <svg class="laser-icon-svg" style="color:#10B981;"><use href="#icon-laser-scanner"></use></svg>
-          <strong>ماسح الباركود وكود الأدوية</strong>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button id="torchBtn" onclick="toggleScannerTorch()" style="background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:5px 10px; border-radius:9px; font-size:0.75rem; font-weight:800; cursor:pointer;">🔦 الفلاش</button>
-          <button onclick="stopScanner()" style="background:transparent; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
+    <div class="modal-box" style="background:#000;color:#fff;">
+      <div class="modal-head">
+        <div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" style="color:#10B981;"><use href="#icon-laser-scanner"></use></svg><strong>ماسح الباركود الليزري</strong></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button id="torchBtn" onclick="toggleScannerTorch()" style="background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:5px 10px;border-radius:9px;font-size:0.75rem;font-weight:800;cursor:pointer;">🔦 الفلاش</button>
+          <button onclick="stopScanner()" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button>
         </div>
       </div>
-      <div style="position:relative; width:100%; min-height:280px; overflow:hidden;">
-        <div class="scanner-laser-line"></div>
-        <div id="reader" style="width:100%; min-height:280px;"></div>
+      <div style="position:relative;width:100%;min-height:280px;overflow:hidden;">
+        <div class="laser-line"></div>
+        <div id="reader" style="width:100%;min-height:280px;"></div>
       </div>
     </div>
   </div>
@@ -793,191 +429,119 @@
   <div class="toast" id="toastBox"></div>
 
   <script>
-    function safeGetStorage(key, fallback) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return fallback;
-        const parsed = JSON.parse(raw);
-        return parsed !== null && parsed !== undefined ? parsed : fallback;
-      } catch (e) {
-        return fallback;
-      }
-    }
+    function safeGetStorage(k, fb) { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; } catch(e) { return fb; } }
 
-    // إعداد الاتصال السحابي مع Firebase
-    const firebaseConfig = {
-      databaseURL: "https://ocarepharmacy-b7aae-default-rtdb.firebaseio.com"
-    };
-    let db = null;
-    let cloudRef = null;
-    let isApplyingRemoteUpdate = false;
-
-    try {
-      if (typeof firebase !== 'undefined') {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        cloudRef = db.ref('ocare_cloud_sync');
-      }
-    } catch (err) {}
+    const firebaseConfig = { databaseURL: "https://ocarepharmacy-b7aae-default-rtdb.firebaseio.com" };
+    let db = null, cloudRef = null, isApplyingRemoteUpdate = false;
+    try { if (typeof firebase !== 'undefined') { firebase.initializeApp(firebaseConfig); db = firebase.database(); cloudRef = db.ref('ocare_cloud_sync'); } } catch(e) {}
 
     let appConfig = safeGetStorage('ocare_app_config', null) || {
-      adminEmails: ['ershadn2030@gmail.com', 'ershad@gmail.com', 'admin@ocare.com'],
-      adminPin: '2020',
-      empPin: '1235',
-      activeTheme: 'royal-obsidian',
-      soundBeep: true,
-      flashLight: true,
-      sfdaParser: true,
-      maintenanceMode: false,
+      adminPin: '2020', empPin: '1235', activeTheme: 'slate-mint',
+      strictWhitelist: true, soundBeep: true, flashLight: true, sfdaParser: true, maintenanceMode: false,
       employees: [
         { email: 'emp1@ocare.com', name: 'موظف الفترة الصباحية', pin: '', active: true },
         { email: 'emp2@ocare.com', name: 'موظف الفترة المسائية', pin: '', active: true }
       ]
     };
 
-    let currentUser = null;
-    let baseExcelProducts = [];
+    let currentUser = null, baseExcelProducts = [], allProducts = [];
     let customCloudProducts = safeGetStorage('ocare_custom_products', []);
     let storeImagesMap = safeGetStorage('ocare_store_images_map', {});
-    let allProducts = [];
     let priceCart = safeGetStorage('ocare_price_cart', []);
     let barcodeOrders = safeGetStorage('ocare_barcode_orders', []);
     let shortagesList = safeGetStorage('ocare_shortages_list', []);
     let shiftNotes = safeGetStorage('ocare_shift_notes', []);
     let auditLogs = safeGetStorage('ocare_audit_logs', []);
-    let scannerInstance = null;
-    let scannerTargetMode = 'search';
-    let torchEnabled = false;
-    let tempNoteImageBase64 = '';
-    let activeBrandName = '';
+    let scannerInstance = null, scannerTargetMode = 'search', torchEnabled = false, tempNoteImageBase64 = '', activeBrandName = '';
 
     function showToast(msg) {
       const t = document.getElementById('toastBox');
       if (!t) return;
-      t.innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2600);
+      t.innerText = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    // تطبيق وتغيير الثيمات الـ 5
     function changeSystemTheme(themeKey, saveCloud) {
-      const validTheme = themeKey || 'royal-obsidian';
-      document.documentElement.setAttribute('data-theme', validTheme);
-      document.body.setAttribute('data-theme', validTheme);
-      localStorage.setItem('ocare_selected_theme', validTheme);
-
-      document.querySelectorAll('.theme-option-card').forEach(el => el.classList.remove('active'));
-      const activeCard = document.getElementById('themeCard_' + validTheme);
-      if (activeCard) activeCard.classList.add('active');
-
+      const valid = themeKey || 'slate-mint';
+      document.documentElement.setAttribute('data-theme', valid);
+      document.body.setAttribute('data-theme', valid);
+      localStorage.setItem('ocare_selected_theme', valid);
+      document.querySelectorAll('.theme-tile').forEach(el => el.classList.remove('active'));
+      const tile = document.getElementById('themeCard_' + valid);
+      if (tile) tile.classList.add('active');
       if (saveCloud && appConfig) {
-        appConfig.activeTheme = validTheme;
+        appConfig.activeTheme = valid;
         localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
         pushDataToFirebase('appConfig', appConfig);
-        logAuditAction(`تغيير ثيم المنظومة إلى (${validTheme})`);
-        showToast('🎨 تم تطبيق وحفظ الثيم بنجاح');
+        showToast('🎨 تم اعتماد الثيم الجديد');
       }
     }
 
-    // الصوت والاهتزاز والوميض عند المسح
     function triggerScannerSuccessFeedback() {
       if (appConfig.flashLight !== false) {
         const fl = document.getElementById('scanFlashOverlay');
-        if (fl) {
-          fl.classList.add('flash');
-          setTimeout(() => fl.classList.remove('flash'), 220);
-        }
+        if (fl) { fl.classList.add('flash'); setTimeout(() => fl.classList.remove('flash'), 220); }
       }
-      if (navigator.vibrate) {
-        try { navigator.vibrate(85); } catch (e) {}
-      }
+      if (navigator.vibrate) { try { navigator.vibrate(85); } catch(e) {} }
       if (appConfig.soundBeep !== false) {
         try {
-          const AudioCtx = window.AudioContext || window.webkitAudioContext;
-          const ctx = new AudioCtx();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(1046.5, ctx.currentTime);
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          const ctx = new Ctx(), osc = ctx.createOscillator(), gain = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(1046.5, ctx.currentTime);
           gain.gain.setValueAtTime(0.18, ctx.currentTime);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + 0.11);
-        } catch (e) {}
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.11);
+        } catch(e) {}
       }
     }
 
-    // فك شفرة كود الأدوية (SFDA GS1 DataMatrix) ومعالجة الباركودات
     function parseDrugOrStandardBarcode(rawText) {
-      let clean = String(rawText || '').replace(/[\x00-\x1F]/g, '').trim();
-      let extractedExpiry = '';
-
+      let clean = String(rawText || '').replace(/[\x00-\x1F]/g, '').trim(), extractedExpiry = '';
       if (appConfig.sfdaParser !== false && clean.length >= 16) {
-        // نمط GS1 للأدوية: يبدأ بـ 01 متبوعاً بـ 14 رقماً (GTIN) ثم 17 متبوعاً بـ YYMMDD
-        const gs1Match = clean.match(/^(?:01)?(\d{14})17(\d{6})/);
-        if (gs1Match) {
-          const gtin14 = gs1Match[1];
-          const yymmdd = gs1Match[2];
-          extractedExpiry = `${yymmdd.slice(2, 4)}/20${yymmdd.slice(0, 2)}`;
-          clean = gtin14.startsWith('0') ? gtin14.slice(1) : gtin14;
+        const m = clean.match(/^(?:01)?(\d{14})17(\d{6})/);
+        if (m) {
+          extractedExpiry = `${m[2].slice(2, 4)}/20${m[2].slice(0, 2)}`;
+          clean = m[1].startsWith('0') ? m[1].slice(1) : m[1];
         } else if (clean.startsWith('01') && /^\d{16,}$/.test(clean)) {
-          const gtin14 = clean.slice(2, 16);
-          clean = gtin14.startsWith('0') ? gtin14.slice(1) : gtin14;
+          const g = clean.slice(2, 16);
+          clean = g.startsWith('0') ? g.slice(1) : g;
         }
       }
       return { barcode: clean, expiryDate: extractedExpiry };
     }
 
-    // مطابقة ذكية للباركود تحل مشكلة الصفر في اليسار
     function findProductSmart(codeStr) {
       if (!codeStr) return null;
-      const c = String(codeStr).trim();
-      const noLeadingZero = c.replace(/^0+/, '');
+      const c = String(codeStr).trim(), noZero = c.replace(/^0+/, '');
       return allProducts.find(p => {
-        const pBar = String(p.barcode || '').trim();
-        const pBarNoZero = pBar.replace(/^0+/, '');
-        const pNum = String(p.item_number || '').trim();
-        return pBar === c || pNum === c || (noLeadingZero && pBarNoZero === noLeadingZero);
+        const b = String(p.barcode || '').trim(), n = String(p.item_number || '').trim();
+        return b === c || n === c || (noZero && b.replace(/^0+/, '') === noZero);
       });
     }
 
     function cleanArray(val) {
       if (!val) return [];
       const arr = Array.isArray(val) ? val : Object.values(val);
-      return arr.filter(item => item && item !== '_EMPTY_');
+      return arr.filter(x => x && x !== '_EMPTY_');
     }
 
     function cleanBatchesMap(val) {
       if (!val || typeof val !== 'object') return {};
       const out = {};
-      Object.keys(val).forEach(k => {
-        if (k !== '_empty' && Array.isArray(val[k]) && val[k].length > 0) {
-          out[k] = val[k];
-        }
-      });
+      Object.keys(val).forEach(k => { if (k !== '_empty' && Array.isArray(val[k]) && val[k].length > 0) out[k] = val[k]; });
       return out;
     }
 
-    function pushDataToFirebase(sectionKey, dataValue) {
+    function pushDataToFirebase(key, val) {
       if (!cloudRef || isApplyingRemoteUpdate) return;
-      let payload = dataValue;
-      if (Array.isArray(dataValue)) {
-        payload = dataValue.length === 0 ? ['_EMPTY_'] : dataValue;
-      } else if (sectionKey === 'savedBatches') {
-        payload = (!dataValue || Object.keys(dataValue).length === 0) ? { _empty: true } : dataValue;
-      }
-      cloudRef.child(sectionKey).set(payload).catch(() => {});
+      let payload = val;
+      if (Array.isArray(val)) payload = val.length === 0 ? ['_EMPTY_'] : val;
+      else if (key === 'savedBatches') payload = (!val || Object.keys(val).length === 0) ? { _empty: true } : val;
+      cloudRef.child(key).set(payload).catch(() => {});
     }
 
-    function logAuditAction(actionText) {
-      const entry = {
-        id: 'log_' + Date.now(),
-        by: currentUser ? currentUser.name : 'مستخدم',
-        action: actionText,
-        time: new Date().toLocaleString('ar-SA')
-      };
-      auditLogs.unshift(entry);
+    function logAuditAction(act) {
+      auditLogs.unshift({ id: 'l_' + Date.now(), by: currentUser ? currentUser.name : 'مستخدم', action: act, time: new Date().toLocaleString('ar-SA') });
       auditLogs = auditLogs.slice(0, 80);
       localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs));
       pushDataToFirebase('auditLogs', auditLogs);
@@ -987,41 +551,24 @@
     function renderAuditLogs() {
       const box = document.getElementById('auditLogsContainer');
       if (!box) return;
-      if (!auditLogs.length) {
-        box.innerHTML = `<div style="color:var(--muted); text-align:center; padding:12px;">لا توجد حركات مسجلة بعد.</div>`;
-        return;
-      }
-      box.innerHTML = auditLogs.map(l => `
-        <div style="padding:7px 4px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; gap:8px;">
-          <span><strong>👤 ${l.by}:</strong> ${l.action}</span>
-          <small style="color:var(--muted); white-space:nowrap;">${l.time}</small>
-        </div>
-      `).join('');
+      if (!auditLogs.length) { box.innerHTML = `<div style="color:var(--muted);text-align:center;padding:10px;">لا توجد حركات مسجلة.</div>`; return; }
+      box.innerHTML = auditLogs.map(l => `<div style="padding:6px 4px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><strong>👤 ${l.by}:</strong> ${l.action}</span><small style="color:var(--muted);">${l.time}</small></div>`).join('');
     }
 
-    function clearAuditLogs() {
-      auditLogs = [];
-      localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs));
-      pushDataToFirebase('auditLogs', auditLogs);
-      renderAuditLogs();
-      showToast('تم مسح سجل الرقابة');
-    }
+    function clearAuditLogs() { auditLogs = []; localStorage.setItem('ocare_audit_logs', '[]'); pushDataToFirebase('auditLogs', []); renderAuditLogs(); }
 
     function initRealtimeFirebaseSync() {
       if (!db || !cloudRef) return;
-
-      cloudRef.on('value', (snapshot) => {
-        const data = snapshot.val();
+      cloudRef.on('value', (snap) => {
+        const data = snap.val();
         if (!data) return;
-
         isApplyingRemoteUpdate = true;
-
         if (data.appConfig) {
           appConfig = {
-            adminEmails: Array.isArray(data.appConfig.adminEmails) ? data.appConfig.adminEmails : ['ershadn2030@gmail.com'],
             adminPin: String(data.appConfig.adminPin || '2020'),
             empPin: String(data.appConfig.empPin || '1235'),
-            activeTheme: String(data.appConfig.activeTheme || 'royal-obsidian'),
+            activeTheme: String(data.appConfig.activeTheme || 'slate-mint'),
+            strictWhitelist: data.appConfig.strictWhitelist !== false,
             soundBeep: data.appConfig.soundBeep !== false,
             flashLight: data.appConfig.flashLight !== false,
             sfdaParser: data.appConfig.sfdaParser !== false,
@@ -1032,63 +579,43 @@
           changeSystemTheme(appConfig.activeTheme, false);
           if (currentUser && currentUser.role === 'admin') renderSettingsUI();
         }
-
         if (data.storeImagesMap && typeof data.storeImagesMap === 'object') {
           storeImagesMap = data.storeImagesMap;
           localStorage.setItem('ocare_store_images_map', JSON.stringify(storeImagesMap));
         }
-
         customCloudProducts = cleanArray(data.customProducts);
         localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
-
         const cloudBatches = cleanBatchesMap(data.savedBatches);
         localStorage.setItem('ocare_saved_batches', JSON.stringify(cloudBatches));
         rebuildAllProductsList(cloudBatches);
-
         barcodeOrders = cleanArray(data.barcodeOrders);
         localStorage.setItem('ocare_barcode_orders', JSON.stringify(barcodeOrders));
-
         shortagesList = cleanArray(data.shortagesList);
         localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList));
-
         shiftNotes = cleanArray(data.shiftNotes);
         localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
-
-        if (data.auditLogs) {
-          auditLogs = cleanArray(data.auditLogs);
-          localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs));
-        }
-
-        renderInventory();
-        renderPriceCalc();
-        renderRegisteredExpiryList();
-        renderBarcodeOrders();
-        renderShortages();
-        renderShiftNotes();
-        renderAuditLogs();
-        updateNotifBadge();
-
+        if (data.auditLogs) { auditLogs = cleanArray(data.auditLogs); localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs)); }
+        renderInventory(); renderPriceCalc(); renderRegisteredExpiryList(); renderBarcodeOrders(); renderShortages(); renderShiftNotes(); renderAuditLogs(); updateNotifBadge();
         isApplyingRemoteUpdate = false;
       });
     }
 
     function rebuildAllProductsList(savedBatchesMap) {
-      const batchesMap = savedBatchesMap || cleanBatchesMap(safeGetStorage('ocare_saved_batches', {}));
+      const bMap = savedBatchesMap || cleanBatchesMap(safeGetStorage('ocare_saved_batches', {}));
       const merged = [...customCloudProducts, ...baseExcelProducts];
       merged.forEach(p => {
         const key = String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_');
-        p.batches = batchesMap[key] || batchesMap[p.barcode] || batchesMap[p.item_number] || [];
-        if (!p.image) {
-          p.image = storeImagesMap[p.barcode] || storeImagesMap[p.item_number] || '';
-        }
+        p.batches = bMap[key] || bMap[p.barcode] || bMap[p.item_number] || [];
+        if (!p.image) p.image = storeImagesMap[p.barcode] || storeImagesMap[p.item_number] || '';
       });
       allProducts = merged;
-      populateFiaDatalist();
+      const el = document.getElementById('fiaDatalist');
+      if (el) el.innerHTML = [...new Set(allProducts.map(p => p.fia))].map(f => `<option value="${f}">`).join('');
     }
 
     function checkMaintenanceBlock() {
       if (appConfig.maintenanceMode && (!currentUser || currentUser.role !== 'admin')) {
-        alert('🛠️ النظام في وضع الجرد والصيانة حالياً من قِبل المطور.');
+        alert('🛠️ النظام في وضع الجرد والصيانة حالياً من قِبل الإدارة.');
         return true;
       }
       return false;
@@ -1096,50 +623,41 @@
 
     function handleLogin(e) {
       if (e && e.preventDefault) e.preventDefault();
-      try {
-        const emailInput = String((document.getElementById('loginEmail') && document.getElementById('loginEmail').value) || '').trim();
-        const pass = String((document.getElementById('loginPass') && document.getElementById('loginPass').value) || '').trim();
+      const emailInput = String((document.getElementById('loginEmail') && document.getElementById('loginEmail').value) || '').trim();
+      const pass = String((document.getElementById('loginPass') && document.getElementById('loginPass').value) || '').trim();
+      if (!pass) return alert('يرجى إدخال رمز الدخول');
 
-        if (!pass) {
-          alert('يرجى إدخال كلمة المرور / الرمز السري');
-          return;
-        }
+      const emailLow = emailInput.toLowerCase();
+      const adminPin = String((appConfig && appConfig.adminPin) || '2020').trim();
+      const empPin = String((appConfig && appConfig.empPin) || '1235').trim();
 
-        const emailLow = emailInput.toLowerCase();
+      if (pass === '2020' || pass === adminPin) {
+        currentUser = { email: emailLow || 'admin@ocare.com', name: 'إرشاد (المطور)', role: 'admin' };
+      } else {
+        if (!emailLow) return alert('يرجى كتابة اسمك أو بريدك المسجل لدى الإدارة أولاً');
         const empList = cleanArray(appConfig && appConfig.employees);
         const matchedEmp = empList.find(u => {
-          const uEm = String(u.email || '').trim().toLowerCase();
-          const uNm = String(u.name || '').trim().toLowerCase();
-          return (emailLow && (uEm === emailLow || uNm === emailLow));
+          const uEm = String(u.email || '').trim().toLowerCase(), uNm = String(u.name || '').trim().toLowerCase();
+          return (uEm && uEm === emailLow) || (uNm && uNm === emailLow);
         });
-
+        if (appConfig.strictWhitelist !== false && !matchedEmp) {
+          return alert('⛔ عفواً، هذا الحساب غير مدرج في قائمة الموظفين المصرح لهم بالدخول!');
+        }
         if (matchedEmp && matchedEmp.active === false) {
-          alert('⛔ هذا الحساب موقوف من قِبل المطور!');
-          return;
+          return alert('⛔ هذا الحساب موقوف من قِبل الإدارة!');
         }
-
-        const adminPin = String((appConfig && appConfig.adminPin) || '2020').trim();
-        const empPin = String((appConfig && appConfig.empPin) || '1235').trim();
-
-        if (pass === '2020' || pass === adminPin) {
-          currentUser = { email: emailLow || 'admin@ocare.com', name: 'إرشاد (المطور)', role: 'admin' };
-        } else if (matchedEmp && matchedEmp.pin && String(matchedEmp.pin).trim() !== '' && pass === String(matchedEmp.pin).trim()) {
-          currentUser = { email: String(matchedEmp.email || emailLow), name: String(matchedEmp.name || emailInput || 'موظف'), role: 'employee' };
-        } else if (pass === '1235' || pass === empPin) {
-          const displayName = matchedEmp ? matchedEmp.name : (emailInput ? (emailInput.includes('@') ? emailInput.split('@')[0] : emailInput) : 'موظف');
-          currentUser = { email: emailLow || 'emp@ocare.com', name: displayName, role: 'employee' };
+        const reqPin = (matchedEmp && matchedEmp.pin && String(matchedEmp.pin).trim() !== '') ? String(matchedEmp.pin).trim() : empPin;
+        if (pass === reqPin || (!matchedEmp && pass === empPin)) {
+          currentUser = { email: matchedEmp ? matchedEmp.email : emailLow, name: matchedEmp ? matchedEmp.name : emailInput, role: 'employee' };
         } else {
-          alert('كلمة المرور أو بيانات الدخول غير صحيحة!');
-          return;
+          return alert('رمز الدخول غير صحيح!');
         }
-
-        localStorage.setItem('ocare_session_user', JSON.stringify(currentUser));
-        document.getElementById('loginOverlay').style.display = 'none';
-        applyPermissionsUI();
-        showToast('مرحباً بك، ' + currentUser.name + ' 👋');
-      } catch (err) {
-        alert('حدث خطأ في قراءة البيانات، يرجى المحاولة مرة أخرى.');
       }
+      localStorage.setItem('ocare_session_user', JSON.stringify(currentUser));
+      document.getElementById('loginOverlay').style.display = 'none';
+      applyPermissionsUI();
+      renderInventory();
+      showToast('مرحباً بك، ' + currentUser.name + ' 👋');
     }
 
     function handleLogout() {
@@ -1150,29 +668,20 @@
 
     function applyPermissionsUI() {
       if (!currentUser) return;
-      try {
-        document.getElementById('userGreeting').innerText = `مرحباً، ${currentUser.name} 👋`;
-        const isAdm = currentUser.role === 'admin';
-        document.getElementById('roleBadge').innerText = isAdm ? '🟢 مطور' : '👤 موظف';
-        document.getElementById('tabBtn_settings').style.display = isAdm ? 'flex' : 'none';
-        document.getElementById('btnClearPrintedBO').style.display = isAdm ? 'inline-block' : 'none';
-        document.querySelectorAll('.admin-export-btns').forEach(el => {
-          el.style.display = isAdm ? 'flex' : 'none';
-        });
-        document.getElementById('empReportRestrictionNotice').style.display = isAdm ? 'none' : 'block';
-        updateNotifBadge();
-        renderSettingsUI();
-      } catch (e) {}
+      const isAdm = currentUser.role === 'admin';
+      document.getElementById('userGreeting').innerText = `مرحباً، ${currentUser.name} 👋`;
+      document.getElementById('roleBadge').innerText = isAdm ? '🟢 مطور' : '👤 موظف';
+      document.getElementById('adminInventoryHeaderCard').style.display = isAdm ? 'block' : 'none';
+      document.getElementById('tabBtn_settings').style.display = isAdm ? 'flex' : 'none';
+      document.getElementById('btnClearPrintedBO').style.display = isAdm ? 'inline-block' : 'none';
+      document.querySelectorAll('.admin-export-btns').forEach(el => { el.style.display = isAdm ? 'flex' : 'none'; });
+      updateNotifBadge();
+      if (isAdm) renderSettingsUI();
     }
 
     function openAddCustomProductModal() {
       if (checkMaintenanceBlock()) return;
-      document.getElementById('cpItemNum').value = '';
-      document.getElementById('cpBarcode').value = '';
-      document.getElementById('cpName').value = '';
-      document.getElementById('cpFia').value = '';
-      document.getElementById('cpPrice').value = '';
-      document.getElementById('cpImage').value = '';
+      ['cpItemNum','cpBarcode','cpName','cpFia','cpPrice','cpImage'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('addCustomProductModal').style.display = 'flex';
     }
 
@@ -1185,332 +694,179 @@
       const price = parseFloat(document.getElementById('cpPrice').value) || 0;
       const image = document.getElementById('cpImage').value.trim();
       if (!name) return alert('يرجى إدخال اسم الصنف');
-
-      const newProd = {
-        uid: 'cp_' + Date.now(),
-        item_number: itemNum || String(Date.now()).slice(-5),
-        barcode: barcode || itemNum || String(Date.now()).slice(-8),
-        name: name,
-        fia: fia,
-        price: Number(price.toFixed(2)),
-        image: image,
-        batches: []
-      };
-
-      customCloudProducts.unshift(newProd);
+      customCloudProducts.unshift({ uid: 'cp_' + Date.now(), item_number: itemNum || String(Date.now()).slice(-5), barcode: barcode || itemNum || String(Date.now()).slice(-8), name, fia, price: Number(price.toFixed(2)), image, batches: [] });
       localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
       pushDataToFirebase('customProducts', customCloudProducts);
-      logAuditAction(`إضافة صنف جديد (${name})`);
-      rebuildAllProductsList();
-      renderInventory();
+      logAuditAction(`إضافة صنف (${name})`);
+      rebuildAllProductsList(); renderInventory();
       document.getElementById('addCustomProductModal').style.display = 'none';
-      showToast('✅ تم حفظ الصنف الجديد بنجاح!');
+      showToast('✅ تم حفظ الصنف الجديد');
     }
 
-    // رفع ملف صور المتجر الإلكتروني وربطها بالباركود أو رقم الصنف
     function handleStoreImagesUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const data = new Uint8Array(e.target.result);
-          const wb = XLSX.read(data, { type: 'array' });
-          const sheet = wb.Sheets[wb.SheetNames[0]];
-          const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-          let linkedCount = 0;
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          let cnt = 0;
           rows.forEach(r => {
             const code = String(r['الباركود'] || r['باركود'] || r['Barcode'] || r['SKU'] || r['رقم الصنف'] || '').replace(/\.0$/, '').trim();
-            const imgUrl = String(r['الصورة'] || r['صورة الصنف'] || r['رابط الصورة'] || r['Image'] || r['Image URL'] || r['image'] || '').trim();
-            if (code && imgUrl && imgUrl.startsWith('http')) {
-              storeImagesMap[code] = imgUrl;
-              linkedCount++;
-            }
+            const img = String(r['الصورة'] || r['صورة الصنف'] || r['رابط الصورة'] || r['Image'] || r['Image URL'] || '').trim();
+            if (code && img && img.startsWith('http')) { storeImagesMap[code] = img; cnt++; }
           });
           localStorage.setItem('ocare_store_images_map', JSON.stringify(storeImagesMap));
           pushDataToFirebase('storeImagesMap', storeImagesMap);
-          rebuildAllProductsList();
-          renderInventory();
-          document.getElementById('linkedImagesCountBadge').innerText = `✅ تم ربط ${linkedCount} صورة منتج بنجاح!`;
-          showToast(`تم ربط ${linkedCount} صورة من ملف المتجر`);
-        } catch (err) {
-          alert('تعذر قراءة ملف المتجر، تأكد من أنه بصيغة Excel أو CSV.');
-        }
+          rebuildAllProductsList(); renderInventory();
+          document.getElementById('linkedImagesCountBadge').innerText = `✅ تم ربط ${cnt} صورة منتج بنجاح!`;
+        } catch(err) { alert('تعذر قراءة الملف'); }
       };
       reader.readAsArrayBuffer(file);
     }
 
     async function autoLoadInventoryFromServer() {
       const savedBatches = cleanBatchesMap(safeGetStorage('ocare_saved_batches', {}));
-      const excelFilesToTry = ['تحديد السعر والقسم.xlsx', 'pharmacy_data.xlsx', 'inventory.xlsx'];
-
-      for (const fileName of excelFilesToTry) {
+      for (const fileName of ['تحديد السعر والقسم.xlsx', 'pharmacy_data.xlsx', 'inventory.xlsx']) {
         try {
           const res = await fetch(fileName);
           if (res.ok) {
             const buf = await res.arrayBuffer();
             const wb = XLSX.read(new Uint8Array(buf), { type: 'array' });
-            const sheet = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+            const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
             const items = [];
             rows.forEach((r, idx) => {
-              const itemNum = String(r['رقم الصنف '] || r['رقم الصنف'] || '').replace(/\.0$/, '').trim();
-              const barcode = String(r['الباركود '] || r['الباركود'] || '').replace(/\.0$/, '').trim();
               const name = String(r['اسم الصنف '] || r['اسم الصنف'] || '').trim();
-              const fia = String(r['الفئة'] || 'مورد عام').trim();
-              const price = parseFloat(r['سعر البيع']) || 0;
-              const img = String(r['الصورة'] || r['صورة الصنف'] || r['Image'] || '').trim();
               if (name) {
                 items.push({
                   uid: 'p_' + idx,
-                  item_number: itemNum,
-                  barcode: barcode,
-                  name: name,
-                  fia: fia,
-                  price: Number(price.toFixed(2)),
-                  image: img,
+                  item_number: String(r['رقم الصنف '] || r['رقم الصنف'] || '').replace(/\.0$/, '').trim(),
+                  barcode: String(r['الباركود '] || r['الباركود'] || '').replace(/\.0$/, '').trim(),
+                  name,
+                  fia: String(r['الفئة'] || 'مورد عام').trim(),
+                  price: Number((parseFloat(r['سعر البيع']) || 0).toFixed(2)),
+                  image: String(r['الصورة'] || r['صورة الصنف'] || r['Image'] || '').trim(),
                   batches: []
                 });
               }
             });
-            if (items.length > 0) {
-              baseExcelProducts = items;
-              rebuildAllProductsList(savedBatches);
-              renderInventory();
-              showToast(`تم تحميل ${allProducts.length.toLocaleString()} صنف!`);
-              return;
-            }
+            if (items.length > 0) { baseExcelProducts = items; rebuildAllProductsList(savedBatches); renderInventory(); return; }
           }
-        } catch (e) {}
+        } catch(e) {}
       }
     }
 
-    function populateFiaDatalist() {
-      const el = document.getElementById('fiaDatalist');
-      if (!el) return;
-      const fiaSet = [...new Set(allProducts.map(p => p.fia))];
-      el.innerHTML = fiaSet.map(f => `<option value="${f}">`).join('');
-    }
-
     function downloadFullClassifiedExcel() {
-      if (!allProducts.length) return alert('تأكد من وجود ملف تحديد السعر والقسم.xlsx بجانب ملف الكود');
-      const exportRows = allProducts.map(p => ({
-        'رقم الصنف': p.item_number,
-        'الباركود': p.barcode,
-        'اسم الصنف': p.name,
-        'الفئة': p.fia,
-        'سعر البيع': p.price
-      }));
-      const ws = XLSX.utils.json_to_sheet(exportRows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'المخزون_17338');
-      XLSX.writeFile(wb, 'تحديد_السعر_مكتمل_17338.xlsx');
-    }
-
-    function downloadThreePartsExcel() {
-      if (!allProducts.length) return;
-      const exportRows = allProducts.map(p => ({
-        'رقم الصنف': p.item_number,
-        'الباركود': p.barcode,
-        'اسم الصنف': p.name,
-        'الفئة': p.fia,
-        'سعر البيع': p.price
-      }));
-      const parts = [
-        { d: exportRows.slice(0, 6000), n: 'مخزون_أوكير_الجزء_1.xlsx' },
-        { d: exportRows.slice(6000, 12000), n: 'مخزون_أوكير_الجزء_2.xlsx' },
-        { d: exportRows.slice(12000), n: 'مخزون_أوكير_الجزء_3.xlsx' }
-      ];
-      parts.forEach(pt => {
-        const ws = XLSX.utils.json_to_sheet(pt.d);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'المخزون');
-        XLSX.writeFile(wb, pt.n);
-      });
+      if (!allProducts.length) return alert('المخزون غير محمل بعد');
+      const ws = XLSX.utils.json_to_sheet(allProducts.map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia, 'سعر البيع': p.price })));
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'المخزون');
+      XLSX.writeFile(wb, 'مخزون_أوكير_الكامل.xlsx');
     }
 
     function renderInventory() {
       const q = String((document.getElementById('mainSearch') && document.getElementById('mainSearch').value) || '').trim().toLowerCase();
       const qNoZero = q.replace(/^0+/, '');
-      document.getElementById('totalLoadedCount').innerText = allProducts.length.toLocaleString();
-
+      if (currentUser && currentUser.role === 'admin') document.getElementById('totalLoadedCount').innerText = allProducts.length.toLocaleString();
       const filtered = allProducts.filter(p => {
         if (!q) return true;
-        const pName = String(p.name || '').toLowerCase();
-        const pBar = String(p.barcode || '').toLowerCase();
-        const pNum = String(p.item_number || '').toLowerCase();
-        return pName.includes(q) || pBar.includes(q) || pNum.includes(q) || (qNoZero && pBar.replace(/^0+/, '').includes(qNoZero));
+        const n = String(p.name || '').toLowerCase(), b = String(p.barcode || '').toLowerCase(), num = String(p.item_number || '').toLowerCase();
+        return n.includes(q) || b.includes(q) || num.includes(q) || (qNoZero && b.replace(/^0+/, '').includes(qNoZero));
       });
-
-      document.getElementById('filteredCountLbl').innerText = `${filtered.length.toLocaleString()} صنف مطابق`;
-      const container = document.getElementById('inventoryList');
-
-      if (!filtered.length) {
-        container.innerHTML = `<div style="text-align:center; padding:25px; color:var(--muted); background:var(--card); border-radius:14px; border:1px solid var(--border);">لا توجد أصناف مطابقة للبحث.</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.slice(0, 60).map(p => {
-        const bHtml = (p.batches && p.batches.length)
-          ? p.batches.map(b => `<span class="tag tag-batch">📅 ${b.exp} (${b.qty})</span>`).join('')
-          : '';
-        const thumbHtml = p.image
-          ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">`
-          : `<span>${String(p.name || '💊').trim().slice(0, 2)}</span>`;
-
-        return `
-          <div class="prod-card">
-            <div class="prod-thumb">${thumbHtml}</div>
-            <div class="prod-info">
-              <div class="prod-name">${p.name}</div>
-              <div class="prod-meta">رقم الصنف: <strong>${p.item_number || '-'}</strong> | الباركود: <strong>${p.barcode || '-'}</strong></div>
-              <div class="prod-tags">
-                <span class="tag tag-fia">${p.fia}</span>
-                <span class="tag tag-price">${Number(p.price || 0).toFixed(2)} ر.س</span>
-                ${bHtml}
-              </div>
-            </div>
-            <div class="prod-actions">
-              <button class="mini-act-btn" style="background:var(--primary-light); color:var(--primary); border-color:var(--primary);" onclick="addToPriceCalc('${p.uid}')">➕ للسعر</button>
-              <button class="mini-act-btn" onclick="quickSendToExpiry('${p.uid}')">📅 تاريخ</button>
-              <button class="mini-act-btn" onclick="addItemToBarcodeOrder('${p.uid}')">🏷️ باركود</button>
+      if (currentUser && currentUser.role === 'admin') document.getElementById('filteredCountLbl').innerText = `المطابق للبحث: ${filtered.length.toLocaleString()} صنف`;
+      const box = document.getElementById('inventoryList');
+      if (!filtered.length) { box.innerHTML = `<div class="bento-card" style="text-align:center;color:var(--muted);">لا توجد أصناف مطابقة للبحث.</div>`; return; }
+      box.innerHTML = filtered.slice(0, 50).map(p => {
+        const bHtml = (p.batches && p.batches.length) ? p.batches.map(b => `<span class="b-chip b-exp">📅 ${b.exp} (${b.qty})</span>`).join('') : '';
+        const thumb = p.image ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">` : `<span>${String(p.name || '💊').trim().slice(0, 2)}</span>`;
+        return `<div class="inv-bento">
+          <div class="inv-thumb">${thumb}</div>
+          <div class="inv-info">
+            <div class="inv-title">${p.name}</div>
+            <div class="inv-codes">رقم: <strong>${p.item_number || '-'}</strong> | باركود: <strong>${p.barcode || '-'}</strong></div>
+            <div><span class="b-chip b-fia">${p.fia}</span>${bHtml}</div>
+          </div>
+          <div class="inv-left">
+            <div class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</div>
+            <div style="display:flex;gap:4px;">
+              <button class="btn-add-p" onclick="addToPriceCalc('${p.uid}')">+ للأسعار</button>
+              <button class="btn-sub" onclick="quickSendToExpiry('${p.uid}')">📅</button>
+              <button class="btn-sub" onclick="addItemToBarcodeOrder('${p.uid}')">🏷️</button>
             </div>
           </div>
-        `;
+        </div>`;
       }).join('');
     }
 
-    // إدارة صفحة حاسبة الأسعار المستقلة
     function addToPriceCalc(uid) {
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
       const ex = priceCart.find(x => x.uid === uid);
-      if (ex) ex.qty += 1;
-      else priceCart.push({ uid: p.uid, name: p.name, item_number: p.item_number, price: p.price, qty: 1 });
+      if (ex) ex.qty += 1; else priceCart.push({ uid: p.uid, name: p.name, item_number: p.item_number, price: p.price, qty: 1 });
       localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart));
-      renderPriceCalc();
-      showToast(`💰 أضيف لحاسبة الأسعار: ${p.name}`);
+      renderPriceCalc(); showToast(`💰 أضيف للأسعار: ${p.name}`);
     }
-
-    function changePriceCartQty(idx, delta) {
-      if (!priceCart[idx]) return;
-      priceCart[idx].qty = Math.max(1, priceCart[idx].qty + delta);
-      localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart));
-      renderPriceCalc();
-    }
-
-    function removeFromPriceCart(idx) {
-      priceCart.splice(idx, 1);
-      localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart));
-      renderPriceCalc();
-    }
+    function changePriceCartQty(i, d) { if (!priceCart[i]) return; priceCart[i].qty = Math.max(1, priceCart[i].qty + d); localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart)); renderPriceCalc(); }
+    function removeFromPriceCart(i) { priceCart.splice(i, 1); localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart)); renderPriceCalc(); }
+    function clearPriceCalc() { priceCart = []; localStorage.setItem('ocare_price_cart', '[]'); renderPriceCalc(); }
 
     function renderPriceCalc() {
-      const box = document.getElementById('priceCalcList');
-      const totalEl = document.getElementById('priceCalcTotal');
-      const subCountEl = document.getElementById('priceCalcSubCount');
+      const box = document.getElementById('priceCalcList'), totalEl = document.getElementById('priceCalcTotal'), subEl = document.getElementById('priceCalcSubCount');
       if (!box || !totalEl) return;
-
       if (!priceCart.length) {
-        box.innerHTML = `<div style="text-align:center; padding:22px; color:var(--muted);">السلة فارغة. امسح أي صنف بالماسح الليزري أو اضغط "➕ للسعر" من المخزون.</div>`;
-        totalEl.innerText = '0.00';
-        if (subCountEl) subCountEl.innerText = '0 أصناف في السلة';
-        return;
+        box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">السلة فارغة. اضغط "+ للأسعار" أو امسح بالليزر.</div>`;
+        totalEl.innerText = '0.00'; if (subEl) subEl.innerText = '(0 أصناف - شامل الضريبة)'; return;
       }
-
       let sum = 0;
-      let totalQty = 0;
-      box.innerHTML = priceCart.map((item, idx) => {
-        const sub = item.price * item.qty;
-        sum += sub;
-        totalQty += item.qty;
-        return `
-          <div class="prod-card" style="margin-bottom:8px;">
-            <div class="prod-info">
-              <div class="prod-name">${item.name}</div>
-              <div class="prod-meta">سعر الحبة: ${Number(item.price).toFixed(2)} ر.س | الإجمالي: <strong style="color:var(--primary);">${sub.toFixed(2)} ر.س</strong></div>
-            </div>
-            <div class="qty-stepper">
-              <button onclick="changePriceCartQty(${idx}, -1)">-</button>
-              <input type="text" readonly value="${item.qty}">
-              <button onclick="changePriceCartQty(${idx}, 1)">+</button>
-            </div>
-            <button onclick="removeFromPriceCart(${idx})" style="border:none; background:rgba(239,68,68,0.2); color:#F87171; padding:7px 9px; border-radius:9px; cursor:pointer;">🗑️</button>
-          </div>
-        `;
+      box.innerHTML = priceCart.map((it, idx) => {
+        const sub = it.price * it.qty; sum += sub;
+        return `<div class="calc-row">
+          <div style="flex:1;"><div style="font-size:0.82rem;font-weight:900;">${it.name}</div><div style="font-size:0.72rem;color:var(--accent);font-weight:800;">${sub.toFixed(2)} ر.س (${Number(it.price).toFixed(2)} × ${it.qty})</div></div>
+          <div class="stepper"><button onclick="changePriceCartQty(${idx},-1)">-</button><span>${it.qty}</span><button onclick="changePriceCartQty(${idx},1)">+</button></div>
+          <button onclick="removeFromPriceCart(${idx})" style="border:none;background:rgba(239,68,68,0.18);color:#FCA5A5;width:30px;height:30px;border-radius:9px;cursor:pointer;">🗑️</button>
+        </div>`;
       }).join('');
-
       totalEl.innerText = sum.toFixed(2);
-      if (subCountEl) subCountEl.innerText = `${priceCart.length} أصناف (${totalQty} قطعة) - شامل الضريبة`;
-    }
-
-    function clearPriceCalc() {
-      priceCart = [];
-      localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart));
-      renderPriceCalc();
-      showToast('تم تفريغ سلة الأسعار');
+      if (subEl) subEl.innerText = `(${priceCart.length} أصناف - شامل الضريبة)`;
     }
 
     function sharePriceInvoice() {
       if (!priceCart.length) return alert('السلة فارغة');
       let sum = 0;
-      const lines = priceCart.map((it, i) => {
-        const sub = it.price * it.qty;
-        sum += sub;
-        return `${i + 1}. ${it.name} (×${it.qty}) = ${sub.toFixed(2)} ر.س`;
-      });
-      const text = `🧾 *بيان أسعار - صيدلية أوكير O CARE*\n` + lines.join('\n') + `\n------------------\n💰 *الإجمالي:* ${sum.toFixed(2)} ريال`;
-      if (navigator.share) {
-        navigator.share({ title: 'بيان أسعار أوكير', text }).catch(() => {});
-      } else {
-        navigator.clipboard.writeText(text);
-        showToast('📋 تم نسخ بيان الأسعار للحافظة');
-      }
+      const lines = priceCart.map((it, i) => { const s = it.price * it.qty; sum += s; return `${i+1}. ${it.name} (×${it.qty}) = ${s.toFixed(2)} ر.س`; });
+      const text = `🧾 *بيان أسعار - أوكير O CARE*\n` + lines.join('\n') + `\n---\n💰 *الإجمالي:* ${sum.toFixed(2)} ر.س`;
+      if (navigator.share) navigator.share({ title: 'بيان أسعار', text }).catch(() => {});
+      else { navigator.clipboard.writeText(text); showToast('📋 تم نسخ الفاتورة'); }
     }
 
-    // إدارة التواريخ والدفعات
     function saveBatchesToStorage() {
       const map = {};
-      allProducts.forEach(p => {
-        if (p.batches && p.batches.length > 0) {
-          const rawKey = String(p.barcode || p.item_number || p.uid);
-          const safeKey = rawKey.replace(/[.#$\[\]\/]/g, '_');
-          map[safeKey] = p.batches;
-        }
-      });
+      allProducts.forEach(p => { if (p.batches && p.batches.length > 0) map[String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_')] = p.batches; });
       localStorage.setItem('ocare_saved_batches', JSON.stringify(map));
       pushDataToFirebase('savedBatches', map);
     }
 
     function addExpiryBatchRow(exp = '', qty = '') {
-      const box = document.getElementById('expiryBatchesBox');
       const row = document.createElement('div');
-      row.style.cssText = 'display:grid; grid-template-columns:1fr 1fr 34px; gap:6px; margin-bottom:6px;';
-      row.innerHTML = `
-        <input type="text" class="b-exp" placeholder="التاريخ (10/2026)" value="${exp}" style="padding:9px; border-radius:9px; border:1px solid var(--border); background:var(--card-alt); color:var(--text);">
-        <input type="number" class="b-qty" placeholder="العدد (12)" value="${qty}" style="padding:9px; border-radius:9px; border:1px solid var(--border); background:var(--card-alt); color:var(--text);">
-        <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.2); color:#F87171; border:none; border-radius:9px; font-weight:bold; cursor:pointer;">✕</button>
-      `;
-      box.appendChild(row);
+      row.className = 'calc-row';
+      row.innerHTML = `<input type="text" class="b-exp-inp" placeholder="التاريخ (2026/10)" value="${exp}" style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);">
+        <input type="number" class="b-qty-inp" placeholder="الكمية (12)" value="${qty}" style="width:90px;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-align:center;">
+        <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.2);color:#FCA5A5;border:none;width:30px;height:30px;border-radius:9px;cursor:pointer;">✕</button>`;
+      document.getElementById('expiryBatchesBox').appendChild(row);
     }
 
     function quickSendToExpiry(uid) { switchTab('expiry'); selectProductForExpiry(uid); }
 
-    function selectProductForExpiry(uid, autoExpDate = '') {
+    function selectProductForExpiry(uid, autoExp = '') {
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
       document.getElementById('expSelectedUid').value = p.uid;
       document.getElementById('expSelectedName').value = `${p.name} (${p.item_number})`;
       document.getElementById('expSearchResults').style.display = 'none';
       document.getElementById('expSearchInp').value = '';
-      const box = document.getElementById('expiryBatchesBox');
-      box.innerHTML = '';
-      if (p.batches && p.batches.length) {
-        p.batches.forEach(b => addExpiryBatchRow(b.exp, b.qty));
-        if (autoExpDate) addExpiryBatchRow(autoExpDate, '1');
-      } else {
-        addExpiryBatchRow(autoExpDate, autoExpDate ? '1' : '');
-      }
+      const box = document.getElementById('expiryBatchesBox'); box.innerHTML = '';
+      if (p.batches && p.batches.length) { p.batches.forEach(b => addExpiryBatchRow(b.exp, b.qty)); if (autoExp) addExpiryBatchRow(autoExp, '1'); }
+      else addExpiryBatchRow(autoExp, autoExp ? '1' : '');
     }
 
     function saveItemExpiryBatches() {
@@ -1519,123 +875,69 @@
       if (!uid) return alert('اختر صنفاً أولاً');
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
-      const rows = document.querySelectorAll('#expiryBatchesBox > div');
-      const newBatches = [];
-      rows.forEach(r => {
-        const exp = r.querySelector('.b-exp').value.trim();
-        const qty = r.querySelector('.b-qty').value.trim();
-        if (exp && qty) newBatches.push({ exp, qty: parseInt(qty, 10) || 1, by: currentUser ? currentUser.name : 'موظف', date: new Date().toLocaleDateString('ar-SA') });
+      const newB = [];
+      document.querySelectorAll('#expiryBatchesBox > div').forEach(r => {
+        const exp = r.querySelector('.b-exp-inp').value.trim(), qty = r.querySelector('.b-qty-inp').value.trim();
+        if (exp && qty) newB.push({ exp, qty: parseInt(qty, 10) || 1, by: currentUser ? currentUser.name : 'موظف', date: new Date().toLocaleDateString('ar-SA') });
       });
-      p.batches = newBatches;
-      saveBatchesToStorage();
-      logAuditAction(`تسجيل تاريخ صلاحية لصنف (${p.name})`);
-      renderRegisteredExpiryList();
-      renderInventory();
-      showToast('تم حفظ التواريخ بنجاح ✅');
+      p.batches = newB; saveBatchesToStorage(); logAuditAction(`تسجيل تاريخ (${p.name})`); renderRegisteredExpiryList(); renderInventory(); showToast('✅ تم حفظ التواريخ');
     }
 
     function deleteAllProductBatches(uid) {
       if (checkMaintenanceBlock()) return;
       const p = allProducts.find(x => x.uid === uid);
-      if (!p) return;
-      p.batches = [];
-      saveBatchesToStorage();
-      logAuditAction(`حذف تواريخ الصلاحية لصنف (${p.name})`);
-      renderRegisteredExpiryList();
-      renderInventory();
-      showToast('تم حذف تاريخ الصنف ✅');
+      if (p) { p.batches = []; saveBatchesToStorage(); renderRegisteredExpiryList(); renderInventory(); }
     }
 
     function renderRegisteredExpiryList() {
       const reg = allProducts.filter(p => p.batches && p.batches.length > 0);
       document.getElementById('expRegisteredCount').innerText = `${reg.length} صنف`;
-      const isAdm = currentUser && currentUser.role === 'admin';
-      const box = document.getElementById('expRegisteredList');
-      if (!reg.length) {
-        box.innerHTML = `<div style="text-align:center; padding:18px; color:var(--muted);">لا توجد تواريخ مسجلة حالياً.</div>`;
-        return;
-      }
-      box.innerHTML = reg.map(p => `
-        <div class="prod-card" style="margin-bottom:6px;">
-          <div class="prod-info">
-            <div class="prod-name">${p.name}</div>
-            <div class="prod-meta">رقم الصنف: ${p.item_number} | الباركود: ${p.barcode}</div>
-            <div class="prod-tags">
-              ${p.batches.map(b => `<span class="tag tag-batch">📅 ${b.exp} (العدد: ${b.qty}) ${isAdm ? `| 👤 ${b.by}` : ''}</span>`).join('')}
-            </div>
-          </div>
-          <div style="display:flex; gap:5px;">
-            <button class="mini-act-btn" onclick="selectProductForExpiry('${p.uid}')">✏️ تعديل</button>
-            <button class="mini-act-btn" style="background:rgba(239,68,68,0.2); color:#F87171;" onclick="deleteAllProductBatches('${p.uid}')">🗑️</button>
-          </div>
-        </div>
-      `).join('');
+      const isAdm = currentUser && currentUser.role === 'admin', box = document.getElementById('expRegisteredList');
+      if (!reg.length) { box.innerHTML = `<div style="text-align:center;padding:14px;color:var(--muted);font-size:0.8rem;">لا توجد تواريخ مسجلة.</div>`; return; }
+      box.innerHTML = reg.map(p => `<div class="calc-row">
+        <div style="flex:1;"><div style="font-size:0.82rem;font-weight:900;">${p.name}</div><div style="margin-top:4px;">${p.batches.map(b => `<span class="b-chip b-exp">📅 (${b.exp}) - العدد (${b.qty}) ${isAdm ? `| ${b.by}` : ''}</span>`).join('')}</div></div>
+        <button class="btn-sub" onclick="selectProductForExpiry('${p.uid}')">✏️</button>
+        <button class="btn-sub" style="color:#FCA5A5;" onclick="deleteAllProductBatches('${p.uid}')">🗑️</button>
+      </div>`).join('');
     }
 
-    // إدارة أوامر طباعة الباركود
-    function syncBarcodeOrders() {
-      localStorage.setItem('ocare_barcode_orders', JSON.stringify(barcodeOrders));
-      pushDataToFirebase('barcodeOrders', barcodeOrders);
-      renderBarcodeOrders();
-    }
+    function syncBarcodeOrders() { localStorage.setItem('ocare_barcode_orders', JSON.stringify(barcodeOrders)); pushDataToFirebase('barcodeOrders', barcodeOrders); renderBarcodeOrders(); }
 
     function addItemToBarcodeOrder(uid) {
       if (checkMaintenanceBlock()) return;
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
       const grp = document.getElementById('boGroupSelect').value;
-      const existing = barcodeOrders.find(x => x.uid === uid && x.group === grp);
-      if (existing) existing.qty += 1;
-      else barcodeOrders.unshift({ uid: p.uid, item_number: p.item_number || 'بدون رقم', barcode: p.barcode || '-', name: p.name, price: p.price, qty: 1, group: grp, done: false });
-      syncBarcodeOrders();
-      showToast(`🏷️ أضيف لأمر الباركود (${grp})`);
+      const ex = barcodeOrders.find(x => x.uid === uid && x.group === grp);
+      if (ex) ex.qty += 1; else barcodeOrders.unshift({ uid: p.uid, item_number: p.item_number || '00', barcode: p.barcode || '-', name: p.name, price: p.price, qty: 1, group: grp, done: false });
+      syncBarcodeOrders(); showToast(`🏷️ أضيف للباركود (${grp})`);
     }
 
     function renderBarcodeOrders() {
       const grp = document.getElementById('boGroupSelect').value;
       const list = barcodeOrders.filter(x => x.group === grp);
-      const isAdm = currentUser && currentUser.role === 'admin';
-      const box = document.getElementById('barcodeOrdersContainer');
-      if (!list.length) { box.innerHTML = `<div style="text-align:center; padding:20px; color:var(--muted);">لا توجد أصناف في ${grp}.</div>`; return; }
-      box.innerHTML = list.map(item => `
-        <div class="barcode-order-item ${item.done ? 'printed' : ''}">
-          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleBarcodeOrderDone('${item.uid}','${item.group}')" style="width:22px; height:22px; cursor:pointer;">
-          <div class="big-item-num">${item.item_number}</div>
-          <div class="bo-details">
-            <strong>${item.name}</strong>
-            <span>الباركود: ${item.barcode} | السعر: ${item.price} ر.س</span>
-          </div>
-          <div class="qty-stepper">
-            <button onclick="changeBOQty('${item.uid}','${item.group}', -1)">-</button>
-            <input type="number" value="${item.qty}" onchange="setBOQty('${item.uid}','${item.group}', this.value)">
-            <button onclick="changeBOQty('${item.uid}','${item.group}', 1)">+</button>
-          </div>
-          ${isAdm ? `<button onclick="deleteBOItem('${item.uid}','${item.group}')" style="border:none;background:rgba(239,68,68,0.2);color:#F87171;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+      const isAdm = currentUser && currentUser.role === 'admin', box = document.getElementById('barcodeOrdersContainer');
+      if (!list.length) { box.innerHTML = `<div style="grid-column:span 2;text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">لا توجد أصناف في ${grp}.</div>`; return; }
+      box.innerHTML = list.map(it => `<div class="bo-card ${it.done ? 'printed' : ''}">
+        <div class="bo-num">${it.item_number}</div>
+        <div style="font-size:0.75rem;font-weight:800;text-align:center;height:32px;overflow:hidden;">${it.name}</div>
+        <div class="bo-pill ${it.done ? 'done' : ''}" onclick="toggleBarcodeOrderDone('${it.uid}','${it.group}')">${it.done ? '✔️ مطبوع' : 'مطبوع / غير مطبوع'}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="stepper"><button onclick="changeBOQty('${it.uid}','${it.group}',-1)">-</button><span>${it.qty}</span><button onclick="changeBOQty('${it.uid}','${it.group}',1)">+</button></div>
+          ${isAdm ? `<button onclick="deleteBOItem('${it.uid}','${it.group}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:5px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
         </div>
-      `).join('');
+      </div>`).join('');
     }
 
     function toggleBarcodeOrderDone(uid, grp) {
-      const item = barcodeOrders.find(x => x.uid === uid && x.group === grp);
-      if (item) {
-        item.done = !item.done;
-        if (item.done && currentUser && currentUser.role === 'admin') {
-          barcodeOrders = barcodeOrders.filter(x => !(x.uid === uid && x.group === grp));
-        }
-        syncBarcodeOrders();
-      }
+      const it = barcodeOrders.find(x => x.uid === uid && x.group === grp);
+      if (it) { it.done = !it.done; syncBarcodeOrders(); }
     }
     function changeBOQty(uid, grp, d) { const it = barcodeOrders.find(x => x.uid === uid && x.group === grp); if (it) { it.qty = Math.max(1, it.qty + d); syncBarcodeOrders(); } }
-    function setBOQty(uid, grp, v) { const it = barcodeOrders.find(x => x.uid === uid && x.group === grp); if (it) { it.qty = Math.max(1, parseInt(v,10)||1); syncBarcodeOrders(); } }
     function deleteBOItem(uid, grp) { barcodeOrders = barcodeOrders.filter(x => !(x.uid === uid && x.group === grp)); syncBarcodeOrders(); }
     function clearPrintedBarcodeOrders() { barcodeOrders = barcodeOrders.filter(x => !x.done); syncBarcodeOrders(); }
 
-    // إدارة النواقص وطلبات الفروع
-    function syncShortages() {
-      localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList));
-      pushDataToFirebase('shortagesList', shortagesList);
-      renderShortages();
-    }
+    function syncShortages() { localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList)); pushDataToFirebase('shortagesList', shortagesList); renderShortages(); }
 
     function addItemToShortages(uid) {
       if (checkMaintenanceBlock()) return;
@@ -1643,159 +945,91 @@
       if (!p) return;
       const br = document.getElementById('branchSelect').value;
       const ex = shortagesList.find(x => x.uid === uid && x.branch === br);
-      if (ex) ex.qty += 1;
-      else shortagesList.unshift({ uid: p.uid, item_number: p.item_number, barcode: p.barcode, name: p.name, fia: p.fia, branch: br, qty: 1, date: new Date().toLocaleDateString('ar-SA') });
-      syncShortages();
-      showToast(`🏥 أضيف إلى ${br} (العدد: 1)`);
+      if (ex) ex.qty += 1; else shortagesList.unshift({ uid: p.uid, item_number: p.item_number, barcode: p.barcode, name: p.name, fia: p.fia, branch: br, qty: 1, date: new Date().toLocaleDateString('ar-SA') });
+      syncShortages(); showToast(`🏥 أضيف إلى ${br}`);
     }
 
     function renderShortages() {
       const br = document.getElementById('branchSelect').value;
       const list = shortagesList.filter(x => x.branch === br);
-      const isAdm = currentUser && currentUser.role === 'admin';
-      const box = document.getElementById('shortagesListContainer');
-      if (!list.length) { box.innerHTML = `<div style="text-align:center; padding:20px; color:var(--muted);">لا توجد أصناف مسجلة في (${br}).</div>`; return; }
-      box.innerHTML = list.map(item => `
-        <div class="prod-card" style="margin-bottom:8px;">
-          <div class="prod-info">
-            <div class="prod-name">${item.name}</div>
-            <div class="prod-meta">رقم الصنف: <strong>${item.item_number}</strong> | الفئة: ${item.fia}</div>
-          </div>
-          <div class="qty-stepper">
-            <button onclick="changeShortQty('${item.uid}','${item.branch}', -1)">-</button>
-            <input type="number" value="${item.qty}" onchange="setShortQty('${item.uid}','${item.branch}', this.value)">
-            <button onclick="changeShortQty('${item.uid}','${item.branch}', 1)">+</button>
-          </div>
-          ${isAdm ? `<button onclick="deleteShortItem('${item.uid}','${item.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#F87171;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
-        </div>
-      `).join('');
+      const isAdm = currentUser && currentUser.role === 'admin', box = document.getElementById('shortagesListContainer');
+      if (!list.length) { box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">لا توجد مواد مطلوبة في (${br}).</div>`; return; }
+      box.innerHTML = list.map(it => `<div class="calc-row">
+        <div style="flex:1;"><span class="b-chip b-exp" style="margin-bottom:4px;">حالة: مطلوب (${it.date || ''})</span><div style="font-size:0.82rem;font-weight:900;">${it.name}</div><div style="font-size:0.7rem;color:var(--muted);">رقم: ${it.item_number} | ${it.branch}</div></div>
+        <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><span>${it.qty}</span><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
+        ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+      </div>`).join('');
     }
     function changeShortQty(uid, br, d) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, it.qty + d); syncShortages(); } }
-    function setShortQty(uid, br, v) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, parseInt(v,10)||1); syncShortages(); } }
     function deleteShortItem(uid, br) { shortagesList = shortagesList.filter(x => !(x.uid === uid && x.branch === br)); syncShortages(); }
 
-    // إدارة ملاحظات الشفت
     function previewNoteImage(e) {
-      const f = e.target.files[0];
-      if (!f) return;
+      const f = e.target.files[0]; if (!f) return;
       const r = new FileReader();
       r.onload = ev => { tempNoteImageBase64 = ev.target.result; const img = document.getElementById('noteImgPreview'); img.src = tempNoteImageBase64; img.style.display = 'block'; };
       r.readAsDataURL(f);
     }
 
     function addShiftNote() {
-      const txt = document.getElementById('noteTextInp').value.trim();
-      const target = document.getElementById('noteTargetSelect').value;
+      const txt = document.getElementById('noteTextInp').value.trim(), target = document.getElementById('noteTargetSelect').value;
       if (!txt && !tempNoteImageBase64) return alert('اكتب ملاحظة أو أرفق صورة');
       shiftNotes.unshift({ id: 'n_' + Date.now(), text: txt, target, img: tempNoteImageBase64, by: currentUser ? currentUser.name : 'موظف', time: new Date().toLocaleString('ar-SA'), read: false });
-      localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
-      pushDataToFirebase('shiftNotes', shiftNotes);
-      document.getElementById('noteTextInp').value = '';
-      document.getElementById('noteImgPreview').style.display = 'none';
-      tempNoteImageBase64 = '';
-      renderShiftNotes();
-      updateNotifBadge();
-      showToast('تم إرسال الملاحظة بنجاح ✅');
+      localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes);
+      document.getElementById('noteTextInp').value = ''; document.getElementById('noteImgPreview').style.display = 'none'; tempNoteImageBase64 = '';
+      renderShiftNotes(); updateNotifBadge(); showToast('✅ تم إرسال الملاحظة');
     }
 
     function renderShiftNotes() {
-      const box = document.getElementById('shiftNotesContainer');
-      const isAdm = currentUser && currentUser.role === 'admin';
-      const visible = shiftNotes.filter(n => (n.target !== 'المطور' && n.target !== 'المشرف') || isAdm);
-      if (!visible.length) { box.innerHTML = `<div style="text-align:center; padding:18px; color:var(--muted);">لا توجد ملاحظات.</div>`; return; }
-      box.innerHTML = visible.map(n => `
-        <div class="prod-card" style="margin-bottom:8px; flex-direction:column; align-items:stretch;">
-          <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-bottom:4px;">
-            <strong>👤 ${n.by} (${n.target})</strong><span>${n.time}</span>
-          </div>
-          <p style="font-size:0.84rem; margin-bottom:6px;">${n.text}</p>
-          ${n.img ? `<img src="${n.img}" style="max-width:100%; border-radius:10px; margin-bottom:6px;">` : ''}
-          <div style="display:flex; gap:6px;">
-            ${!n.read ? `<button class="mini-act-btn" onclick="markNoteRead('${n.id}')">✅ تم الاطلاع</button>` : ''}
-            <button class="mini-act-btn" style="background:rgba(239,68,68,0.2);color:#F87171;" onclick="deleteShiftNote('${n.id}')">🗑️ حذف</button>
-          </div>
-        </div>
-      `).join('');
+      const box = document.getElementById('shiftNotesContainer'), isAdm = currentUser && currentUser.role === 'admin';
+      const vis = shiftNotes.filter(n => n.target !== 'المطور' || isAdm);
+      if (!vis.length) { box.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">لا توجد ملاحظات.</div>`; return; }
+      box.innerHTML = vis.map(n => `<div class="calc-row" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);"><strong>👤 ${n.by} (${n.target})</strong><span>${n.time}</span></div>
+        <p style="font-size:0.83rem;margin:6px 0;">${n.text}</p>
+        ${n.img ? `<img src="${n.img}" style="max-width:100%;border-radius:10px;margin-bottom:6px;">` : ''}
+        <div style="display:flex;gap:6px;">${!n.read ? `<button class="btn-sub" onclick="markNoteRead('${n.id}')">✅ تم الاطلاع</button>` : ''}<button class="btn-sub" style="color:#FCA5A5;" onclick="deleteShiftNote('${n.id}')">🗑️ حذف</button></div>
+      </div>`).join('');
     }
+    function markNoteRead(id) { const n = shiftNotes.find(x => x.id === id); if (n) { n.read = true; localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes); renderShiftNotes(); updateNotifBadge(); } }
+    function deleteShiftNote(id) { shiftNotes = shiftNotes.filter(x => x.id !== id); localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes); renderShiftNotes(); updateNotifBadge(); }
+    function updateNotifBadge() { const u = shiftNotes.filter(n => !n.read).length, b = document.getElementById('notifBadge'); if (b) { b.style.display = u > 0 ? 'flex' : 'none'; b.innerText = u; } }
 
-    function markNoteRead(id) {
-      const n = shiftNotes.find(x => x.id === id);
-      if (n) {
-        n.read = true;
-        localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
-        pushDataToFirebase('shiftNotes', shiftNotes);
-        renderShiftNotes();
-        updateNotifBadge();
-      }
-    }
-    function deleteShiftNote(id) {
-      shiftNotes = shiftNotes.filter(x => x.id !== id);
-      localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
-      pushDataToFirebase('shiftNotes', shiftNotes);
-      renderShiftNotes();
-      updateNotifBadge();
-    }
-    function updateNotifBadge() { const u = shiftNotes.filter(n => !n.read).length; const b = document.getElementById('notifBadge'); if (b) { b.style.display = u > 0 ? 'flex' : 'none'; b.innerText = u; } }
-
-    // التقارير الـ 5 والشركات
     function renderBrandsGrid() {
-      const q = (document.getElementById('brandSearchInp').value || '').trim().toLowerCase();
-      const brandMap = {};
+      const q = (document.getElementById('brandSearchInp').value || '').trim().toLowerCase(), map = {};
       allProducts.forEach(p => {
-        if (p.fia && (p.fia.toLowerCase().includes('medicine') || p.fia.includes('ادويه') || p.fia.includes('أدوية'))) return;
-        const firstWord = String(p.name || '').split(/\s+/)[0];
-        if (!firstWord || firstWord.length < 2) return;
-        if (!brandMap[firstWord]) brandMap[firstWord] = [];
-        brandMap[firstWord].push(p);
+        if (p.fia && (p.fia.toLowerCase().includes('medicine') || p.fia.includes('ادويه'))) return;
+        const w = String(p.name || '').split(/\s+/)[0];
+        if (!w || w.length < 2) return;
+        if (!map[w]) map[w] = []; map[w].push(p);
       });
-      const brands = Object.keys(brandMap).filter(b => brandMap[b].length >= 3 && (!q || b.toLowerCase().includes(q))).sort((a, b) => brandMap[b].length - brandMap[a].length).slice(0, 45);
-      document.getElementById('brandsGridBox').innerHTML = brands.map(b => `
-        <div class="brand-card" onclick="activeBrandName='${b}';openReportPreview('brand');">
-          <div class="brand-avatar">${b.slice(0, 2)}</div>
-          <div class="brand-name">${b}</div>
-          <div class="brand-cnt">${brandMap[b].length} صنف</div>
-        </div>
-      `).join('');
+      const brands = Object.keys(map).filter(b => map[b].length >= 3 && (!q || b.toLowerCase().includes(q))).sort((a,b) => map[b].length - map[a].length).slice(0, 42);
+      document.getElementById('brandsGridBox').innerHTML = brands.map(b => `<div class="brand-card" onclick="activeBrandName='${b}';openReportPreview('brand');"><div class="brand-av">${b.slice(0,2)}</div><div style="font-size:0.74rem;font-weight:800;">${b}</div><div style="font-size:0.65rem;color:var(--muted);">${map[b].length} صنف</div></div>`).join('');
     }
 
     function getReportDataset(type) {
       const isAdm = currentUser && currentUser.role === 'admin';
       if (type === 'expiry') {
         const rows = [];
-        allProducts.filter(p => p.batches && p.batches.length).forEach(p => {
-          p.batches.forEach(b => {
-            const o = { 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'تاريخ الصلاحية': b.exp, 'العدد': b.qty };
-            if (isAdm) { o['السعر'] = p.price; o['الموظف المسجل'] = b.by; }
-            rows.push(o);
-          });
-        });
+        allProducts.filter(p => p.batches && p.batches.length).forEach(p => p.batches.forEach(b => {
+          const o = { 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'تاريخ الصلاحية': b.exp, 'العدد': b.qty };
+          if (isAdm) { o['السعر'] = p.price; o['الموظف'] = b.by; }
+          rows.push(o);
+        }));
         return { title: 'تقرير تواريخ الصلاحية', rows };
       }
       if (type === 'barcodeOrder') {
         const grp = document.getElementById('boGroupSelect').value;
-        const rows = barcodeOrders.filter(x => x.group === grp).map(x => ({ 'رقم الصنف البارز': x.item_number, 'اسم الصنف': x.name, 'الباركود': x.barcode, 'العدد المطلوب': x.qty }));
-        return { title: `كشف أمر طباعة الباركودات (${grp})`, rows };
+        return { title: `أمر طباعة الباركود (${grp})`, rows: barcodeOrders.filter(x => x.group === grp).map(x => ({ 'رقم الصنف البارز': x.item_number, 'اسم الصنف': x.name, 'الباركود': x.barcode, 'العدد': x.qty })) };
       }
       if (type === 'fia') {
-        const fVal = document.getElementById('fiaFilterInp').value.trim().toLowerCase();
-        const rows = allProducts.filter(p => !fVal || String(p.fia || '').toLowerCase().includes(fVal)).map(p => {
-          const o = { 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia };
-          if (isAdm) o['السعر'] = p.price;
-          return o;
-        });
-        return { title: `تقرير الفئة: ${fVal || 'الكل'}`, rows };
+        const f = document.getElementById('fiaFilterInp').value.trim().toLowerCase();
+        return { title: `تقرير الفئة: ${f || 'الكل'}`, rows: allProducts.filter(p => !f || String(p.fia || '').toLowerCase().includes(f)).map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia })) };
       }
       if (type === 'brand') {
-        const rows = allProducts.filter(p => !(p.fia && p.fia.toLowerCase().includes('medicine')) && String(p.name || '').startsWith(activeBrandName)).map(p => {
-          const o = { 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia };
-          if (isAdm) o['السعر'] = p.price;
-          return o;
-        });
-        return { title: `تقرير العلامة التجارية: ${activeBrandName}`, rows };
+        return { title: `الشركة: ${activeBrandName}`, rows: allProducts.filter(p => String(p.name || '').startsWith(activeBrandName)).map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia })) };
       }
       if (type === 'shortages') {
-        const rows = shortagesList.map(x => ({ 'الجهة': x.branch, 'رقم الصنف': x.item_number, 'الباركود': x.barcode, 'اسم الصنف': x.name, 'العدد': x.qty }));
-        return { title: 'تقرير النواقص وطلبات الفروع', rows };
+        return { title: 'تقرير النواقص والفروع', rows: shortagesList.map(x => ({ 'الجهة': x.branch, 'رقم الصنف': x.item_number, 'الباركود': x.barcode, 'اسم الصنف': x.name, 'العدد': x.qty })) };
       }
       return { title: 'تقرير', rows: [] };
     }
@@ -1804,152 +1038,83 @@
       const data = getReportDataset(type);
       document.getElementById('previewModalTitle').innerText = `${data.title} (${data.rows.length})`;
       const box = document.getElementById('previewModalContent');
-      if (!data.rows.length) box.innerHTML = `<div style="text-align:center; padding:30px;">لا توجد بيانات.</div>`;
+      if (!data.rows.length) box.innerHTML = `<div style="text-align:center;padding:24px;">لا توجد بيانات.</div>`;
       else {
         const cols = Object.keys(data.rows[0]);
-        box.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.76rem;"><thead><tr style="background:var(--navy); color:#fff;">${cols.map(c => `<th style="padding:8px; border:1px solid var(--border);">${c}</th>`).join('')}</tr></thead><tbody>${data.rows.slice(0, 300).map(r => `<tr>${cols.map(c => `<td style="padding:7px; border:1px solid var(--border); ${c === 'رقم الصنف البارز' ? 'font-size:1.15rem; font-weight:900; color:var(--primary);' : ''}">${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+        box.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.75rem;"><thead><tr style="background:rgba(0,0,0,0.3);">${cols.map(c => `<th style="padding:8px;border:1px solid var(--border);">${c}</th>`).join('')}</tr></thead><tbody>${data.rows.slice(0,250).map(r => `<tr>${cols.map(c => `<td style="padding:7px;border:1px solid var(--border);">${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
       }
       document.getElementById('previewModal').style.display = 'flex';
     }
-    function closePreviewModal() { document.getElementById('previewModal').style.display = 'none'; }
 
     function exportReportExcel(type) {
       if (!currentUser || currentUser.role !== 'admin') return;
       const data = getReportDataset(type);
       if (!data.rows.length) return alert('لا توجد بيانات');
-      const ws = XLSX.utils.json_to_sheet(data.rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "التقرير");
-      XLSX.writeFile(wb, `${data.title}.xlsx`);
+      const ws = XLSX.utils.json_to_sheet(data.rows), wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'التقرير'); XLSX.writeFile(wb, `${data.title}.xlsx`);
     }
 
     function exportReportPDF(type) {
       if (!currentUser || currentUser.role !== 'admin') return;
       const data = getReportDataset(type);
       if (!data.rows.length) return alert('لا توجد بيانات');
-      const cols = Object.keys(data.rows[0]);
-      const win = window.open('', '_blank');
-      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Tahoma,sans-serif;padding:24px;}table{width:100%;border-collapse:collapse;font-size:12px;}th{background:#0B1957;color:#FFF;padding:9px;border:1px solid #0B1957;text-align:right;}td{padding:8px;border:1px solid #CBD5E1;}.big-num{font-size:18px;font-weight:900;color:#0B1957;}</style></head><body><h2>أوكير O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r => `<tr>${cols.map(c => `<td class="${c === 'رقم الصنف البارز' ? 'big-num' : ''}">${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
+      const cols = Object.keys(data.rows[0]), win = window.open('', '_blank');
+      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Tahoma;padding:20px;}table{width:100%;border-collapse:collapse;font-size:12px;}th,td{padding:8px;border:1px solid #999;text-align:right;}</style></head><body><h2>أوكير O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
       win.document.close();
     }
 
     function searchForSubModule(mod, val) {
-      const boxMap = {
-        pricing: 'priceSearchResults',
-        expiry: 'expSearchResults',
-        barcodeOrder: 'boSearchResults',
-        shortages: 'shortSearchResults'
-      };
-      const box = document.getElementById(boxMap[mod]);
-      if (!box) return;
-      const q = val.trim().toLowerCase();
-      if (!q) { box.style.display = 'none'; return; }
-      const matches = allProducts.filter(p => String(p.name || '').toLowerCase().includes(q) || String(p.barcode || '').toLowerCase().includes(q) || String(p.item_number || '').toLowerCase().includes(q)).slice(0, 8);
-      box.innerHTML = matches.map(p => `<div onclick="handleSubModuleSelect('${mod}','${p.uid}')" style="padding:9px 12px; border-bottom:1px solid var(--border); cursor:pointer; font-size:0.8rem;"><strong>${p.item_number}</strong> - ${p.name} (${p.price} ر.س)</div>`).join('');
+      const map = { pricing: 'priceSearchResults', expiry: 'expSearchResults', barcodeOrder: 'boSearchResults', shortages: 'shortSearchResults' };
+      const box = document.getElementById(map[mod]); if (!box) return;
+      const q = val.trim().toLowerCase(); if (!q) { box.style.display = 'none'; return; }
+      const m = allProducts.filter(p => String(p.name || '').toLowerCase().includes(q) || String(p.barcode || '').toLowerCase().includes(q) || String(p.item_number || '').toLowerCase().includes(q)).slice(0, 8);
+      box.innerHTML = m.map(p => `<div onclick="handleSubModuleSelect('${mod}','${p.uid}')" style="padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:0.78rem;"><strong>${p.item_number}</strong> - ${p.name} (${p.price} ر.س)</div>`).join('');
       box.style.display = 'block';
     }
 
     function handleSubModuleSelect(mod, uid) {
-      if (mod === 'pricing') {
-        addToPriceCalc(uid);
-        document.getElementById('priceSearchResults').style.display = 'none';
-        document.getElementById('priceSearchInp').value = '';
-      } else if (mod === 'expiry') {
-        selectProductForExpiry(uid);
-      } else if (mod === 'barcodeOrder') {
-        addItemToBarcodeOrder(uid);
-        document.getElementById('boSearchResults').style.display = 'none';
-        document.getElementById('boSearchInp').value = '';
-      } else if (mod === 'shortages') {
-        addItemToShortages(uid);
-        document.getElementById('shortSearchResults').style.display = 'none';
-        document.getElementById('shortSearchInp').value = '';
-      }
+      if (mod === 'pricing') { addToPriceCalc(uid); document.getElementById('priceSearchResults').style.display = 'none'; document.getElementById('priceSearchInp').value = ''; }
+      else if (mod === 'expiry') selectProductForExpiry(uid);
+      else if (mod === 'barcodeOrder') { addItemToBarcodeOrder(uid); document.getElementById('boSearchResults').style.display = 'none'; document.getElementById('boSearchInp').value = ''; }
+      else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
-    // الماسح الليزري المطور مع دعم الكشاف (Torch) وكود الأدوية
     function openScanner(mode) {
-      scannerTargetMode = mode;
-      torchEnabled = false;
-      const tBtn = document.getElementById('torchBtn');
-      if (tBtn) tBtn.innerText = '🔦 الفلاش';
+      scannerTargetMode = mode; torchEnabled = false;
+      const tBtn = document.getElementById('torchBtn'); if (tBtn) tBtn.innerText = '🔦 الفلاش';
       document.getElementById('scannerModal').style.display = 'flex';
       scannerInstance = new Html5Qrcode("reader");
-      scannerInstance.start(
-        { facingMode: "environment" },
-        { fps: 20, qrbox: { width: 260, height: 150 } },
-        (decodedText) => {
-          const raw = String(decodedText || '').trim();
-          if (raw.length < 4) return;
-          triggerScannerSuccessFeedback();
-          stopScanner();
-
-          const parsed = parseDrugOrStandardBarcode(raw);
-          const found = findProductSmart(parsed.barcode);
-
-          if (scannerTargetMode === 'search') {
-            switchTab('inventory');
-            document.getElementById('mainSearch').value = found ? (found.barcode || found.item_number) : parsed.barcode;
-            renderInventory();
-          } else if (scannerTargetMode === 'price') {
-            if (found) addToPriceCalc(found.uid);
-            else showToast(`⚠️ لم يتم العثور على الباركود (${parsed.barcode})`);
-          } else if (scannerTargetMode === 'expiry') {
-            if (found) {
-              selectProductForExpiry(found.uid, parsed.expiryDate);
-              if (parsed.expiryDate) showToast(`💊 تم استخراج تاريخ الدواء تلقائياً: ${parsed.expiryDate}`);
-            } else {
-              showToast(`⚠️ لم يتم العثور على الباركود (${parsed.barcode})`);
-            }
-          } else if (scannerTargetMode === 'barcodeOrder') {
-            if (found) addItemToBarcodeOrder(found.uid);
-            else showToast(`⚠️ لم يتم العثور على الباركود (${parsed.barcode})`);
-          } else if (scannerTargetMode === 'shortages') {
-            if (found) addItemToShortages(found.uid);
-            else showToast(`⚠️ لم يتم العثور على الباركود (${parsed.barcode})`);
-          }
-        },
-        () => {}
-      ).catch(() => stopScanner());
+      scannerInstance.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 250, height: 150 } }, (decoded) => {
+        const raw = String(decoded || '').trim(); if (raw.length < 4) return;
+        triggerScannerSuccessFeedback(); stopScanner();
+        const parsed = parseDrugOrStandardBarcode(raw), found = findProductSmart(parsed.barcode);
+        if (scannerTargetMode === 'search') { switchTab('inventory'); document.getElementById('mainSearch').value = found ? (found.barcode || found.item_number) : parsed.barcode; renderInventory(); }
+        else if (scannerTargetMode === 'price') { if (found) addToPriceCalc(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+        else if (scannerTargetMode === 'expiry') { if (found) selectProductForExpiry(found.uid, parsed.expiryDate); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+        else if (scannerTargetMode === 'barcodeOrder') { if (found) addItemToBarcodeOrder(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+        else if (scannerTargetMode === 'shortages') { if (found) addItemToShortages(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+      }, () => {}).catch(() => stopScanner());
     }
 
     function toggleScannerTorch() {
       if (!scannerInstance) return;
       torchEnabled = !torchEnabled;
-      scannerInstance.applyVideoConstraints({
-        advanced: [{ torch: torchEnabled }]
-      }).then(() => {
-        const tBtn = document.getElementById('torchBtn');
-        if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الفلاش' : '🔦 الفلاش';
-      }).catch(() => {
-        showToast('كشاف الفلاش غير مدعوم في هذا المتصفح');
-      });
+      scannerInstance.applyVideoConstraints({ advanced: [{ torch: torchEnabled }] }).then(() => {
+        document.getElementById('torchBtn').innerText = torchEnabled ? '🌟 إطفاء' : '🔦 الفلاش';
+      }).catch(() => showToast('الفلاش غير مدعوم في هذا المتصفح'));
     }
 
     function stopScanner() {
-      if (scannerInstance) {
-        scannerInstance.stop().then(() => {
-          scannerInstance.clear();
-          document.getElementById('scannerModal').style.display = 'none';
-        }).catch(() => {
-          document.getElementById('scannerModal').style.display = 'none';
-        });
-      } else {
-        document.getElementById('scannerModal').style.display = 'none';
-      }
+      if (scannerInstance) scannerInstance.stop().then(() => { scannerInstance.clear(); document.getElementById('scannerModal').style.display = 'none'; }).catch(() => document.getElementById('scannerModal').style.display = 'none');
+      else document.getElementById('scannerModal').style.display = 'none';
     }
 
     function switchTab(tab) {
-      const views = ['inventory', 'pricing', 'expiry', 'barcodeOrder', 'shortages', 'notes', 'reports', 'settings'];
-      views.forEach(v => {
-        const viewEl = document.getElementById('view_' + v);
-        if (viewEl) viewEl.style.display = v === tab ? 'block' : 'none';
-        const b = document.getElementById('tabBtn_' + v);
-        if (b) b.classList.toggle('active', v === tab);
-        const navB = document.getElementById('bottomNav_' + v);
-        if (navB) navB.classList.toggle('active', v === tab);
+      ['inventory','pricing','expiry','barcodeOrder','shortages','notes','reports','settings'].forEach(v => {
+        const el = document.getElementById('view_' + v); if (el) el.style.display = v === tab ? 'block' : 'none';
+        const b = document.getElementById('tabBtn_' + v); if (b) b.classList.toggle('active', v === tab);
+        const nb = document.getElementById('bottomNav_' + v); if (nb) nb.classList.toggle('active', v === tab);
       });
-      document.getElementById('appFooterRights').style.display = tab === 'reports' ? 'none' : 'block';
       if (tab === 'pricing') renderPriceCalc();
       if (tab === 'expiry') renderRegisteredExpiryList();
       if (tab === 'barcodeOrder') renderBarcodeOrders();
@@ -1962,143 +1127,69 @@
     function renderSettingsUI() {
       const empList = cleanArray(appConfig && appConfig.employees);
       appConfig.employees = empList;
-      document.getElementById('setAdminEmail').value = (appConfig.adminEmails && appConfig.adminEmails[0]) || '';
       document.getElementById('setAdminPin').value = appConfig.adminPin || '2020';
       document.getElementById('setEmpPin').value = appConfig.empPin || '1235';
-
+      document.getElementById('prefStrictWhitelist').checked = appConfig.strictWhitelist !== false;
       document.getElementById('prefSoundBeep').checked = appConfig.soundBeep !== false;
       document.getElementById('prefFlashLight').checked = appConfig.flashLight !== false;
       document.getElementById('prefSfdaParser').checked = appConfig.sfdaParser !== false;
       document.getElementById('prefMaintenanceMode').checked = Boolean(appConfig.maintenanceMode);
-
-      changeSystemTheme(appConfig.activeTheme || 'royal-obsidian', false);
+      changeSystemTheme(appConfig.activeTheme || 'slate-mint', false);
       renderAuditLogs();
-
-      document.getElementById('authorizedEmployeesList').innerHTML = empList.map((u, i) => `
-        <div class="prod-card" style="margin-bottom:6px; padding:8px 12px; opacity:${u.active === false ? '0.55' : '1'};">
-          <div>
-            <strong style="font-size:0.82rem;">${u.name || ''} ${u.active === false ? '<span style="color:#F87171;">(موقوف)</span>' : '<span style="color:#34D399;">(نشط)</span>'}</strong>
-            <div style="font-size:0.72rem; color:var(--muted);">${u.email || ''} ${u.pin ? `| رمز خاص: ${u.pin}` : ''}</div>
-          </div>
-          <div style="display:flex; gap:5px;">
-            <button class="mini-act-btn" onclick="toggleEmployeeActive(${i})">${u.active === false ? 'تفعيل' : 'إيقاف'}</button>
-            <button class="mini-act-btn" style="background:rgba(239,68,68,0.2); color:#F87171;" onclick="removeEmployee(${i})">حذف</button>
-          </div>
-        </div>
-      `).join('');
+      document.getElementById('authorizedEmployeesList').innerHTML = empList.map((u, i) => `<div class="calc-row" style="opacity:${u.active === false ? '0.5' : '1'};">
+        <div><strong style="font-size:0.8rem;">${u.name || ''} ${u.active === false ? '<span style="color:#FCA5A5;">(موقوف)</span>' : '<span style="color:#34D399;">(نشط)</span>'}</strong><div style="font-size:0.7rem;color:var(--muted);">${u.email || ''} ${u.pin ? `| رمز: ${u.pin}` : ''}</div></div>
+        <div style="display:flex;gap:5px;"><button class="btn-sub" onclick="toggleEmployeeActive(${i})">${u.active === false ? 'تفعيل' : 'إيقاف'}</button><button class="btn-sub" style="color:#FCA5A5;" onclick="removeEmployee(${i})">حذف</button></div>
+      </div>`).join('');
     }
 
     function saveScannerAndSystemPrefs() {
+      appConfig.strictWhitelist = document.getElementById('prefStrictWhitelist').checked;
       appConfig.soundBeep = document.getElementById('prefSoundBeep').checked;
       appConfig.flashLight = document.getElementById('prefFlashLight').checked;
       appConfig.sfdaParser = document.getElementById('prefSfdaParser').checked;
       appConfig.maintenanceMode = document.getElementById('prefMaintenanceMode').checked;
       localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
       pushDataToFirebase('appConfig', appConfig);
-      showToast('⚡ تم حفظ إعدادات النظام والماسح الليزري');
+      showToast('⚡ تم حفظ الخصائص');
     }
 
-    function toggleEmployeeActive(idx) {
-      const empList = cleanArray(appConfig.employees);
-      if (!empList[idx]) return;
-      empList[idx].active = empList[idx].active === false ? true : false;
-      appConfig.employees = empList;
-      localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
-      pushDataToFirebase('appConfig', appConfig);
-      renderSettingsUI();
-      showToast('تم تحديث حالة الموظف');
+    function toggleEmployeeActive(i) {
+      const list = cleanArray(appConfig.employees); if (!list[i]) return;
+      list[i].active = list[i].active === false ? true : false;
+      appConfig.employees = list; localStorage.setItem('ocare_app_config', JSON.stringify(appConfig)); pushDataToFirebase('appConfig', appConfig); renderSettingsUI();
     }
 
-    function removeEmployee(idx) {
-      const empList = cleanArray(appConfig.employees);
-      empList.splice(idx, 1);
-      appConfig.employees = empList;
-      localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
-      pushDataToFirebase('appConfig', appConfig);
-      renderSettingsUI();
-      showToast('تم حذف الحساب');
+    function removeEmployee(i) {
+      const list = cleanArray(appConfig.employees); list.splice(i, 1);
+      appConfig.employees = list; localStorage.setItem('ocare_app_config', JSON.stringify(appConfig)); pushDataToFirebase('appConfig', appConfig); renderSettingsUI();
     }
 
     function addAuthorizedEmployee() {
       const em = document.getElementById('newEmpEmail').value.trim().toLowerCase();
       const nm = document.getElementById('newEmpName').value.trim();
-      const customPin = document.getElementById('newEmpCustomPin').value.trim();
-      if (!em || !nm) return alert('أدخل إيميل/معرف الزميل والاسم');
-      const empList = cleanArray(appConfig.employees);
-      empList.push({ email: em, name: nm, pin: customPin, active: true });
-      appConfig.employees = empList;
-      localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
-      pushDataToFirebase('appConfig', appConfig);
-      document.getElementById('newEmpEmail').value = '';
-      document.getElementById('newEmpName').value = '';
-      document.getElementById('newEmpCustomPin').value = '';
-      renderSettingsUI();
-      showToast('✅ تمت إضافة الموظف بنجاح!');
+      const pin = document.getElementById('newEmpCustomPin').value.trim();
+      if (!em || !nm) return alert('أدخل المعرف والاسم');
+      const list = cleanArray(appConfig.employees);
+      list.push({ email: em, name: nm, pin, active: true });
+      appConfig.employees = list; localStorage.setItem('ocare_app_config', JSON.stringify(appConfig)); pushDataToFirebase('appConfig', appConfig);
+      ['newEmpEmail','newEmpName','newEmpCustomPin'].forEach(id => document.getElementById(id).value = '');
+      renderSettingsUI(); showToast('✅ تمت إضافة الموظف');
     }
 
     function saveSecuritySettings() {
-      const admEm = document.getElementById('setAdminEmail').value.trim().toLowerCase();
-      if (!Array.isArray(appConfig.adminEmails)) appConfig.adminEmails = [];
-      if (admEm && !appConfig.adminEmails.includes(admEm)) appConfig.adminEmails.unshift(admEm);
       appConfig.adminPin = document.getElementById('setAdminPin').value.trim() || '2020';
       appConfig.empPin = document.getElementById('setEmpPin').value.trim() || '1235';
       localStorage.setItem('ocare_app_config', JSON.stringify(appConfig));
       pushDataToFirebase('appConfig', appConfig);
-      showToast('✅ تم حفظ إعدادات الدخول بنجاح');
-    }
-
-    function exportFullBackupJSON() {
-      const backup = {
-        appConfig,
-        customCloudProducts,
-        savedBatches: safeGetStorage('ocare_saved_batches', {}),
-        barcodeOrders,
-        shortagesList,
-        shiftNotes,
-        storeImagesMap
-      };
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `OCARE_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-    }
-
-    function importFullBackupJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const r = new FileReader();
-      r.onload = (e) => {
-        try {
-          const data = JSON.parse(e.target.result);
-          if (data.appConfig) { appConfig = data.appConfig; localStorage.setItem('ocare_app_config', JSON.stringify(appConfig)); pushDataToFirebase('appConfig', appConfig); }
-          if (data.customCloudProducts) { customCloudProducts = data.customCloudProducts; localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts)); pushDataToFirebase('customProducts', customCloudProducts); }
-          if (data.savedBatches) { localStorage.setItem('ocare_saved_batches', JSON.stringify(data.savedBatches)); pushDataToFirebase('savedBatches', data.savedBatches); }
-          if (data.barcodeOrders) { barcodeOrders = data.barcodeOrders; syncBarcodeOrders(); }
-          if (data.shortagesList) { shortagesList = data.shortagesList; syncShortages(); }
-          rebuildAllProductsList();
-          renderInventory();
-          showToast('✅ تمت استعادة النسخة الاحتياطية بنجاح');
-        } catch (err) {
-          alert('ملف النسخة الاحتياطية غير صالح');
-        }
-      };
-      r.readAsText(file);
+      showToast('✅ تم حفظ الرموز السرية');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('ocare_selected_theme') || appConfig.activeTheme || 'royal-obsidian';
-      changeSystemTheme(savedTheme, false);
-
+      changeSystemTheme(localStorage.getItem('ocare_selected_theme') || appConfig.activeTheme || 'slate-mint', false);
       addExpiryBatchRow();
       initRealtimeFirebaseSync();
-
-      const savedSession = safeGetStorage('ocare_session_user', null);
-      if (savedSession && savedSession.name) {
-        currentUser = savedSession;
-        document.getElementById('loginOverlay').style.display = 'none';
-        applyPermissionsUI();
-      }
+      const s = safeGetStorage('ocare_session_user', null);
+      if (s && s.name) { currentUser = s; document.getElementById('loginOverlay').style.display = 'none'; applyPermissionsUI(); }
       autoLoadInventoryFromServer();
       renderPriceCalc();
     });
