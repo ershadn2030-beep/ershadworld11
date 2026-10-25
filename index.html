@@ -1096,14 +1096,38 @@
       }, () => {}).catch(() => stopScanner());
     }
 
-    function toggleScannerTorch() {
-      if (!scannerInstance) return;
-      torchEnabled = !torchEnabled;
-      scannerInstance.applyVideoConstraints({ advanced: [{ torch: torchEnabled }] }).then(() => {
-        document.getElementById('torchBtn').innerText = torchEnabled ? '🌟 إطفاء' : '🔦 الفلاش';
-      }).catch(() => showToast('الفلاش غير مدعوم في هذا المتصفح'));
-    }
+   function toggleScannerTorch() {
+  torchEnabled = !torchEnabled;
+  const tBtn = document.getElementById('torchBtn');
 
+  // 1. محاولة الوصول المباشر لكشاف الكاميرا الخلفي (للأندرويد)
+  try {
+    const video = document.querySelector("#reader video");
+    if (video && video.srcObject) {
+      const track = video.srcObject.getVideoTracks()[0];
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      if (caps && caps.torch) {
+        track.applyConstraints({ advanced: [{ torch: torchEnabled }] }).then(() => {
+          if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الفلاش' : '🔦 الفلاش';
+        });
+        return;
+      }
+    }
+  } catch (err) {}
+
+  // 2. البديل المعتمد للآيفون والمتصفحات المقفلة: إضاءة الشاشة البيضاء العاكسة
+  let whiteOverlay = document.getElementById('screenFlashOverlayLight');
+  if (!whiteOverlay) {
+    whiteOverlay = document.createElement('div');
+    whiteOverlay.id = 'screenFlashOverlayLight';
+    whiteOverlay.style.cssText = 'position:fixed;inset:0;background:#ffffff;z-index:9998;opacity:0.92;pointer-events:none;display:none;';
+    document.body.appendChild(whiteOverlay);
+  }
+
+  whiteOverlay.style.display = torchEnabled ? 'block' : 'none';
+  if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الشاشة' : '💡 كشاف الشاشة';
+  showToast(torchEnabled ? 'تم تفعيل كشاف الشاشة للإضاءة' : 'تم إطفاء الإضاءة');
+}
     function stopScanner() {
       if (scannerInstance) scannerInstance.stop().then(() => { scannerInstance.clear(); document.getElementById('scannerModal').style.display = 'none'; }).catch(() => document.getElementById('scannerModal').style.display = 'none');
       else document.getElementById('scannerModal').style.display = 'none';
