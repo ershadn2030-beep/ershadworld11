@@ -8,6 +8,7 @@
   <title>أوكير O CARE - منظومة إدارة الصيدلية</title>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
@@ -77,6 +78,9 @@
     .stepper { display:inline-flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:3px 6px; }
     .stepper button { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-weight:900; cursor:pointer; }
     .stepper span { min-width:22px; text-align:center; font-size:0.82rem; font-weight:900; }
+    .stepper input.qty-manual-inp { width:40px; text-align:center; font-size:0.82rem; font-weight:900; color:var(--text); background:transparent; border:none; outline:none; -moz-appearance:textfield; }
+    .stepper input.qty-manual-inp::-webkit-outer-spin-button,
+    .stepper input.qty-manual-inp::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
 
     .bo-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
     .bo-card { background:var(--card-alt); border:1.5px solid var(--border); border-radius:20px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; }
@@ -354,6 +358,14 @@
         <div class="sw-row"><div><strong>🛠️ وضع الجرد والصيانة (قفل تعديل الموظفين)</strong><small>إيقاف الحذف أو الإضافة للموظفين مؤقتاً أثناء الجرد</small></div><label class="sw-toggle"><input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
       </div>
 
+      <!-- إضافة الأصناف الجديدة بملف إكسل مع المزامنة التلقائية الدائمة -->
+      <div class="bento-card">
+        <div class="bento-head"><h3>📦 إضافة أصناف جديدة بملف إكسل (تُضم للمنتجات القديمة)</h3></div>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على الأصناف الجديدة ليتم دمجها تلقائياً مع المخزون ومزامنتها فوراً لدى جميع الموظفين دون الحاجة لرفعها كل مرة:</p>
+        <input type="file" accept=".xlsx,.xls,.csv" onchange="handleNewProductsExcelUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
+        <div id="mergedNewProductsBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
+      </div>
+
       <div class="bento-card">
         <div class="bento-head"><h3>🖼️ ربط صور الأصناف من المتجر الإلكتروني</h3></div>
         <input type="file" accept=".xlsx,.xls,.csv" onchange="handleStoreImagesUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
@@ -602,11 +614,17 @@
 
     function rebuildAllProductsList(savedBatchesMap) {
       const bMap = savedBatchesMap || cleanBatchesMap(safeGetStorage('ocare_saved_batches', {}));
-      const merged = [...customCloudProducts, ...baseExcelProducts];
-      merged.forEach(p => {
+      const seenKeys = new Set();
+      const merged = [];
+      [...customCloudProducts, ...baseExcelProducts].forEach(p => {
+        if (!p || !p.name) return;
+        const uniq = `${String(p.barcode || '').trim()}_${String(p.item_number || '').trim()}`;
+        if (uniq !== '_' && seenKeys.has(uniq)) return;
+        if (uniq !== '_') seenKeys.add(uniq);
         const key = String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_');
         p.batches = bMap[key] || bMap[p.barcode] || bMap[p.item_number] || [];
         if (!p.image) p.image = storeImagesMap[p.barcode] || storeImagesMap[p.item_number] || '';
+        merged.push(p);
       });
       allProducts = merged;
       const el = document.getElementById('fiaDatalist');
@@ -703,6 +721,75 @@
       showToast('✅ تم حفظ الصنف الجديد');
     }
 
+    // رفع ملف إكسل بالأصناف الجديدة ودمجها مع المنتجات القديمة ومزامنتها سحابياً
+    function handleNewProductsExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          let addedCount = 0;
+          let updatedCount = 0;
+          const nowTs = Date.now();
+
+          rows.forEach((r, idx) => {
+            const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
+            if (!name) return;
+            const itemNum = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Number'] || '').replace(/\.0$/, '').trim();
+            const barcode = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
+            const fia = String(r['الفئة'] || r['الفئة '] || r['القسم'] || 'مورد عام').trim();
+            const price = Number((parseFloat(r['سعر البيع'] || r['السعر'] || r['Price']) || 0).toFixed(2));
+            const image = String(r['الصورة'] || r['صورة الصنف'] || r['Image'] || '').trim();
+
+            const existingIdx = customCloudProducts.findIndex(p =>
+              (barcode && String(p.barcode || '').trim() === barcode) ||
+              (itemNum && String(p.item_number || '').trim() === itemNum)
+            );
+
+            if (existingIdx > -1) {
+              customCloudProducts[existingIdx] = {
+                ...customCloudProducts[existingIdx],
+                item_number: itemNum || customCloudProducts[existingIdx].item_number,
+                barcode: barcode || customCloudProducts[existingIdx].barcode,
+                name,
+                fia: fia || customCloudProducts[existingIdx].fia,
+                price: price || customCloudProducts[existingIdx].price,
+                image: image || customCloudProducts[existingIdx].image
+              };
+              updatedCount++;
+            } else {
+              customCloudProducts.unshift({
+                uid: 'cp_' + nowTs + '_' + idx,
+                item_number: itemNum || String(nowTs + idx).slice(-6),
+                barcode: barcode || itemNum || String(nowTs + idx).slice(-8),
+                name,
+                fia,
+                price,
+                image,
+                batches: []
+              });
+              addedCount++;
+            }
+          });
+
+          localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
+          pushDataToFirebase('customProducts', customCloudProducts);
+          logAuditAction(`دمج ملف أصناف جديدة (${addedCount} جديد، ${updatedCount} محدث)`);
+          rebuildAllProductsList();
+          renderInventory();
+          const badge = document.getElementById('mergedNewProductsBadge');
+          if (badge) badge.innerText = `✅ تم دمج ${addedCount} صنف جديد وتحديث ${updatedCount} صنف ومزامنتها سحابياً!`;
+          showToast(`✅ تم ضم ${addedCount + updatedCount} صنف للمخزون سحابياً`);
+          event.target.value = '';
+        } catch (err) {
+          alert('تعذر قراءة ملف الإكسل، تأكد من صحة الملف.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
     function handleStoreImagesUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -757,11 +844,106 @@
       }
     }
 
+    // دالة موحدة لبناء وتنسيق ملف الإكسل (RTL + ترويسة كحلية + مسافات واسعة + حدود + توسيط)
+    function writeStyledExcelWorkbook(rows, sheetName, fileName) {
+      if (!rows || !rows.length) return;
+      const cols = Object.keys(rows[0]);
+
+      // تجهيز البيانات مع ضمان بقاء الباركود ورقم الصنف نصاً صريحاً لمنع الصيغة العلمية
+      const normalizedRows = rows.map(r => {
+        const obj = {};
+        cols.forEach(c => {
+          if (c.includes('باركود') || c.includes('رقم الصنف')) {
+            obj[c] = String(r[c] !== undefined && r[c] !== null ? r[c] : '');
+          } else {
+            obj[c] = r[c];
+          }
+        });
+        return obj;
+      });
+
+      const ws = XLSX.utils.json_to_sheet(normalizedRows);
+
+      // ضبط اتجاه الورقة من اليمين لليسار (RTL)
+      ws['!views'] = [{ rightToLeft: true }];
+
+      // حساب عرض الأعمدة والمسافات المريحة تلقائياً حسب المحتوى ونوع العمود
+      ws['!cols'] = cols.map(c => {
+        let maxLen = c.length + 6;
+        normalizedRows.slice(0, 500).forEach(r => {
+          const valLen = String(r[c] !== undefined && r[c] !== null ? r[c] : '').length;
+          if (valLen + 6 > maxLen) maxLen = valLen + 6;
+        });
+        if (c.includes('اسم الصنف')) return { wch: Math.max(maxLen, 44) };
+        if (c.includes('باركود')) return { wch: Math.max(maxLen, 22) };
+        if (c.includes('الفئة') || c.includes('الجهة')) return { wch: Math.max(maxLen, 22) };
+        if (c.includes('رقم الصنف')) return { wch: Math.max(maxLen, 16) };
+        if (c.includes('تاريخ')) return { wch: Math.max(maxLen, 18) };
+        return { wch: Math.max(maxLen, 15) };
+      });
+
+      // ضبط ارتفاع الصفوف (صف الترويسة 28 وصفوف البيانات 22)
+      const rowHeights = [{ hpt: 28 }];
+      for (let i = 0; i < normalizedRows.length; i++) {
+        rowHeights.push({ hpt: 22 });
+      }
+      ws['!rows'] = rowHeights;
+
+      // تطبيق التصميم والألوان والحدود على جميع الخلايا
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      const borderStyle = {
+        top: { style: 'thin', color: { rgb: 'CBD5E1' } },
+        bottom: { style: 'thin', color: { rgb: 'CBD5E1' } },
+        left: { style: 'thin', color: { rgb: 'CBD5E1' } },
+        right: { style: 'thin', color: { rgb: 'CBD5E1' } }
+      };
+
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
+          if (!ws[cellRef]) continue;
+          const colName = cols[C] || '';
+
+          if (R > 0 && (colName.includes('باركود') || colName.includes('رقم الصنف'))) {
+            ws[cellRef].t = 's';
+            ws[cellRef].v = String(ws[cellRef].v ?? '');
+          }
+
+          if (R === 0) {
+            // تنسيق صف العناوين الكحلي الغامق مع النص الأبيض العريض
+            ws[cellRef].s = {
+              fill: { patternType: 'solid', fgColor: { rgb: '0B1957' } },
+              font: { name: 'Arial', sz: 11, bold: true, color: { rgb: 'FFFFFF' } },
+              alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+              border: {
+                top: { style: 'thin', color: { rgb: '0B1957' } },
+                bottom: { style: 'thin', color: { rgb: '0B1957' } },
+                left: { style: 'thin', color: { rgb: '1E3A8A' } },
+                right: { style: 'thin', color: { rgb: '1E3A8A' } }
+              }
+            };
+          } else {
+            // تنسيق خلايا البيانات في المنتصف مع مسافات وحدود واضحة
+            ws[cellRef].s = {
+              fill: { patternType: 'solid', fgColor: { rgb: 'FFFFFF' } },
+              font: { name: 'Arial', sz: 11, bold: false, color: { rgb: '0F172A' } },
+              alignment: { horizontal: 'center', vertical: 'center', wrapText: false },
+              border: borderStyle
+            };
+          }
+        }
+      }
+
+      const wb = XLSX.utils.book_new();
+      wb.Workbook = { Views: [{ RTL: true }] };
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      XLSX.writeFile(wb, fileName);
+    }
+
     function downloadFullClassifiedExcel() {
       if (!allProducts.length) return alert('المخزون غير محمل بعد');
-      const ws = XLSX.utils.json_to_sheet(allProducts.map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia, 'سعر البيع': p.price })));
-      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'المخزون');
-      XLSX.writeFile(wb, 'مخزون_أوكير_الكامل.xlsx');
+      const rows = allProducts.map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia, 'سعر البيع': p.price }));
+      writeStyledExcelWorkbook(rows, 'المخزون', 'مخزون_أوكير_الكامل.xlsx');
     }
 
     function renderInventory() {
@@ -956,11 +1138,12 @@
       if (!list.length) { box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">لا توجد مواد مطلوبة في (${br}).</div>`; return; }
       box.innerHTML = list.map(it => `<div class="calc-row">
         <div style="flex:1;"><span class="b-chip b-exp" style="margin-bottom:4px;">حالة: مطلوب (${it.date || ''})</span><div style="font-size:0.82rem;font-weight:900;">${it.name}</div><div style="font-size:0.7rem;color:var(--muted);">رقم: ${it.item_number} | ${it.branch}</div></div>
-        <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><span>${it.qty}</span><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
+        <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><input type="number" min="1" class="qty-manual-inp" value="${it.qty}" onclick="this.select()" onchange="setShortQty('${it.uid}','${it.branch}',this.value)"><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
         ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
       </div>`).join('');
     }
     function changeShortQty(uid, br, d) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, it.qty + d); syncShortages(); } }
+    function setShortQty(uid, br, val) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, parseInt(val, 10) || 1); syncShortages(); } }
     function deleteShortItem(uid, br) { shortagesList = shortagesList.filter(x => !(x.uid === uid && x.branch === br)); syncShortages(); }
 
     function previewNoteImage(e) {
@@ -1041,7 +1224,7 @@
       if (!data.rows.length) box.innerHTML = `<div style="text-align:center;padding:24px;">لا توجد بيانات.</div>`;
       else {
         const cols = Object.keys(data.rows[0]);
-        box.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.75rem;"><thead><tr style="background:rgba(0,0,0,0.3);">${cols.map(c => `<th style="padding:8px;border:1px solid var(--border);">${c}</th>`).join('')}</tr></thead><tbody>${data.rows.slice(0,250).map(r => `<tr>${cols.map(c => `<td style="padding:7px;border:1px solid var(--border);">${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+        box.innerHTML = `<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.75rem;"><thead><tr style="background:#0B1957;color:#FFFFFF;">${cols.map(c => `<th style="padding:9px 8px;border:1px solid #1E3A8A;text-align:center;">${c}</th>`).join('')}</tr></thead><tbody>${data.rows.slice(0,250).map(r => `<tr>${cols.map(c => `<td style="padding:8px 7px;border:1px solid var(--border);text-align:center;">${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
       }
       document.getElementById('previewModal').style.display = 'flex';
     }
@@ -1050,8 +1233,7 @@
       if (!currentUser || currentUser.role !== 'admin') return;
       const data = getReportDataset(type);
       if (!data.rows.length) return alert('لا توجد بيانات');
-      const ws = XLSX.utils.json_to_sheet(data.rows), wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'التقرير'); XLSX.writeFile(wb, `${data.title}.xlsx`);
+      writeStyledExcelWorkbook(data.rows, 'التقرير', `${data.title}.xlsx`);
     }
 
     function exportReportPDF(type) {
@@ -1059,7 +1241,7 @@
       const data = getReportDataset(type);
       if (!data.rows.length) return alert('لا توجد بيانات');
       const cols = Object.keys(data.rows[0]), win = window.open('', '_blank');
-      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Tahoma;padding:20px;}table{width:100%;border-collapse:collapse;font-size:12px;}th,td{padding:8px;border:1px solid #999;text-align:right;}</style></head><body><h2>أوكير O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
+      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Arial,Tahoma;padding:20px;}table{width:100%;border-collapse:collapse;font-size:12px;}th{background:#0B1957;color:#FFFFFF;padding:10px 8px;border:1px solid #0B1957;text-align:center;font-weight:bold;}td{padding:8px;border:1px solid #CBD5E1;text-align:center;}</style></head><body><h2 style="text-align:center;color:#0B1957;">أوكير O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
       win.document.close();
     }
 
@@ -1096,39 +1278,40 @@
       }, () => {}).catch(() => stopScanner());
     }
 
-   function toggleScannerTorch() {
-  torchEnabled = !torchEnabled;
-  const tBtn = document.getElementById('torchBtn');
+    function toggleScannerTorch() {
+      torchEnabled = !torchEnabled;
+      const tBtn = document.getElementById('torchBtn');
 
-  // 1. محاولة الوصول المباشر لكشاف الكاميرا الخلفي (للأندرويد)
-  try {
-    const video = document.querySelector("#reader video");
-    if (video && video.srcObject) {
-      const track = video.srcObject.getVideoTracks()[0];
-      const caps = track.getCapabilities ? track.getCapabilities() : {};
-      if (caps && caps.torch) {
-        track.applyConstraints({ advanced: [{ torch: torchEnabled }] }).then(() => {
-          if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الفلاش' : '🔦 الفلاش';
-        });
-        return;
+      try {
+        const video = document.querySelector("#reader video");
+        if (video && video.srcObject) {
+          const track = video.srcObject.getVideoTracks()[0];
+          const caps = track.getCapabilities ? track.getCapabilities() : {};
+          if (caps && caps.torch) {
+            track.applyConstraints({ advanced: [{ torch: torchEnabled }] }).then(() => {
+              if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الفلاش' : '🔦 الفلاش';
+            });
+            return;
+          }
+        }
+      } catch (err) {}
+
+      let whiteOverlay = document.getElementById('screenFlashOverlayLight');
+      if (!whiteOverlay) {
+        whiteOverlay = document.createElement('div');
+        whiteOverlay.id = 'screenFlashOverlayLight';
+        whiteOverlay.style.cssText = 'position:fixed;inset:0;background:#ffffff;z-index:9998;opacity:0.92;pointer-events:none;display:none;';
+        document.body.appendChild(whiteOverlay);
       }
+
+      whiteOverlay.style.display = torchEnabled ? 'block' : 'none';
+      if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الشاشة' : '💡 كشاف الشاشة';
+      showToast(torchEnabled ? 'تم تفعيل كشاف الشاشة للإضاءة' : 'تم إطفاء الإضاءة');
     }
-  } catch (err) {}
 
-  // 2. البديل المعتمد للآيفون والمتصفحات المقفلة: إضاءة الشاشة البيضاء العاكسة
-  let whiteOverlay = document.getElementById('screenFlashOverlayLight');
-  if (!whiteOverlay) {
-    whiteOverlay = document.createElement('div');
-    whiteOverlay.id = 'screenFlashOverlayLight';
-    whiteOverlay.style.cssText = 'position:fixed;inset:0;background:#ffffff;z-index:9998;opacity:0.92;pointer-events:none;display:none;';
-    document.body.appendChild(whiteOverlay);
-  }
-
-  whiteOverlay.style.display = torchEnabled ? 'block' : 'none';
-  if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الشاشة' : '💡 كشاف الشاشة';
-  showToast(torchEnabled ? 'تم تفعيل كشاف الشاشة للإضاءة' : 'تم إطفاء الإضاءة');
-}
     function stopScanner() {
+      const whiteOverlay = document.getElementById('screenFlashOverlayLight');
+      if (whiteOverlay) whiteOverlay.style.display = 'none';
       if (scannerInstance) scannerInstance.stop().then(() => { scannerInstance.clear(); document.getElementById('scannerModal').style.display = 'none'; }).catch(() => document.getElementById('scannerModal').style.display = 'none');
       else document.getElementById('scannerModal').style.display = 'none';
     }
@@ -1160,6 +1343,10 @@
       document.getElementById('prefMaintenanceMode').checked = Boolean(appConfig.maintenanceMode);
       changeSystemTheme(appConfig.activeTheme || 'slate-mint', false);
       renderAuditLogs();
+      const mergedBadge = document.getElementById('mergedNewProductsBadge');
+      if (mergedBadge && customCloudProducts.length > 0) {
+        mergedBadge.innerText = `📦 إجمالي الأصناف الإضافية المدمجة سحابياً: ${customCloudProducts.length} صنف`;
+      }
       document.getElementById('authorizedEmployeesList').innerHTML = empList.map((u, i) => `<div class="calc-row" style="opacity:${u.active === false ? '0.5' : '1'};">
         <div><strong style="font-size:0.8rem;">${u.name || ''} ${u.active === false ? '<span style="color:#FCA5A5;">(موقوف)</span>' : '<span style="color:#34D399;">(نشط)</span>'}</strong><div style="font-size:0.7rem;color:var(--muted);">${u.email || ''} ${u.pin ? `| رمز: ${u.pin}` : ''}</div></div>
         <div style="display:flex;gap:5px;"><button class="btn-sub" onclick="toggleEmployeeActive(${i})">${u.active === false ? 'تفعيل' : 'إيقاف'}</button><button class="btn-sub" style="color:#FCA5A5;" onclick="removeEmployee(${i})">حذف</button></div>
