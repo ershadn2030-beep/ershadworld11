@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#091318">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>أوكير O CARE - منظومة إدارة الصيدلية</title>
+  <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
@@ -1404,6 +1406,12 @@
       autoLoadInventoryFromServer();
       renderPriceCalc();
     });
-  </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
 </body>
 </html>
