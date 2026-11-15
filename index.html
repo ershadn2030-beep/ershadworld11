@@ -1404,10 +1404,11 @@
       const s = safeGetStorage('ocare_session_user', null);
       if (s && s.name) { currentUser = s; document.getElementById('loginOverlay').style.display = 'none'; applyPermissionsUI(); }
       autoLoadInventoryFromServer();
-      renderPriceCalc();
+renderPriceCalc();
     });
-<script>
-  if ('serviceWorker' in navigator) {
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
