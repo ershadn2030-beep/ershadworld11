@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>أوكير O CARE - منظومة إدارة الصيدلية</title>
   <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
@@ -15,13 +15,13 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     :root, :root[data-theme="slate-mint"] { --bg:#091318; --shell:linear-gradient(180deg,#0D1F27 0%,#081217 100%); --card:rgba(18,37,46,0.92); --card-solid:#12252E; --card-alt:#17313D; --text:#F0FDF4; --muted:#86A8B2; --border:rgba(45,212,191,0.2); --primary:#10B981; --glow:rgba(16,185,129,0.35); --light:rgba(16,185,129,0.15); --accent:#F59E0B; --danger:#EF4444; --banner:linear-gradient(135deg,#D9B166 0%,#B38738 100%); --banner-txt:#091318; --btn-txt:#06120E; }
-    :root[data-theme="world8"] { --navy: #0B1957; --primary: #0D9488; --primary-dark: #0F766E; --primary-light: #CCFBF1; --accent: #0D9488; --accent-2: #0F766E; --accent-glow: rgba(13,148,136,0.18); --bg: #F1F5F9; --shell: linear-gradient(150deg, #F1F5F9 0%, #E2E8F0 100%); --card: rgba(255,255,255,0.95); --card-solid: #FFFFFF; --card-alt: #F8FAFC; --header: #0B1957; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --danger: #EF4444; --success: #10B981; }
-:root[data-theme="world8"] .top-header { background: linear-gradient(135deg, #0B1957 0%, #0F2B6B 60%, #0D9488 100%) !important; color: #FFFFFF !important; border-radius: 0 0 24px 24px !important; border-bottom: none !important; }
-:root[data-theme="world8"] .top-header h1, :root[data-theme="world8"] .top-header p, :root[data-theme="world8"] .top-header div { color: #FFFFFF !important; }
-:root[data-theme="world8"] .top-header .exit-btn { background: rgba(220, 38, 38, 0.35) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
-:root[data-theme="world8"] .top-header .role-tag, :root[data-theme="world8"] .top-header .circle-btn { background: rgba(255, 255, 255, 0.16) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
-:root[data-theme="world8"] .top-header input { background: #FFFFFF !important; color: #0F172A !important; }
-:root[data-theme="world8"] .btn-glow { background: #0B1957 !important; color: #FFFFFF !important; box-shadow: 0 4px 14px rgba(11,25,87,0.25) !important; }    
+    :root[data-theme="world8"] { --navy: #0B1957; --primary: #0D9488; --primary-dark: #0F766E; --primary-light: #CCFBF1; --accent: #0D9488; --accent-2: #0F766E; --accent-glow: rgba(13,148,136,0.18); --glow: rgba(13,148,136,0.25); --light: #CCFBF1; --bg: #F1F5F9; --shell: linear-gradient(150deg, #F1F5F9 0%, #E2E8F0 100%); --card: rgba(255,255,255,0.95); --card-solid: #FFFFFF; --card-alt: #F8FAFC; --header: #0B1957; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --danger: #EF4444; --success: #10B981; --banner: linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%); --banner-txt: #0B1957; --btn-txt: #FFFFFF; }
+    :root[data-theme="world8"] .top-header { background: linear-gradient(135deg, #0B1957 0%, #0F2B6B 60%, #0D9488 100%) !important; color: #FFFFFF !important; border-radius: 0 0 24px 24px !important; border-bottom: none !important; }
+    :root[data-theme="world8"] .top-header h1, :root[data-theme="world8"] .top-header p, :root[data-theme="world8"] .top-header div { color: #FFFFFF !important; }
+    :root[data-theme="world8"] .top-header .exit-btn { background: rgba(220, 38, 38, 0.35) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
+    :root[data-theme="world8"] .top-header .role-tag, :root[data-theme="world8"] .top-header .circle-btn { background: rgba(255, 255, 255, 0.16) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
+    :root[data-theme="world8"] .top-header input { background: #FFFFFF !important; color: #0F172A !important; }
+    :root[data-theme="world8"] .btn-glow { background: #0B1957 !important; color: #FFFFFF !important; box-shadow: 0 4px 14px rgba(11,25,87,0.25) !important; }
     :root[data-theme="royal-obsidian"] { --bg:#080A0F; --shell:linear-gradient(180deg,#121722 0%,#080A0F 100%); --card:rgba(20,25,36,0.94); --card-solid:#141924; --card-alt:#1C2332; --text:#F8FAFC; --muted:#94A3B8; --border:rgba(212,175,55,0.24); --primary:#D4AF37; --glow:rgba(212,175,55,0.32); --light:rgba(212,175,55,0.15); --accent:#10B981; --danger:#EF4444; --banner:linear-gradient(135deg,#E5C158 0%,#AA821A 100%); --banner-txt:#080A0F; --btn-txt:#080A0F; }
     :root[data-theme="clinical-daylight"] { --bg:#EEF2F6; --shell:linear-gradient(180deg,#F8FAFC 0%,#EEF2F6 100%); --card:#FFFFFF; --card-solid:#FFFFFF; --card-alt:#F1F5F9; --text:#0F172A; --muted:#64748B; --border:#CBD5E1; --primary:#0D9488; --glow:rgba(13,148,136,0.25); --light:#CCFBF1; --accent:#D97706; --danger:#EF4444; --banner:linear-gradient(135deg,#0B1957 0%,#0D9488 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
     :root[data-theme="emerald-glass"] { --bg:#031A15; --shell:linear-gradient(180deg,#062F26 0%,#031A15 100%); --card:rgba(9,48,39,0.92); --card-solid:#093027; --card-alt:#0E4236; --text:#ECFDF5; --muted:#6EE7B7; --border:rgba(52,211,153,0.25); --primary:#34D399; --glow:rgba(52,211,153,0.35); --light:rgba(52,211,153,0.16); --accent:#FBBF24; --danger:#F87171; --banner:linear-gradient(135deg,#D9B166 0%,#A37A2D 100%); --banner-txt:#031A15; --btn-txt:#031A15; }
@@ -76,6 +76,7 @@
     .b-chip { font-size:0.65rem; font-weight:800; padding:2px 7px; border-radius:7px; display:inline-block; margin-left:4px; }
     .b-fia { background:rgba(168,85,247,0.16); color:#C084FC; border:1px solid rgba(168,85,247,0.3); }
     .b-exp { background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); }
+    .b-multi { background:rgba(16,185,129,0.16); color:var(--primary); border:1px solid rgba(16,185,129,0.35); }
     .inv-left { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
     .price-tag { font-size:0.85rem; font-weight:900; color:var(--accent); background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.32); padding:3px 9px; border-radius:9px; }
     .btn-add-p { background:var(--primary); color:var(--btn-txt); border:none; padding:6px 10px; border-radius:9px; font-size:0.72rem; font-weight:900; cursor:pointer; }
@@ -121,6 +122,9 @@
     .sw-slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:2px; background:var(--muted); border-radius:50%; transition:0.25s; }
     .sw-toggle input:checked + .sw-slider { background:var(--light); border-color:var(--primary); }
     .sw-toggle input:checked + .sw-slider:before { transform:translateX(19px); background:var(--primary); }
+
+    .md-barcode-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; background:var(--card-solid); border:1px solid var(--border); font-size:0.8rem; font-weight:800; color:var(--text); }
+    .md-barcode-pill.primary-bc { border-color:var(--primary); background:var(--light); }
 
     nav.bottom-dock { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:var(--card-solid); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; padding:7px 6px 12px; box-shadow:0 -8px 25px rgba(0,0,0,0.4); z-index:900; }
     .dock-btn { border:none; background:transparent; color:var(--muted); font-size:0.67rem; font-weight:800; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
@@ -177,7 +181,8 @@
     <header class="top-header">
       <div class="h-row">
         <div class="b-mini">
-<div class="b-icon" style="overflow:hidden;padding:2px;background:#F8F7F4;"><img src="icon-192.png" alt="O CARE" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
+          <div class="b-icon" style="overflow:hidden;padding:2px;background:#F8F7F4;"><img src="icon-192.png" alt="O CARE" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
+          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
         </div>
         <div class="h-tools">
           <button class="circle-btn" onclick="switchTab('notes')">🔔<span class="notif-dot" id="notifBadge">0</span></button>
@@ -200,6 +205,7 @@
       <button class="pill-tab" id="tabBtn_shortages" onclick="switchTab('shortages')">🏥 النواقص والفروع</button>
       <button class="pill-tab" id="tabBtn_notes" onclick="switchTab('notes')">📝 تسليم الشفت</button>
       <button class="pill-tab" id="tabBtn_reports" onclick="switchTab('reports')">📊 التقارير</button>
+      <button class="pill-tab" id="tabBtn_masterData" style="display:none;" onclick="switchTab('masterData')">🗂️ البيانات الأساسية</button>
       <button class="pill-tab" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
     </div>
 
@@ -331,15 +337,72 @@
       </div>
     </div>
 
-    <!-- 8. إعدادات المطور الشاملة -->
+    <!-- 8. البيانات الأساسية (للمشرف فقط - تعديل الأصناف وتعدد الباركود حتى 7) -->
+    <div id="view_masterData" style="display:none;">
+      <div class="bento-card">
+        <div class="bento-head">
+          <h3>🗂️ البيانات الأساسية وتعدد الباركود (للمشرف)</h3>
+          <span class="b-chip b-multi" id="mdEditedCountBadge">0 معدّل</span>
+        </div>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:10px;">ابحث عن أي صنف بالاسم أو الرقم أو أي باركود لتعديل بياناته أو ربط حتى 7 باركودات لنفس رقم الصنف:</p>
+
+        <div style="display:flex;gap:7px;margin-bottom:10px;">
+          <input type="text" id="mdSearchInput" placeholder="ابحث برقم الصنف أو الاسم أو أي باركود..." oninput="searchMasterItem()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.83rem;outline:none;">
+          <button type="button" class="btn-add-p" onclick="openScanner('masterSearch')" style="padding:0 13px;border-radius:12px;display:flex;align-items:center;gap:4px;"><svg width="17" height="17"><use href="#icon-laser-scanner"></use></svg> مسح</button>
+        </div>
+
+        <div id="mdSearchResults" style="max-height:210px;overflow-y:auto;margin-bottom:10px;border-radius:12px;"></div>
+
+        <div id="mdEditorCard" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-top:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:0.84rem;font-weight:900;color:var(--primary);">رقم الصنف: <strong id="mdItemCode" style="font-size:0.95rem;"></strong></span>
+            <span id="mdBarcodeCounter" class="b-chip b-multi">1 / 7 باركود</span>
+          </div>
+
+          <div class="inp-wrap">
+            <label>اسم الصنف *</label>
+            <div class="inp-box"><input type="text" id="mdItemName" placeholder="اسم الصنف الكامل"></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div class="inp-wrap" style="margin-bottom:0;">
+              <label>سعر البيع (ر.س) *</label>
+              <div class="inp-box"><input type="number" step="0.01" id="mdItemPrice" placeholder="0.00"></div>
+            </div>
+            <div class="inp-wrap" style="margin-bottom:0;">
+              <label>القسم / الفئة</label>
+              <div class="inp-box"><input type="text" id="mdItemCat" list="fiaDatalist" placeholder="الفئة"></div>
+            </div>
+          </div>
+
+          <div style="background:var(--card-alt);padding:12px;border-radius:16px;border:1px solid var(--border);margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <strong style="font-size:0.8rem;">🏷️ الباركودات المرتبطة بالصنف (حتى 7):</strong>
+              <small style="font-size:0.66rem;color:var(--muted);">⭐ الأساسي</small>
+            </div>
+            <div id="mdBarcodeList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+
+            <div id="mdAddBarcodeRow" style="display:flex;gap:6px;">
+              <input type="text" id="mdNewBarcodeInput" placeholder="امسح بالليزر أو اكتب باركود إضافي..." onkeydown="if(event.key==='Enter'){event.preventDefault();addMasterBarcode();}" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--border);background:var(--card-solid);color:var(--text);font-size:0.82rem;outline:none;">
+              <button type="button" class="btn-sub" onclick="openScanner('masterAdd')" title="مسح بالكاميرا" style="padding:0 11px;border-radius:11px;"><svg width="17" height="17"><use href="#icon-laser-scanner"></use></svg></button>
+              <button type="button" class="btn-add-p" onclick="addMasterBarcode()" style="padding:0 13px;border-radius:11px;">+ إضافة</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-glow" onclick="saveMasterItemChanges()">💾 حفظ التعديلات ومزامنتها فوراً</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. إعدادات المطور الشاملة -->
     <div id="view_settings" style="display:none;">
       <div class="bento-card">
-        <div class="bento-head"><h3>🎨 اختيار الثيم (5 ثيمات تفاعلية)</h3></div>
+        <div class="bento-head"><h3>🎨 اختيار الثيم (ثيمات تفاعلية)</h3></div>
         <div class="theme-grid">
           <div class="theme-tile" id="themeCard_world8" onclick="changeSystemTheme('world8', true)">
-  <div class="theme-dot" style="background:linear-gradient(135deg, #0B1957 0%, #0D9488 55%, #F1F5F9 100%);"></div>
-  <div class="theme-name">أوكير الكلاسيكي (World 8)</div>
-</div>
+            <div class="theme-dot" style="background:linear-gradient(135deg, #0B1957 0%, #0D9488 55%, #F1F5F9 100%);"></div>
+            <span>أوكير الكلاسيكي (World 8)</span>
+          </div>
           <div class="theme-tile" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0D1F27,#10B981);"></div><span>Slate & Mint</span></div>
           <div class="theme-tile" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#080A0F,#D4AF37);"></div><span>الفخامة الملكية</span></div>
           <div class="theme-tile" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div><span>البياض الطبي</span></div>
@@ -471,12 +534,14 @@
     let currentUser = null, baseExcelProducts = [], allProducts = [];
     let customCloudProducts = safeGetStorage('ocare_custom_products', []);
     let storeImagesMap = safeGetStorage('ocare_store_images_map', {});
+    let masterEdits = safeGetStorage('ocare_master_edits', {});
     let priceCart = safeGetStorage('ocare_price_cart', []);
     let barcodeOrders = safeGetStorage('ocare_barcode_orders', []);
     let shortagesList = safeGetStorage('ocare_shortages_list', []);
     let shiftNotes = safeGetStorage('ocare_shift_notes', []);
     let auditLogs = safeGetStorage('ocare_audit_logs', []);
     let scannerInstance = null, scannerTargetMode = 'search', torchEnabled = false, tempNoteImageBase64 = '', activeBrandName = '';
+    let activeMasterItem = null, activeMasterBarcodes = [];
 
     function showToast(msg) {
       const t = document.getElementById('toastBox');
@@ -534,12 +599,27 @@
       return { barcode: clean, expiryDate: extractedExpiry };
     }
 
+    function getProductAllBarcodes(p) {
+      if (!p) return [];
+      const list = [];
+      if (p.barcode) list.push(String(p.barcode).trim());
+      if (Array.isArray(p.barcodes)) {
+        p.barcodes.forEach(b => {
+          const s = String(b || '').trim();
+          if (s && !list.includes(s)) list.push(s);
+        });
+      }
+      return list.slice(0, 7);
+    }
+
     function findProductSmart(codeStr) {
       if (!codeStr) return null;
       const c = String(codeStr).trim(), noZero = c.replace(/^0+/, '');
       return allProducts.find(p => {
-        const b = String(p.barcode || '').trim(), n = String(p.item_number || '').trim();
-        return b === c || n === c || (noZero && b.replace(/^0+/, '') === noZero);
+        const n = String(p.item_number || '').trim();
+        if (n === c) return true;
+        const allBc = getProductAllBarcodes(p);
+        return allBc.some(b => b === c || (noZero && b.replace(/^0+/, '') === noZero));
       });
     }
 
@@ -556,11 +636,24 @@
       return out;
     }
 
+    function cleanMasterEditsMap(val) {
+      if (!val || typeof val !== 'object') return {};
+      const out = {};
+      Object.keys(val).forEach(k => {
+        if (k !== '_empty' && val[k] && typeof val[k] === 'object') {
+          const entry = { ...val[k] };
+          if (entry.barcodes) entry.barcodes = cleanArray(entry.barcodes).map(b => String(b).trim()).filter(Boolean).slice(0, 7);
+          out[k] = entry;
+        }
+      });
+      return out;
+    }
+
     function pushDataToFirebase(key, val) {
       if (!cloudRef || isApplyingRemoteUpdate) return;
       let payload = val;
       if (Array.isArray(val)) payload = val.length === 0 ? ['_EMPTY_'] : val;
-      else if (key === 'savedBatches') payload = (!val || Object.keys(val).length === 0) ? { _empty: true } : val;
+      else if (key === 'savedBatches' || key === 'masterEdits') payload = (!val || Object.keys(val).length === 0) ? { _empty: true } : val;
       cloudRef.child(key).set(payload).catch(() => {});
     }
 
@@ -607,6 +700,10 @@
           storeImagesMap = data.storeImagesMap;
           localStorage.setItem('ocare_store_images_map', JSON.stringify(storeImagesMap));
         }
+        if (data.masterEdits !== undefined) {
+          masterEdits = cleanMasterEditsMap(data.masterEdits);
+          localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
+        }
         customCloudProducts = cleanArray(data.customProducts);
         localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
         const cloudBatches = cleanBatchesMap(data.savedBatches);
@@ -619,28 +716,63 @@
         shiftNotes = cleanArray(data.shiftNotes);
         localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
         if (data.auditLogs) { auditLogs = cleanArray(data.auditLogs); localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs)); }
-        renderInventory(); renderPriceCalc(); renderRegisteredExpiryList(); renderBarcodeOrders(); renderShortages(); renderShiftNotes(); renderAuditLogs(); updateNotifBadge();
+        renderInventory(); renderPriceCalc(); renderRegisteredExpiryList(); renderBarcodeOrders(); renderShortages(); renderShiftNotes(); renderAuditLogs(); updateNotifBadge(); updateMasterEditedBadge();
         isApplyingRemoteUpdate = false;
       });
+    }
+
+    function getMasterEditKey(p) {
+      const raw = String(p.item_number || p.barcode || p.uid || '').trim();
+      return raw.replace(/[.#$\[\]\/]/g, '_');
+    }
+
+    function applyMasterEditsToProduct(p) {
+      const mKey = getMasterEditKey(p);
+      const codeStr = String(p.item_number || '').trim();
+      const edit = masterEdits[mKey] || (codeStr ? masterEdits[codeStr] : null);
+      if (edit) {
+        if (edit.name) p.name = String(edit.name).trim();
+        if (edit.price !== undefined && edit.price !== '' && !isNaN(parseFloat(edit.price))) {
+          p.price = Number(parseFloat(edit.price).toFixed(2));
+        }
+        if (edit.fia) p.fia = String(edit.fia).trim();
+        if (Array.isArray(edit.barcodes) && edit.barcodes.length > 0) {
+          const uniqBc = [...new Set(edit.barcodes.map(b => String(b).trim()).filter(Boolean))].slice(0, 7);
+          p.barcodes = uniqBc;
+          p.barcode = uniqBc[0];
+        }
+      }
+      if (!Array.isArray(p.barcodes) || !p.barcodes.length) {
+        p.barcodes = p.barcode ? [String(p.barcode).trim()] : [];
+      } else {
+        p.barcodes = [...new Set(p.barcodes.map(b => String(b).trim()).filter(Boolean))].slice(0, 7);
+        if (!p.barcode && p.barcodes.length) p.barcode = p.barcodes[0];
+      }
     }
 
     function rebuildAllProductsList(savedBatchesMap) {
       const bMap = savedBatchesMap || cleanBatchesMap(safeGetStorage('ocare_saved_batches', {}));
       const seenKeys = new Set();
       const merged = [];
-      [...customCloudProducts, ...baseExcelProducts].forEach(p => {
-        if (!p || !p.name) return;
+      [...customCloudProducts, ...baseExcelProducts].forEach(rawP => {
+        if (!rawP || !rawP.name) return;
+        const p = { ...rawP };
+        applyMasterEditsToProduct(p);
         const uniq = `${String(p.barcode || '').trim()}_${String(p.item_number || '').trim()}`;
         if (uniq !== '_' && seenKeys.has(uniq)) return;
         if (uniq !== '_') seenKeys.add(uniq);
         const key = String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_');
         p.batches = bMap[key] || bMap[p.barcode] || bMap[p.item_number] || [];
-        if (!p.image) p.image = storeImagesMap[p.barcode] || storeImagesMap[p.item_number] || '';
+        if (!p.image) {
+          const allBc = getProductAllBarcodes(p);
+          p.image = allBc.map(b => storeImagesMap[b]).find(Boolean) || storeImagesMap[p.item_number] || '';
+        }
         merged.push(p);
       });
       allProducts = merged;
       const el = document.getElementById('fiaDatalist');
       if (el) el.innerHTML = [...new Set(allProducts.map(p => p.fia))].map(f => `<option value="${f}">`).join('');
+      updateMasterEditedBadge();
     }
 
     function checkMaintenanceBlock() {
@@ -702,11 +834,151 @@
       document.getElementById('userGreeting').innerText = `مرحباً، ${currentUser.name} 👋`;
       document.getElementById('roleBadge').innerText = isAdm ? '🟢 مطور' : '👤 موظف';
       document.getElementById('adminInventoryHeaderCard').style.display = isAdm ? 'block' : 'none';
+      document.getElementById('tabBtn_masterData').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('tabBtn_settings').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('btnClearPrintedBO').style.display = isAdm ? 'inline-block' : 'none';
       document.querySelectorAll('.admin-export-btns').forEach(el => { el.style.display = isAdm ? 'flex' : 'none'; });
       updateNotifBadge();
-      if (isAdm) renderSettingsUI();
+      if (isAdm) { renderSettingsUI(); updateMasterEditedBadge(); }
+    }
+
+    // --- برمجة صفحة البيانات الأساسية وتعدد الباركود (حتى 7 باركودات) ---
+    function updateMasterEditedBadge() {
+      const badge = document.getElementById('mdEditedCountBadge');
+      if (badge) badge.innerText = `${Object.keys(masterEdits || {}).length} معدّل`;
+    }
+
+    function searchMasterItem() {
+      const inp = document.getElementById('mdSearchInput');
+      const box = document.getElementById('mdSearchResults');
+      if (!inp || !box) return;
+      const q = inp.value.trim().toLowerCase();
+      const qNoZero = q.replace(/^0+/, '');
+      if (!q) { box.innerHTML = ''; return; }
+
+      const matches = allProducts.filter(p => {
+        const code = String(p.item_number || '').toLowerCase();
+        const name = String(p.name || '').toLowerCase();
+        const allBc = getProductAllBarcodes(p);
+        return code.includes(q) || name.includes(q) || allBc.some(b => b.toLowerCase().includes(q) || (qNoZero && b.replace(/^0+/, '').toLowerCase().includes(qNoZero)));
+      }).slice(0, 15);
+
+      if (matches.length === 1 && (String(matches[0].item_number || '').trim().toLowerCase() === q || getProductAllBarcodes(matches[0]).some(b => b.toLowerCase() === q))) {
+        selectMasterItem(matches[0].uid);
+        return;
+      }
+
+      box.innerHTML = matches.map(p => {
+        const allBc = getProductAllBarcodes(p);
+        return `<div onclick="selectMasterItem('${p.uid}')" style="padding:10px 12px;background:var(--card-alt);border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <div style="min-width:0;flex:1;">
+            <div style="font-weight:900;font-size:0.83rem;color:var(--text);">${p.name}</div>
+            <div style="font-size:0.71rem;color:var(--muted);">رقم: <strong>${p.item_number || '-'}</strong> | باركود أساسي: <strong>${p.barcode || '-'}</strong> (${allBc.length}/7)</div>
+          </div>
+          <span class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</span>
+        </div>`;
+      }).join('') || `<div style="padding:12px;text-align:center;color:var(--muted);font-size:0.8rem;">لا توجد أصناف مطابقة</div>`;
+    }
+
+    function selectMasterItem(uid) {
+      const p = allProducts.find(x => x.uid === uid);
+      if (!p) return;
+      activeMasterItem = p;
+      document.getElementById('mdEditorCard').style.display = 'block';
+      document.getElementById('mdSearchResults').innerHTML = '';
+      document.getElementById('mdItemCode').innerText = p.item_number || p.uid;
+      document.getElementById('mdItemName').value = p.name || '';
+      document.getElementById('mdItemPrice').value = Number(p.price || 0);
+      document.getElementById('mdItemCat').value = p.fia || '';
+      activeMasterBarcodes = getProductAllBarcodes(p);
+      renderMasterBarcodes();
+    }
+
+    function renderMasterBarcodes() {
+      const listEl = document.getElementById('mdBarcodeList');
+      const counterEl = document.getElementById('mdBarcodeCounter');
+      const addRowEl = document.getElementById('mdAddBarcodeRow');
+      if (!listEl) return;
+      if (counterEl) counterEl.innerText = `${activeMasterBarcodes.length} / 7 باركود`;
+      if (addRowEl) addRowEl.style.display = activeMasterBarcodes.length >= 7 ? 'none' : 'flex';
+
+      listEl.innerHTML = activeMasterBarcodes.map((b, idx) => `
+        <span class="md-barcode-pill ${idx === 0 ? 'primary-bc' : ''}">
+          <span>${idx === 0 ? '⭐' : `#${idx + 1}`} ${b}</span>
+          ${idx > 0 ? `<button type="button" onclick="setPrimaryMasterBarcode(${idx})" title="تعيين كباركود أساسي" style="border:none;background:transparent;color:var(--primary);font-size:0.75rem;cursor:pointer;">⬆️</button>` : ''}
+          ${activeMasterBarcodes.length > 1 ? `<button type="button" onclick="removeMasterBarcode(${idx})" title="حذف الباركود" style="border:none;background:transparent;color:var(--danger);font-weight:900;cursor:pointer;">✕</button>` : ''}
+        </span>
+      `).join('');
+    }
+
+    function setPrimaryMasterBarcode(idx) {
+      if (idx <= 0 || idx >= activeMasterBarcodes.length) return;
+      const chosen = activeMasterBarcodes.splice(idx, 1)[0];
+      activeMasterBarcodes.unshift(chosen);
+      renderMasterBarcodes();
+      showToast('⭐ تم تعيينه كباركود أساسي');
+    }
+
+    function addMasterBarcode(scannedCode) {
+      if (!activeMasterItem) return alert('اختر صنفاً أولاً');
+      const input = document.getElementById('mdNewBarcodeInput');
+      const parsed = parseDrugOrStandardBarcode(scannedCode || (input && input.value) || '');
+      const val = String(parsed.barcode || '').trim();
+      if (!val) return;
+      if (activeMasterBarcodes.length >= 7) {
+        showToast('⚠️ الحد الأقصى 7 باركودات لنفس الصنف');
+        return;
+      }
+      if (activeMasterBarcodes.includes(val)) {
+        showToast('⚠️ هذا الباركود مضاف مسبقاً لهذا الصنف');
+        if (input && !scannedCode) input.value = '';
+        return;
+      }
+      const conflict = findProductSmart(val);
+      if (conflict && conflict.uid !== activeMasterItem.uid) {
+        if (!confirm(`⚠️ تنبيه: هذا الباركود (${val}) مسجل حالياً لصنف آخر (${conflict.name}). هل تريد إضافته هنا أيضاً؟`)) return;
+      }
+      activeMasterBarcodes.push(val);
+      if (input && !scannedCode) input.value = '';
+      renderMasterBarcodes();
+      showToast(`✅ تم إضافة الباركود (${activeMasterBarcodes.length}/7)`);
+    }
+
+    function removeMasterBarcode(idx) {
+      if (activeMasterBarcodes.length <= 1) return showToast('⚠️ يجب بقاء باركود واحد على الأقل');
+      activeMasterBarcodes.splice(idx, 1);
+      renderMasterBarcodes();
+    }
+
+    function saveMasterItemChanges() {
+      if (!currentUser || currentUser.role !== 'admin') return alert('⛔ هذه الصلاحية للمشرف/المطور فقط');
+      if (!activeMasterItem) return alert('اختر صنفاً أولاً');
+      const newName = document.getElementById('mdItemName').value.trim();
+      const newPrice = Number((parseFloat(document.getElementById('mdItemPrice').value) || 0).toFixed(2));
+      const newCat = document.getElementById('mdItemCat').value.trim() || 'مورد عام';
+      if (!newName) return alert('يرجى إدخال اسم الصنف');
+      if (!activeMasterBarcodes.length) return alert('يرجى إضافة باركود واحد على الأقل');
+
+      const mKey = getMasterEditKey(activeMasterItem);
+      masterEdits[mKey] = {
+        item_number: String(activeMasterItem.item_number || '').trim(),
+        name: newName,
+        price: newPrice,
+        fia: newCat,
+        barcodes: [...activeMasterBarcodes].slice(0, 7),
+        updatedAt: Date.now(),
+        updatedBy: currentUser.name
+      };
+
+      localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
+      pushDataToFirebase('masterEdits', masterEdits);
+      logAuditAction(`تعديل البيانات الأساسية للصنف (${newName} - ${activeMasterBarcodes.length} باركود)`);
+      rebuildAllProductsList();
+      renderInventory();
+      renderPriceCalc();
+      renderBarcodeOrders();
+      renderShortages();
+      showToast('✅ تم حفظ التعديلات ومزامنتها مع جميع الصفحات والأجهزة');
     }
 
     function openAddCustomProductModal() {
@@ -724,7 +996,8 @@
       const price = parseFloat(document.getElementById('cpPrice').value) || 0;
       const image = document.getElementById('cpImage').value.trim();
       if (!name) return alert('يرجى إدخال اسم الصنف');
-      customCloudProducts.unshift({ uid: 'cp_' + Date.now(), item_number: itemNum || String(Date.now()).slice(-5), barcode: barcode || itemNum || String(Date.now()).slice(-8), name, fia, price: Number(price.toFixed(2)), image, batches: [] });
+      const mainBc = barcode || itemNum || String(Date.now()).slice(-8);
+      customCloudProducts.unshift({ uid: 'cp_' + Date.now(), item_number: itemNum || String(Date.now()).slice(-5), barcode: mainBc, barcodes: [mainBc], name, fia, price: Number(price.toFixed(2)), image, batches: [] });
       localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
       pushDataToFirebase('customProducts', customCloudProducts);
       logAuditAction(`إضافة صنف (${name})`);
@@ -751,6 +1024,8 @@
             if (!name) return;
             const itemNum = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Number'] || '').replace(/\.0$/, '').trim();
             const barcode = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
+            const extraBcRaw = String(r['باركودات إضافية'] || '').trim();
+            const extraBc = extraBcRaw ? extraBcRaw.split(/[,،|]/).map(x => x.trim()).filter(Boolean) : [];
             const fia = String(r['الفئة'] || r['الفئة '] || r['القسم'] || 'مورد عام').trim();
             const price = Number((parseFloat(r['سعر البيع'] || r['السعر'] || r['Price']) || 0).toFixed(2));
             const image = String(r['الصورة'] || r['صورة الصنف'] || r['Image'] || '').trim();
@@ -761,10 +1036,12 @@
             );
 
             if (existingIdx > -1) {
+              const mergedBc = [...new Set([barcode || customCloudProducts[existingIdx].barcode, ...extraBc].filter(Boolean))].slice(0, 7);
               customCloudProducts[existingIdx] = {
                 ...customCloudProducts[existingIdx],
                 item_number: itemNum || customCloudProducts[existingIdx].item_number,
-                barcode: barcode || customCloudProducts[existingIdx].barcode,
+                barcode: mergedBc[0] || customCloudProducts[existingIdx].barcode,
+                barcodes: mergedBc,
                 name,
                 fia: fia || customCloudProducts[existingIdx].fia,
                 price: price || customCloudProducts[existingIdx].price,
@@ -772,10 +1049,13 @@
               };
               updatedCount++;
             } else {
+              const firstBc = barcode || itemNum || String(nowTs + idx).slice(-8);
+              const allBc = [...new Set([firstBc, ...extraBc].filter(Boolean))].slice(0, 7);
               customCloudProducts.unshift({
                 uid: 'cp_' + nowTs + '_' + idx,
                 item_number: itemNum || String(nowTs + idx).slice(-6),
-                barcode: barcode || itemNum || String(nowTs + idx).slice(-8),
+                barcode: firstBc,
+                barcodes: allBc,
                 name,
                 fia,
                 price,
@@ -838,10 +1118,15 @@
             rows.forEach((r, idx) => {
               const name = String(r['اسم الصنف '] || r['اسم الصنف'] || '').trim();
               if (name) {
+                const bc = String(r['الباركود '] || r['الباركود'] || '').replace(/\.0$/, '').trim();
+                const extraRaw = String(r['باركودات إضافية'] || '').trim();
+                const extraList = extraRaw ? extraRaw.split(/[,،|]/).map(x => x.trim()).filter(Boolean) : [];
+                const barcodes = [...new Set([bc, ...extraList].filter(Boolean))].slice(0, 7);
                 items.push({
                   uid: 'p_' + idx,
                   item_number: String(r['رقم الصنف '] || r['رقم الصنف'] || '').replace(/\.0$/, '').trim(),
-                  barcode: String(r['الباركود '] || r['الباركود'] || '').replace(/\.0$/, '').trim(),
+                  barcode: bc,
+                  barcodes,
                   name,
                   fia: String(r['الفئة'] || 'مورد عام').trim(),
                   price: Number((parseFloat(r['سعر البيع']) || 0).toFixed(2)),
@@ -861,7 +1146,6 @@
       if (!rows || !rows.length) return;
       const cols = Object.keys(rows[0]);
 
-      // تجهيز البيانات مع ضمان بقاء الباركود ورقم الصنف نصاً صريحاً لمنع الصيغة العلمية
       const normalizedRows = rows.map(r => {
         const obj = {};
         cols.forEach(c => {
@@ -875,11 +1159,8 @@
       });
 
       const ws = XLSX.utils.json_to_sheet(normalizedRows);
-
-      // ضبط اتجاه الورقة من اليمين لليسار (RTL)
       ws['!views'] = [{ rightToLeft: true }];
 
-      // حساب عرض الأعمدة والمسافات المريحة تلقائياً حسب المحتوى ونوع العمود
       ws['!cols'] = cols.map(c => {
         let maxLen = c.length + 6;
         normalizedRows.slice(0, 500).forEach(r => {
@@ -894,14 +1175,12 @@
         return { wch: Math.max(maxLen, 15) };
       });
 
-      // ضبط ارتفاع الصفوف (صف الترويسة 28 وصفوف البيانات 22)
       const rowHeights = [{ hpt: 28 }];
       for (let i = 0; i < normalizedRows.length; i++) {
         rowHeights.push({ hpt: 22 });
       }
       ws['!rows'] = rowHeights;
 
-      // تطبيق التصميم والألوان والحدود على جميع الخلايا
       const range = XLSX.utils.decode_range(ws['!ref']);
       const borderStyle = {
         top: { style: 'thin', color: { rgb: 'CBD5E1' } },
@@ -922,7 +1201,6 @@
           }
 
           if (R === 0) {
-            // تنسيق صف العناوين الكحلي الغامق مع النص الأبيض العريض
             ws[cellRef].s = {
               fill: { patternType: 'solid', fgColor: { rgb: '0B1957' } },
               font: { name: 'Arial', sz: 11, bold: true, color: { rgb: 'FFFFFF' } },
@@ -935,7 +1213,6 @@
               }
             };
           } else {
-            // تنسيق خلايا البيانات في المنتصف مع مسافات وحدود واضحة
             ws[cellRef].s = {
               fill: { patternType: 'solid', fgColor: { rgb: 'FFFFFF' } },
               font: { name: 'Arial', sz: 11, bold: false, color: { rgb: '0F172A' } },
@@ -954,7 +1231,17 @@
 
     function downloadFullClassifiedExcel() {
       if (!allProducts.length) return alert('المخزون غير محمل بعد');
-      const rows = allProducts.map(p => ({ 'رقم الصنف': p.item_number, 'الباركود': p.barcode, 'اسم الصنف': p.name, 'الفئة': p.fia, 'سعر البيع': p.price }));
+      const rows = allProducts.map(p => {
+        const allBc = getProductAllBarcodes(p);
+        return {
+          'رقم الصنف': p.item_number,
+          'الباركود': p.barcode,
+          'اسم الصنف': p.name,
+          'الفئة': p.fia,
+          'سعر البيع': p.price,
+          'باركودات إضافية': allBc.slice(1).join(' , ')
+        };
+      });
       writeStyledExcelWorkbook(rows, 'المخزون', 'مخزون_أوكير_الكامل.xlsx');
     }
 
@@ -964,21 +1251,28 @@
       if (currentUser && currentUser.role === 'admin') document.getElementById('totalLoadedCount').innerText = allProducts.length.toLocaleString();
       const filtered = allProducts.filter(p => {
         if (!q) return true;
-        const n = String(p.name || '').toLowerCase(), b = String(p.barcode || '').toLowerCase(), num = String(p.item_number || '').toLowerCase();
-        return n.includes(q) || b.includes(q) || num.includes(q) || (qNoZero && b.replace(/^0+/, '').includes(qNoZero));
+        const n = String(p.name || '').toLowerCase(), num = String(p.item_number || '').toLowerCase();
+        if (n.includes(q) || num.includes(q)) return true;
+        const allBc = getProductAllBarcodes(p);
+        return allBc.some(bc => {
+          const bLow = bc.toLowerCase();
+          return bLow.includes(q) || (qNoZero && bLow.replace(/^0+/, '').includes(qNoZero));
+        });
       });
       if (currentUser && currentUser.role === 'admin') document.getElementById('filteredCountLbl').innerText = `المطابق للبحث: ${filtered.length.toLocaleString()} صنف`;
       const box = document.getElementById('inventoryList');
       if (!filtered.length) { box.innerHTML = `<div class="bento-card" style="text-align:center;color:var(--muted);">لا توجد أصناف مطابقة للبحث.</div>`; return; }
       box.innerHTML = filtered.slice(0, 50).map(p => {
         const bHtml = (p.batches && p.batches.length) ? p.batches.map(b => `<span class="b-chip b-exp">📅 ${b.exp} (${b.qty})</span>`).join('') : '';
+        const allBc = getProductAllBarcodes(p);
+        const extraBcBadge = allBc.length > 1 ? `<span class="b-chip b-multi">+${allBc.length - 1} باركود</span>` : '';
         const thumb = p.image ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">` : `<span>${String(p.name || '💊').trim().slice(0, 2)}</span>`;
         return `<div class="inv-bento">
           <div class="inv-thumb">${thumb}</div>
           <div class="inv-info">
             <div class="inv-title">${p.name}</div>
             <div class="inv-codes">رقم: <strong>${p.item_number || '-'}</strong> | باركود: <strong>${p.barcode || '-'}</strong></div>
-            <div><span class="b-chip b-fia">${p.fia}</span>${bHtml}</div>
+            <div><span class="b-chip b-fia">${p.fia}</span>${extraBcBadge}${bHtml}</div>
           </div>
           <div class="inv-left">
             <div class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</div>
@@ -1112,15 +1406,20 @@
       const list = barcodeOrders.filter(x => x.group === grp);
       const isAdm = currentUser && currentUser.role === 'admin', box = document.getElementById('barcodeOrdersContainer');
       if (!list.length) { box.innerHTML = `<div style="grid-column:span 2;text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">لا توجد أصناف في ${grp}.</div>`; return; }
-      box.innerHTML = list.map(it => `<div class="bo-card ${it.done ? 'printed' : ''}">
-        <div class="bo-num">${it.item_number}</div>
-        <div style="font-size:0.75rem;font-weight:800;text-align:center;height:32px;overflow:hidden;">${it.name}</div>
-        <div class="bo-pill ${it.done ? 'done' : ''}" onclick="toggleBarcodeOrderDone('${it.uid}','${it.group}')">${it.done ? '✔️ مطبوع' : 'مطبوع / غير مطبوع'}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="stepper"><button onclick="changeBOQty('${it.uid}','${it.group}',-1)">-</button><span>${it.qty}</span><button onclick="changeBOQty('${it.uid}','${it.group}',1)">+</button></div>
-          ${isAdm ? `<button onclick="deleteBOItem('${it.uid}','${it.group}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:5px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
-        </div>
-      </div>`).join('');
+      box.innerHTML = list.map(it => {
+        const liveP = allProducts.find(x => x.uid === it.uid || (it.item_number && x.item_number === it.item_number));
+        const dispName = liveP ? liveP.name : it.name;
+        const dispNum = liveP ? (liveP.item_number || it.item_number) : it.item_number;
+        return `<div class="bo-card ${it.done ? 'printed' : ''}">
+          <div class="bo-num">${dispNum}</div>
+          <div style="font-size:0.75rem;font-weight:800;text-align:center;height:32px;overflow:hidden;">${dispName}</div>
+          <div class="bo-pill ${it.done ? 'done' : ''}" onclick="toggleBarcodeOrderDone('${it.uid}','${it.group}')">${it.done ? '✔️ مطبوع' : 'مطبوع / غير مطبوع'}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="stepper"><button onclick="changeBOQty('${it.uid}','${it.group}',-1)">-</button><span>${it.qty}</span><button onclick="changeBOQty('${it.uid}','${it.group}',1)">+</button></div>
+            ${isAdm ? `<button onclick="deleteBOItem('${it.uid}','${it.group}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:5px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+          </div>
+        </div>`;
+      }).join('');
     }
 
     function toggleBarcodeOrderDone(uid, grp) {
@@ -1148,11 +1447,16 @@
       const list = shortagesList.filter(x => x.branch === br);
       const isAdm = currentUser && currentUser.role === 'admin', box = document.getElementById('shortagesListContainer');
       if (!list.length) { box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">لا توجد مواد مطلوبة في (${br}).</div>`; return; }
-      box.innerHTML = list.map(it => `<div class="calc-row">
-        <div style="flex:1;"><span class="b-chip b-exp" style="margin-bottom:4px;">حالة: مطلوب (${it.date || ''})</span><div style="font-size:0.82rem;font-weight:900;">${it.name}</div><div style="font-size:0.7rem;color:var(--muted);">رقم: ${it.item_number} | ${it.branch}</div></div>
-        <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><input type="number" min="1" class="qty-manual-inp" value="${it.qty}" onclick="this.select()" onchange="setShortQty('${it.uid}','${it.branch}',this.value)"><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
-        ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
-      </div>`).join('');
+      box.innerHTML = list.map(it => {
+        const liveP = allProducts.find(x => x.uid === it.uid || (it.item_number && x.item_number === it.item_number));
+        const dispName = liveP ? liveP.name : it.name;
+        const dispNum = liveP ? (liveP.item_number || it.item_number) : it.item_number;
+        return `<div class="calc-row">
+          <div style="flex:1;"><span class="b-chip b-exp" style="margin-bottom:4px;">حالة: مطلوب (${it.date || ''})</span><div style="font-size:0.82rem;font-weight:900;">${dispName}</div><div style="font-size:0.7rem;color:var(--muted);">رقم: ${dispNum} | ${it.branch}</div></div>
+          <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><input type="number" min="1" class="qty-manual-inp" value="${it.qty}" onclick="this.select()" onchange="setShortQty('${it.uid}','${it.branch}',this.value)"><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
+          ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+        </div>`;
+      }).join('');
     }
     function changeShortQty(uid, br, d) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, it.qty + d); syncShortages(); } }
     function setShortQty(uid, br, val) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, parseInt(val, 10) || 1); syncShortages(); } }
@@ -1261,7 +1565,11 @@
       const map = { pricing: 'priceSearchResults', expiry: 'expSearchResults', barcodeOrder: 'boSearchResults', shortages: 'shortSearchResults' };
       const box = document.getElementById(map[mod]); if (!box) return;
       const q = val.trim().toLowerCase(); if (!q) { box.style.display = 'none'; return; }
-      const m = allProducts.filter(p => String(p.name || '').toLowerCase().includes(q) || String(p.barcode || '').toLowerCase().includes(q) || String(p.item_number || '').toLowerCase().includes(q)).slice(0, 8);
+      const qNoZero = q.replace(/^0+/, '');
+      const m = allProducts.filter(p => {
+        if (String(p.name || '').toLowerCase().includes(q) || String(p.item_number || '').toLowerCase().includes(q)) return true;
+        return getProductAllBarcodes(p).some(bc => bc.toLowerCase().includes(q) || (qNoZero && bc.replace(/^0+/, '').toLowerCase().includes(qNoZero)));
+      }).slice(0, 8);
       box.innerHTML = m.map(p => `<div onclick="handleSubModuleSelect('${mod}','${p.uid}')" style="padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:0.78rem;"><strong>${p.item_number}</strong> - ${p.name} (${p.price} ر.س)</div>`).join('');
       box.style.display = 'block';
     }
@@ -1282,11 +1590,16 @@
         const raw = String(decoded || '').trim(); if (raw.length < 4) return;
         triggerScannerSuccessFeedback(); stopScanner();
         const parsed = parseDrugOrStandardBarcode(raw), found = findProductSmart(parsed.barcode);
-        if (scannerTargetMode === 'search') { switchTab('inventory'); document.getElementById('mainSearch').value = found ? (found.barcode || found.item_number) : parsed.barcode; renderInventory(); }
+        if (scannerTargetMode === 'search') { switchTab('inventory'); document.getElementById('mainSearch').value = found ? (found.item_number || found.barcode) : parsed.barcode; renderInventory(); }
         else if (scannerTargetMode === 'price') { if (found) addToPriceCalc(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
         else if (scannerTargetMode === 'expiry') { if (found) selectProductForExpiry(found.uid, parsed.expiryDate); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
         else if (scannerTargetMode === 'barcodeOrder') { if (found) addItemToBarcodeOrder(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
         else if (scannerTargetMode === 'shortages') { if (found) addItemToShortages(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+        else if (scannerTargetMode === 'masterSearch') {
+          if (found) { selectMasterItem(found.uid); showToast(`✅ تم تحديد الصنف: ${found.name}`); }
+          else { document.getElementById('mdSearchInput').value = parsed.barcode; searchMasterItem(); showToast(`⚠️ لم يتم العثور على باركود (${parsed.barcode})`); }
+        }
+        else if (scannerTargetMode === 'masterAdd') { addMasterBarcode(parsed.barcode); }
       }, () => {}).catch(() => stopScanner());
     }
 
@@ -1329,7 +1642,7 @@
     }
 
     function switchTab(tab) {
-      ['inventory','pricing','expiry','barcodeOrder','shortages','notes','reports','settings'].forEach(v => {
+      ['inventory','pricing','expiry','barcodeOrder','shortages','notes','reports','masterData','settings'].forEach(v => {
         const el = document.getElementById('view_' + v); if (el) el.style.display = v === tab ? 'block' : 'none';
         const b = document.getElementById('tabBtn_' + v); if (b) b.classList.toggle('active', v === tab);
         const nb = document.getElementById('bottomNav_' + v); if (nb) nb.classList.toggle('active', v === tab);
@@ -1340,6 +1653,7 @@
       if (tab === 'shortages') renderShortages();
       if (tab === 'notes') renderShiftNotes();
       if (tab === 'reports') renderBrandsGrid();
+      if (tab === 'masterData') updateMasterEditedBadge();
       if (tab === 'settings') renderSettingsUI();
     }
 
@@ -1414,15 +1728,15 @@
       const s = safeGetStorage('ocare_session_user', null);
       if (s && s.name) { currentUser = s; document.getElementById('loginOverlay').style.display = 'none'; applyPermissionsUI(); }
       autoLoadInventoryFromServer();
-renderPriceCalc();
+      renderPriceCalc();
     });
   </script>
   <script>
     if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    });
-  }
-</script>
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
