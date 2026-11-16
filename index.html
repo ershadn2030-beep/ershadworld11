@@ -257,7 +257,7 @@
       <div class="bento-card"><div class="bento-head"><h3>الأصناف المسجلة تواريخها</h3><span class="b-chip b-exp" id="expRegisteredCount">0</span></div><div id="expRegisteredList"></div></div>
     </div>
 
-    <!-- 4. طباعة الباركود (المربعات الضخمة 2x2 + طباعة Zebra 3x2 إنش المطابقة) -->
+    <!-- 4. طباعة الباركود (المربعات الضخمة 2x2 + طباعة Zebra 60x40 مم المطابقة) -->
     <div id="view_barcodeOrder" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>🏷️ طباعة الباركود</h3><button class="btn-add-p" onclick="openScanner('barcodeOrder')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
@@ -267,7 +267,7 @@
           </select>
           <button class="btn-sub" id="btnClearPrintedBO" style="display:none;color:#FCA5A5;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع</button>
         </div>
-        <button type="button" class="btn-glow" style="margin-bottom:10px;padding:11px;" onclick="printZebraOCareLabels()">🖨️ طباعة ملصقات Zebra (3×2 إنش)</button>
+        <button type="button" class="btn-glow" style="margin-bottom:10px;padding:11px;" onclick="printZebraOCareLabels()">🖨️ طباعة ملصقات Zebra (60×40 مم)</button>
         <input type="text" id="boSearchInp" placeholder="ابحث لإضافة رقم صنف للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
         <div id="boSearchResults" style="max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-top:4px;display:none;background:var(--card-solid);"></div>
         <div class="bo-grid" id="barcodeOrdersContainer"></div>
@@ -852,8 +852,8 @@
       if (isAdm) { renderSettingsUI(); updateMasterEditedBadge(); }
     }
 
-    // --- طباعة ملصقات التسعير المطابقة لتصميم O CARE على طابعة Zebra GK420t (3x2 إنش) ---
- function printZebraOCareLabels() {
+    // --- طباعة ملصقات التسعير المطابقة لتصميم O CARE على طابعة Zebra GK420t (60×40 مم) ---
+    function printZebraOCareLabels() {
       const grp = document.getElementById('boGroupSelect').value;
       const list = barcodeOrders.filter(x => x.group === grp && !x.done);
       if (!list.length) return alert('لا توجد ملصقات غير مطبوعة في ' + grp);
@@ -971,125 +971,6 @@
           text: it.barcode || it.item_number,
           width: 140,
           height: 140,
-          correctLevel: QRCode.CorrectLevel.M
-        });
-      });
-      setTimeout(() => { window.print(); }, 400);
-    };
-  <\/script>
-</body>
-</html>`);
-      win.document.close();
-    }
-
-      const labelsToPrint = [];
-      list.forEach(it => {
-        const liveP = allProducts.find(x => x.uid === it.uid || (it.item_number && x.item_number === it.item_number)) || it;
-        const count = Math.max(1, parseInt(it.qty, 10) || 1);
-        for (let i = 0; i < count; i++) {
-          labelsToPrint.push({
-            name: liveP.name || it.name || '',
-            item_number: String(liveP.item_number || it.item_number || '').trim(),
-            price: Number(liveP.price !== undefined ? liveP.price : (it.price || 0)).toFixed(2),
-            barcode: String(liveP.barcode || it.barcode || liveP.item_number || '').trim()
-          });
-        }
-      });
-
-      const win = window.open('', '_blank', 'width=520,height=640');
-      win.document.write(`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>طباعة ملصقات O CARE - Zebra</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
-  <style>
-    @page { size: 3in 2in; margin: 0; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Tahoma, sans-serif; color: #000; }
-    body { background: #fff; margin: 0; padding: 0; }
-    .label-sheet {
-      width: 3in;
-      height: 2in;
-      padding: 0.12in 0.16in;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      page-break-after: always;
-      overflow: hidden;
-    }
-    .label-sheet:last-child { page-break-after: auto; }
-    .brand-top {
-      text-align: center;
-      font-weight: 900;
-      font-size: 13pt;
-      letter-spacing: 0.6px;
-      line-height: 1.1;
-    }
-    .item-title {
-      text-align: center;
-      font-weight: 700;
-      font-size: 10pt;
-      line-height: 1.22;
-      max-height: 2.45em;
-      overflow: hidden;
-      margin: 0.04in 0;
-    }
-    .bottom-split {
-      display: flex;
-      direction: ltr;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.12in;
-      flex: 1;
-    }
-    .qr-box {
-      width: 0.92in;
-      height: 0.92in;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .qr-box img, .qr-box canvas { width: 0.92in !important; height: 0.92in !important; }
-    .info-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      line-height: 1.25;
-    }
-    .code-num { font-size: 10.5pt; font-weight: 800; }
-    .vat-txt { font-size: 8.5pt; font-weight: 700; margin: 0.03in 0; }
-    .price-val { font-size: 12.5pt; font-weight: 900; direction: ltr; }
-    .bc-txt { font-size: 9pt; font-weight: 700; letter-spacing: 0.4px; margin-top: 0.03in; }
-  </style>
-</head>
-<body>
-  ${labelsToPrint.map((lb, idx) => `
-    <div class="label-sheet">
-      <div class="brand-top">O CARE</div>
-      <div class="item-title">${lb.name}</div>
-      <div class="bottom-split">
-        <div class="qr-box" id="qr_${idx}"></div>
-        <div class="info-col">
-          <div class="code-num">${lb.item_number}</div>
-          <div class="vat-txt">شامل ق المضافة</div>
-          <div class="price-val">SR ${lb.price}</div>
-          <div class="bc-txt">${lb.barcode}</div>
-        </div>
-      </div>
-    </div>
-  `).join('')}
-  <script>
-    const items = ${JSON.stringify(labelsToPrint)};
-    window.onload = function() {
-      items.forEach((it, i) => {
-        new QRCode(document.getElementById('qr_' + i), {
-          text: it.barcode || it.item_number,
-          width: 150,
-          height: 150,
           correctLevel: QRCode.CorrectLevel.M
         });
       });
