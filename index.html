@@ -496,16 +496,29 @@
     </div>
   </div>
 
-  <!-- نافذة الماسح الليزري + الكشاف -->
+ <!-- نافذة الماسح الليزري عالي الدقة + التقريب + الكشاف -->
   <div id="scannerModal">
     <div class="modal-box" style="background:#000;color:#fff;">
       <div class="modal-head">
-        <div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" style="color:#10B981;"><use href="#icon-laser-scanner"></use></svg><strong>ماسح الباركود الليزري</strong></div>
+        <div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" style="color:#10B981;"><use href="#icon-laser-scanner"></use></svg><strong>ماسح الباركود الليزري HD</strong></div>
         <div style="display:flex;align-items:center;gap:8px;">
           <button id="torchBtn" onclick="toggleScannerTorch()" style="background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:5px 10px;border-radius:9px;font-size:0.75rem;font-weight:800;cursor:pointer;">🔦 الفلاش</button>
           <button onclick="stopScanner()" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button>
         </div>
       </div>
+      <div onclick="refocusScannerCamera()" style="position:relative;width:100%;min-height:310px;overflow:hidden;background:#000;cursor:pointer;">
+        <div class="laser-line"></div>
+        <div id="reader" style="width:100%;min-height:310px;"></div>
+        <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:0.68rem;color:rgba(255,255,255,0.75);pointer-events:none;z-index:25;">اضغط على الشاشة لإعادة التركيز (Focus)</div>
+      </div>
+      <div id="scannerZoomControls" style="display:flex;justify-content:center;gap:8px;padding:10px;background:#0B1218;border-top:1px solid rgba(255,255,255,0.12);">
+        <button type="button" class="zoom-pill" data-z="1" onclick="setScannerZoom(1)" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:0.75rem;font-weight:800;cursor:pointer;">1x</button>
+        <button type="button" class="zoom-pill" data-z="1.5" onclick="setScannerZoom(1.5)" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:0.75rem;font-weight:800;cursor:pointer;">1.5x</button>
+        <button type="button" class="zoom-pill active-z" data-z="2" onclick="setScannerZoom(2)" style="padding:5px 12px;border-radius:10px;border:1px solid #10B981;background:#10B981;color:#052E16;font-size:0.75rem;font-weight:900;cursor:pointer;">2x</button>
+        <button type="button" class="zoom-pill" data-z="2.8" onclick="setScannerZoom(2.8)" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:0.75rem;font-weight:800;cursor:pointer;">2.8x</button>
+      </div>
+    </div>
+  </div>
       <div style="position:relative;width:100%;min-height:280px;overflow:hidden;">
         <div class="laser-line"></div>
         <div id="reader" style="width:100%;min-height:280px;"></div>
@@ -1581,12 +1594,94 @@
       else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
+let currentZoomLevel = 2;
+
+    function applyCameraHardwareEnhancements(targetZoom) {
+      try {
+        const video = document.querySelector("#reader video");
+        if (!video || !video.srcObject) return;
+        const track = video.srcObject.getVideoTracks()[0];
+        if (!track) return;
+        const caps = track.getCapabilities ? track.getCapabilities() : {};
+        const advancedRules = [];
+
+        if (caps.focusMode && caps.focusMode.includes('continuous')) {
+          advancedRules.push({ focusMode: 'continuous' });
+        }
+        if (caps.exposureMode && caps.exposureMode.includes('continuous')) {
+          advancedRules.push({ exposureMode: 'continuous' });
+        }
+        if (caps.zoom) {
+          const clampedZoom = Math.min(Math.max(targetZoom, caps.zoom.min || 1), caps.zoom.max || 1);
+          advancedRules.push({ zoom: clampedZoom });
+          video.style.transform = 'none';
+        } else {
+          video.style.transformOrigin = 'center center';
+          video.style.transform = `scale(${targetZoom})`;
+        }
+
+        if (advancedRules.length > 0) {
+          track.applyConstraints({ advanced: advancedRules }).catch(() => {});
+        }
+      } catch (e) {}
+    }
+
+    function setScannerZoom(level) {
+      currentZoomLevel = level;
+      document.querySelectorAll('.zoom-pill').forEach(btn => {
+        const isSel = Number(btn.getAttribute('data-z')) === Number(level);
+        btn.style.background = isSel ? '#10B981' : 'rgba(255,255,255,0.1)';
+        btn.style.color = isSel ? '#052E16' : '#fff';
+        btn.style.borderColor = isSel ? '#10B981' : 'rgba(255,255,255,0.25)';
+      });
+      applyCameraHardwareEnhancements(level);
+    }
+
+    function refocusScannerCamera() {
+      try {
+        const video = document.querySelector("#reader video");
+        if (!video || !video.srcObject) return;
+        const track = video.srcObject.getVideoTracks()[0];
+        const caps = track.getCapabilities ? track.getCapabilities() : {};
+        if (caps.focusMode) {
+          if (caps.focusMode.includes('single-shot')) {
+            track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] })
+              .then(() => {
+                if (caps.focusMode.includes('continuous')) {
+                  setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {}), 400);
+                }
+              }).catch(() => {});
+          } else if (caps.focusMode.includes('continuous')) {
+            track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+          }
+        }
+        showToast('🎯 تم تحديث التركيز');
+      } catch (e) {}
+    }
+
     function openScanner(mode) {
       scannerTargetMode = mode; torchEnabled = false;
       const tBtn = document.getElementById('torchBtn'); if (tBtn) tBtn.innerText = '🔦 الفلاش';
       document.getElementById('scannerModal').style.display = 'flex';
-      scannerInstance = new Html5Qrcode("reader");
-      scannerInstance.start({ facingMode: "environment" }, { fps: 20, qrbox: { width: 250, height: 150 } }, (decoded) => {
+      scannerInstance = new Html5Qrcode("reader", {
+        verbose: false,
+        experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+      });
+
+      const scanConfig = {
+        fps: 25,
+        qrbox: (vw, vh) => ({
+          width: Math.min(Math.floor(vw * 0.86), 340),
+          height: Math.min(Math.floor(vh * 0.45), 185)
+        }),
+        videoConstraints: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      };
+
+      scannerInstance.start({ facingMode: "environment" }, scanConfig, (decoded) => {
         const raw = String(decoded || '').trim(); if (raw.length < 4) return;
         triggerScannerSuccessFeedback(); stopScanner();
         const parsed = parseDrugOrStandardBarcode(raw), found = findProductSmart(parsed.barcode);
@@ -1600,7 +1695,9 @@
           else { document.getElementById('mdSearchInput').value = parsed.barcode; searchMasterItem(); showToast(`⚠️ لم يتم العثور على باركود (${parsed.barcode})`); }
         }
         else if (scannerTargetMode === 'masterAdd') { addMasterBarcode(parsed.barcode); }
-      }, () => {}).catch(() => stopScanner());
+      }, () => {}).then(() => {
+        setTimeout(() => setScannerZoom(2), 250);
+      }).catch(() => stopScanner());
     }
 
     function toggleScannerTorch() {
