@@ -29,8 +29,8 @@
     :root[data-theme="velvet-amethyst"] { --bg:#0D0818; --shell:linear-gradient(180deg,#1C1132 0%,#0D0818 100%); --card:rgba(30,19,54,0.92); --card-solid:#1E1336; --card-alt:#2A1B4A; --text:#F5F3FF; --muted:#C4B5FD; --border:rgba(168,85,247,0.25); --primary:#A855F7; --glow:rgba(168,85,247,0.35); --light:rgba(168,85,247,0.16); --accent:#F472B6; --danger:#EF4444; --banner:linear-gradient(135deg,#9333EA 0%,#6B21A8 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
 
     * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',Tahoma,system-ui,sans-serif; -webkit-tap-highlight-color:transparent; }
-    body { background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; }
-    .app-shell { width:100%; max-width:480px; min-height:100vh; background:var(--shell); position:relative; padding-bottom:96px; box-shadow:0 0 50px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow-x:hidden; }
+    body { background:var(--bg); color:var(--text); display:block; min-height:100vh; }
+    .app-shell { width:100%; max-width:480px; min-height:100vh; margin:0 auto; background:var(--shell); position:relative; padding-bottom:96px; box-shadow:0 0 50px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow-x:hidden; }
     #scanFlashOverlay { position:fixed; inset:0; background:rgba(16,185,129,0.42); z-index:100001; pointer-events:none; opacity:0; transition:opacity 0.18s; }
     #scanFlashOverlay.flash { opacity:1; }
 
@@ -496,7 +496,7 @@
     </div>
   </div>
 
- <!-- نافذة الماسح الليزري عالي الدقة + التقريب + الكشاف -->
+  <!-- نافذة الماسح الليزري عالي الدقة + التقريب + الكشاف -->
   <div id="scannerModal">
     <div class="modal-box" style="background:#000;color:#fff;">
       <div class="modal-head">
@@ -516,12 +516,6 @@
         <button type="button" class="zoom-pill" data-z="1.5" onclick="setScannerZoom(1.5)" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:0.75rem;font-weight:800;cursor:pointer;">1.5x</button>
         <button type="button" class="zoom-pill active-z" data-z="2" onclick="setScannerZoom(2)" style="padding:5px 12px;border-radius:10px;border:1px solid #10B981;background:#10B981;color:#052E16;font-size:0.75rem;font-weight:900;cursor:pointer;">2x</button>
         <button type="button" class="zoom-pill" data-z="2.8" onclick="setScannerZoom(2.8)" style="padding:5px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:0.75rem;font-weight:800;cursor:pointer;">2.8x</button>
-      </div>
-    </div>
-  </div>
-      <div style="position:relative;width:100%;min-height:280px;overflow:hidden;">
-        <div class="laser-line"></div>
-        <div id="reader" style="width:100%;min-height:280px;"></div>
       </div>
     </div>
   </div>
@@ -555,6 +549,7 @@
     let auditLogs = safeGetStorage('ocare_audit_logs', []);
     let scannerInstance = null, scannerTargetMode = 'search', torchEnabled = false, tempNoteImageBase64 = '', activeBrandName = '';
     let activeMasterItem = null, activeMasterBarcodes = [];
+    let currentZoomLevel = 2;
 
     function showToast(msg) {
       const t = document.getElementById('toastBox');
@@ -1594,8 +1589,6 @@
       else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
-let currentZoomLevel = 2;
-
     function applyCameraHardwareEnhancements(targetZoom) {
       try {
         const video = document.querySelector("#reader video");
@@ -1662,6 +1655,7 @@ let currentZoomLevel = 2;
     function openScanner(mode) {
       scannerTargetMode = mode; torchEnabled = false;
       const tBtn = document.getElementById('torchBtn'); if (tBtn) tBtn.innerText = '🔦 الفلاش';
+      setScannerZoom(2);
       document.getElementById('scannerModal').style.display = 'flex';
       scannerInstance = new Html5Qrcode("reader", {
         verbose: false,
