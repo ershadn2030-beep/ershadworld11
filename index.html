@@ -14,6 +14,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
+    :root[data-theme="world8"] { --navy: #0B1957; --primary: #0D9488; --primary-dark: #0F766E; --primary-light: #CCFBF1; --accent: #0D9488; --accent-2: #0F766E; --accent-glow: rgba(13,148,136,0.18); --bg: #F1F5F9; --bg-2: #E2E8F0; --surface: #FFFFFF; --surface-2: #F8FAFC; --card: #FFFFFF; --card-2: #F8FAFC; --header: #0B1957; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --danger: #EF4444; --success: #10B981; }
     :root, :root[data-theme="slate-mint"] { --bg:#091318; --shell:linear-gradient(180deg,#0D1F27 0%,#081217 100%); --card:rgba(18,37,46,0.92); --card-solid:#12252E; --card-alt:#17313D; --text:#F0FDF4; --muted:#86A8B2; --border:rgba(45,212,191,0.2); --primary:#10B981; --glow:rgba(16,185,129,0.35); --light:rgba(16,185,129,0.15); --accent:#F59E0B; --danger:#EF4444; --banner:linear-gradient(135deg,#D9B166 0%,#B38738 100%); --banner-txt:#091318; --btn-txt:#06120E; }
     :root[data-theme="royal-obsidian"] { --bg:#080A0F; --shell:linear-gradient(180deg,#121722 0%,#080A0F 100%); --card:rgba(20,25,36,0.94); --card-solid:#141924; --card-alt:#1C2332; --text:#F8FAFC; --muted:#94A3B8; --border:rgba(212,175,55,0.24); --primary:#D4AF37; --glow:rgba(212,175,55,0.32); --light:rgba(212,175,55,0.15); --accent:#10B981; --danger:#EF4444; --banner:linear-gradient(135deg,#E5C158 0%,#AA821A 100%); --banner-txt:#080A0F; --btn-txt:#080A0F; }
     :root[data-theme="clinical-daylight"] { --bg:#EEF2F6; --shell:linear-gradient(180deg,#F8FAFC 0%,#EEF2F6 100%); --card:#FFFFFF; --card-solid:#FFFFFF; --card-alt:#F1F5F9; --text:#0F172A; --muted:#64748B; --border:#CBD5E1; --primary:#0D9488; --glow:rgba(13,148,136,0.25); --light:#CCFBF1; --accent:#D97706; --danger:#EF4444; --banner:linear-gradient(135deg,#0B1957 0%,#0D9488 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
@@ -170,8 +171,7 @@
     <header class="top-header">
       <div class="h-row">
         <div class="b-mini">
-          <div class="b-icon">OC</div>
-          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
+<div class="b-icon" style="overflow:hidden;padding:2px;background:#F8F7F4;"><img src="icon-192.png" alt="O CARE" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
         </div>
         <div class="h-tools">
           <button class="circle-btn" onclick="switchTab('notes')">🔔<span class="notif-dot" id="notifBadge">0</span></button>
@@ -330,6 +330,10 @@
       <div class="bento-card">
         <div class="bento-head"><h3>🎨 اختيار الثيم (5 ثيمات تفاعلية)</h3></div>
         <div class="theme-grid">
+          <div class="theme-tile" id="themeCard_world8" onclick="changeSystemTheme('world8', true)">
+  <div class="theme-preview" style="background:linear-gradient(135deg, #0B1957 0%, #0D9488 55%, #F1F5F9 100%);"></div>
+  <div class="theme-name">أوكير الكلاسيكي (World 8)</div>
+</div>
           <div class="theme-tile" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0D1F27,#10B981);"></div><span>Slate & Mint</span></div>
           <div class="theme-tile" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#080A0F,#D4AF37);"></div><span>الفخامة الملكية</span></div>
           <div class="theme-tile" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div><span>البياض الطبي</span></div>
