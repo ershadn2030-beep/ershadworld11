@@ -853,10 +853,134 @@
     }
 
     // --- طباعة ملصقات التسعير المطابقة لتصميم O CARE على طابعة Zebra GK420t (3x2 إنش) ---
-    function printZebraOCareLabels() {
+ function printZebraOCareLabels() {
       const grp = document.getElementById('boGroupSelect').value;
       const list = barcodeOrders.filter(x => x.group === grp && !x.done);
       if (!list.length) return alert('لا توجد ملصقات غير مطبوعة في ' + grp);
+
+      const labelsToPrint = [];
+      list.forEach(it => {
+        const liveP = allProducts.find(x => x.uid === it.uid || (it.item_number && x.item_number === it.item_number)) || it;
+        const count = Math.max(1, parseInt(it.qty, 10) || 1);
+        for (let i = 0; i < count; i++) {
+          labelsToPrint.push({
+            name: liveP.name || it.name || '',
+            item_number: String(liveP.item_number || it.item_number || '').trim(),
+            price: Number(liveP.price !== undefined ? liveP.price : (it.price || 0)).toFixed(2),
+            barcode: String(liveP.barcode || it.barcode || liveP.item_number || '').trim()
+          });
+        }
+      });
+
+      const win = window.open('', '_blank', 'width=480,height=600');
+      win.document.write(`<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طباعة ملصقات O CARE - 60x40mm</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+  <style>
+    @page { size: 60mm 40mm; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Tahoma, sans-serif; color: #000; }
+    html, body { width: 60mm; background: #fff; margin: 0; padding: 0; }
+    .label-sheet {
+      width: 60mm;
+      height: 40mm;
+      padding: 2.8mm 3.5mm 2.8mm 3.5mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+      overflow: hidden;
+    }
+    .label-sheet:last-child { page-break-after: auto; }
+    .header-block {
+      text-align: center;
+      margin-bottom: 1.5mm;
+    }
+    .brand-top {
+      font-weight: 800;
+      font-size: 9pt;
+      letter-spacing: 0.4px;
+      line-height: 1.15;
+      margin-bottom: 0.8mm;
+    }
+    .item-title {
+      font-weight: 700;
+      font-size: 7.5pt;
+      line-height: 1.25;
+      max-height: 2.5em;
+      overflow: hidden;
+    }
+    .bottom-split {
+      display: flex;
+      direction: ltr;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5mm;
+      flex: 1;
+    }
+    .qr-box {
+      width: 15.5mm;
+      height: 15.5mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .qr-box img, .qr-box canvas { width: 15.5mm !important; height: 15.5mm !important; }
+    .info-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-left: 2mm;
+      line-height: 1.3;
+    }
+    .code-num { font-size: 8.5pt; font-weight: 800; }
+    .vat-txt { font-size: 6.8pt; font-weight: 700; margin: 0.3mm 0; }
+    .price-val { font-size: 8.8pt; font-weight: 800; direction: ltr; }
+    .bc-txt { font-size: 7pt; font-weight: 700; letter-spacing: 0.2px; margin-top: 0.4mm; }
+  </style>
+</head>
+<body>
+  ${labelsToPrint.map((lb, idx) => `
+    <div class="label-sheet">
+      <div class="header-block">
+        <div class="brand-top">O CARE</div>
+        <div class="item-title">${lb.name}</div>
+      </div>
+      <div class="bottom-split">
+        <div class="qr-box" id="qr_${idx}"></div>
+        <div class="info-col">
+          <div class="code-num">${lb.item_number}</div>
+          <div class="vat-txt">شامل ق المضافة</div>
+          <div class="price-val">SR ${lb.price}</div>
+          <div class="bc-txt">${lb.barcode}</div>
+        </div>
+      </div>
+    </div>
+  `).join('')}
+  <script>
+    const items = ${JSON.stringify(labelsToPrint)};
+    window.onload = function() {
+      items.forEach((it, i) => {
+        new QRCode(document.getElementById('qr_' + i), {
+          text: it.barcode || it.item_number,
+          width: 140,
+          height: 140,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      });
+      setTimeout(() => { window.print(); }, 400);
+    };
+  <\/script>
+</body>
+</html>`);
+      win.document.close();
+    }
 
       const labelsToPrint = [];
       list.forEach(it => {
