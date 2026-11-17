@@ -853,7 +853,7 @@
     }
 
     // --- طباعة ملصقات التسعير المطابقة لـ PDF النظام الأصلي (60×40 مم - خط Arial عريض) ---
-    function printZebraOCareLabels() {
+function printZebraOCareLabels() {
       const grp = document.getElementById('boGroupSelect').value;
       const list = barcodeOrders.filter(x => x.group === grp && !x.done);
       if (!list.length) return alert('لا توجد ملصقات غير مطبوعة في ' + grp);
@@ -885,7 +885,8 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: Tahoma, Arial, sans-serif;
+      font-weight: 400;
       color: #000 !important;
       -webkit-font-smoothing: none;
       print-color-adjust: exact;
@@ -894,7 +895,7 @@
     .label-sheet {
       width: 60mm;
       height: 40mm;
-      padding: 1.8mm 2.5mm 2mm 2.5mm;
+      padding: 3.4mm 3.5mm 3.6mm 5.5mm;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -903,34 +904,34 @@
     }
     .label-sheet:last-child { page-break-after: auto; }
     .header-block {
-      text-align: center;
-      margin-bottom: 0.8mm;
+      width: 100%;
     }
-.brand-top {
-      font-weight: 400;
-      font-size: 9.5pt;
-      letter-spacing: 0.3px;
+    .brand-top {
+      text-align: center;
+      font-size: 8.8pt;
+      letter-spacing: 0.2px;
       line-height: 1.15;
-      margin-bottom: 0.8mm;
+      margin-bottom: 1mm;
     }
     .item-title {
-      font-weight: 400;
-      font-size: 9.5pt;
-      line-height: 1.25;
-      max-height: 2.5em;
+      text-align: right;
+      font-size: 8.6pt;
+      line-height: 1.22;
+      max-height: 2.45em;
       overflow: hidden;
     }
     .bottom-split {
       display: flex;
       direction: ltr;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 1.2mm;
+      justify-content: flex-start;
+      gap: 4.5mm;
       flex: 1;
+      margin-top: 0.8mm;
     }
     .qr-box {
-      width: 16mm;
-      height: 16mm;
+      width: 14.5mm;
+      height: 14.5mm;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -938,24 +939,23 @@
       image-rendering: pixelated;
     }
     .qr-box img, .qr-box canvas {
-      width: 16mm !important;
-      height: 16mm !important;
+      width: 14.5mm !important;
+      height: 14.5mm !important;
       image-rendering: pixelated;
     }
     .info-col {
-      flex: 1;
+      width: 26mm;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding-left: 2mm;
-      line-height: 1.3;
+      line-height: 1.28;
     }
-    .code-num { font-size: 9.5pt; font-weight: 400; }
-    .vat-txt { font-size: 8pt; font-weight: 400; margin: 0.3mm 0; }
-    .price-val { font-size: 10pt; font-weight: 600; direction: ltr; }
-    .bc-txt { font-size: 8.5pt; font-weight: 400; margin-top: 0.3mm; }
+    .code-num { font-size: 8.6pt; margin-bottom: 0.5mm; }
+    .vat-txt { font-size: 7.4pt; margin: 0.2mm 0; }
+    .price-val { font-size: 9pt; direction: ltr; }
+    .bc-txt { font-size: 7.5pt; margin-top: 0.3mm; }
   </style>
 </head>
 <body>
@@ -983,9 +983,9 @@
         items.forEach((it, i) => {
           new QRCode(document.getElementById('qr_' + i), {
             text: it.barcode || it.item_number,
-            width: 160,
-            height: 160,
-            correctLevel: QRCode.CorrectLevel.M
+            width: 140,
+            height: 140,
+            correctLevel: QRCode.CorrectLevel.L
           });
         });
       }
