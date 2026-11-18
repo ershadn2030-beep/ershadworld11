@@ -73,6 +73,7 @@
     .inv-thumb img { width:100%; height:100%; object-fit:cover; }
     .inv-info { flex:1; min-width:0; }
     .inv-title { font-size:0.84rem; font-weight:900; color:var(--text); margin-bottom:3px; line-height:1.3; }
+    .inv-title.en-title { direction:ltr; text-align:left; font-size:0.81rem; letter-spacing:0.1px; }
     .inv-codes { font-size:0.7rem; color:var(--muted); margin-bottom:5px; }
     .b-chip { font-size:0.65rem; font-weight:800; padding:2px 7px; border-radius:7px; display:inline-block; margin-left:4px; }
     .b-fia { background:rgba(168,85,247,0.16); color:#C084FC; border:1px solid rgba(168,85,247,0.3); }
@@ -198,7 +199,7 @@
       </div>
       <div class="laser-bar">
         <button class="laser-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري"><svg width="22" height="22"><use href="#icon-laser-scanner"></use></svg></button>
-        <input type="text" id="mainSearch" placeholder="شريط البحث بالاسم أو الباركود أو الرقم..." oninput="renderInventory()">
+        <input type="text" id="mainSearch" placeholder="ابحث بالعربي أو English أو الباركود أو الرقم..." oninput="renderInventory()">
         <span style="color:var(--muted);">🔍</span>
       </div>
     </header>
@@ -235,7 +236,7 @@
       </div>
       <div class="bento-card">
         <div style="margin-bottom:10px;">
-          <input type="text" id="priceSearchInp" placeholder="ابحث عن صنف لإضافته للسلة..." oninput="searchForSubModule('pricing', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <input type="text" id="priceSearchInp" placeholder="ابحث بالعربي أو English لإضافته للسلة..." oninput="searchForSubModule('pricing', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
           <div id="priceSearchResults" class="sub-search-dropdown"></div>
         </div>
         <div id="priceCalcList"></div>
@@ -251,7 +252,7 @@
     <div id="view_expiry" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📅 تسجيل تواريخ الصلاحية</h3><button class="btn-add-p" onclick="openScanner('expiry')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح</button></div>
-        <input type="text" id="expSearchInp" placeholder="ابحث بالاسم أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
+        <input type="text" id="expSearchInp" placeholder="ابحث بالعربي أو English أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
         <div id="expSearchResults" class="sub-search-dropdown"></div>
         <input type="text" id="expSelectedName" readonly placeholder="الصنف المختار سيظهر هنا..." style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--primary);background:var(--light);color:var(--text);font-weight:900;margin-bottom:10px;outline:none;">
         <input type="hidden" id="expSelectedUid">
@@ -273,7 +274,7 @@
           <button class="btn-sub" id="btnClearPrintedBO" style="display:none;color:#FCA5A5;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع</button>
         </div>
         <button type="button" class="btn-glow" style="margin-bottom:10px;padding:11px;" onclick="printZebraOCareLabels()">🖨️ طباعة ملصقات Zebra (60×40 مم)</button>
-        <input type="text" id="boSearchInp" placeholder="ابحث لإضافة رقم صنف للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+        <input type="text" id="boSearchInp" placeholder="ابحث بالعربي أو English لإضافة صنف للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
         <div id="boSearchResults" class="sub-search-dropdown"></div>
         <div class="bo-grid" id="barcodeOrdersContainer"></div>
       </div>
@@ -286,7 +287,7 @@
         <select id="branchSelect" onchange="renderShortages()" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;margin-bottom:10px;">
           <option value="فرع الشرائع">🏪 فرع الشرائع</option><option value="فرع النوارية">🏪 فرع النوارية</option><option value="المستودع">📦 المستودع الرئيسي</option><option value="نواقص المشتريات">⚠️ قائمة النواقص السريعة</option>
         </select>
-        <input type="text" id="shortSearchInp" placeholder="ابحث لإضافة الصنف للمواد المطلوبة..." oninput="searchForSubModule('shortages', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:10px;outline:none;">
+        <input type="text" id="shortSearchInp" placeholder="ابحث بالعربي أو English لإضافة الصنف للمطلوب..." oninput="searchForSubModule('shortages', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:10px;outline:none;">
         <div id="shortSearchResults" class="sub-search-dropdown"></div>
         <div id="shortagesListContainer"></div>
       </div>
@@ -357,10 +358,10 @@
           <h3>🗂️ البيانات الأساسية وتعدد الباركود (للمشرف)</h3>
           <span class="b-chip b-multi" id="mdEditedCountBadge">0 معدّل</span>
         </div>
-        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:10px;">ابحث عن أي صنف بالاسم أو الرقم أو أي باركود لتعديل بياناته أو ربط حتى 7 باركودات لنفس رقم الصنف:</p>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:10px;">ابحث عن أي صنف بالعربي أو English أو الرقم أو الباركود لتعديل بياناته أو ربط حتى 7 باركودات لنفس رقم الصنف:</p>
 
         <div style="display:flex;gap:7px;margin-bottom:10px;">
-          <input type="text" id="mdSearchInput" placeholder="ابحث برقم الصنف أو الاسم أو أي باركود..." oninput="searchMasterItem()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.83rem;outline:none;">
+          <input type="text" id="mdSearchInput" placeholder="ابحث بالعربي أو English أو رقم الصنف أو الباركود..." oninput="searchMasterItem()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.83rem;outline:none;">
           <button type="button" class="btn-add-p" onclick="openScanner('masterSearch')" style="padding:0 13px;border-radius:12px;display:flex;align-items:center;gap:4px;"><svg width="17" height="17"><use href="#icon-laser-scanner"></use></svg> مسح</button>
         </div>
 
@@ -373,8 +374,13 @@
           </div>
 
           <div class="inp-wrap">
-            <label>اسم الصنف *</label>
-            <div class="inp-box"><input type="text" id="mdItemName" placeholder="اسم الصنف الكامل"></div>
+            <label>اسم الصنف (عربي) *</label>
+            <div class="inp-box"><input type="text" id="mdItemName" placeholder="اسم الصنف بالعربي"></div>
+          </div>
+
+          <div class="inp-wrap">
+            <label>الاسم بالإنجليزية (Item Name En)</label>
+            <div class="inp-box"><input type="text" id="mdItemNameEn" placeholder="English Product Name" style="direction:ltr;text-align:left;"></div>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
@@ -446,6 +452,14 @@
         <div class="sw-row"><div><strong>🛠️ وضع الجرد والصيانة (قفل تعديل الموظفين)</strong><small>إيقاف الحذف أو الإضافة للموظفين مؤقتاً أثناء الجرد</small></div><label class="sw-toggle"><input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
       </div>
 
+      <!-- ربط الأسماء الإنجليزية للأصناف من قاعدة البيانات بملف إكسل -->
+      <div class="bento-card">
+        <div class="bento-head"><h3>🌐 ربط الأسماء الإنجليزية للأصناف (بملف إكسل)</h3></div>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على <strong>رقم الصنف</strong> و<strong>الاسم الإنجليزي</strong> ليتم ربطها بالأصناف الموجودة تلقائياً ومزامنتها لجميع الموظفين (عند البحث بالعربي تظهر البطاقات عربي وعند البحث بالإنجليزي تظهر إنجليزي):</p>
+        <input type="file" accept=".xlsx,.xls,.csv" onchange="handleEnglishNamesExcelUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
+        <div id="linkedEnglishNamesBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
+      </div>
+
       <!-- إضافة الأصناف الجديدة بملف إكسل مع المزامنة التلقائية الدائمة -->
       <div class="bento-card">
         <div class="bento-head"><h3>📦 إضافة أصناف جديدة بملف إكسل (تُضم للمنتجات القديمة)</h3></div>
@@ -492,7 +506,8 @@
       <div class="modal-body">
         <div class="inp-wrap"><label>رقم الصنف *</label><div class="inp-box"><input type="text" id="cpItemNum"></div></div>
         <div class="inp-wrap"><label>الباركود *</label><div class="inp-box"><input type="text" id="cpBarcode"></div></div>
-        <div class="inp-wrap"><label>اسم الصنف *</label><div class="inp-box"><input type="text" id="cpName"></div></div>
+        <div class="inp-wrap"><label>اسم الصنف (عربي) *</label><div class="inp-box"><input type="text" id="cpName"></div></div>
+        <div class="inp-wrap"><label>الاسم بالإنجليزية (اختياري)</label><div class="inp-box"><input type="text" id="cpNameEn" style="direction:ltr;text-align:left;"></div></div>
         <div class="inp-wrap"><label>الفئة / المورد</label><div class="inp-box"><input type="text" id="cpFia" list="fiaDatalist"></div></div>
         <div class="inp-wrap"><label>سعر البيع (ر.س) *</label><div class="inp-box"><input type="number" step="0.01" id="cpPrice"></div></div>
         <div class="inp-wrap"><label>رابط الصورة (اختياري)</label><div class="inp-box"><input type="url" id="cpImage"></div></div>
@@ -554,6 +569,7 @@
     let currentUser = null, baseExcelProducts = [], allProducts = [];
     let customCloudProducts = safeGetStorage('ocare_custom_products', []);
     let storeImagesMap = safeGetStorage('ocare_store_images_map', {});
+    let englishNamesMap = safeGetStorage('ocare_english_names_map', {});
     let masterEdits = safeGetStorage('ocare_master_edits', {});
     let priceCart = safeGetStorage('ocare_price_cart', []);
     let barcodeOrders = safeGetStorage('ocare_barcode_orders', []);
@@ -644,7 +660,22 @@
       });
     }
 
-    // --- دوال البحث الذكي الشامل (مطابقة لـ ICP: توحيد الحروف العربية، البحث بالاسم العربي والإنجليزي، والترتيب بالأولوية) ---
+    // --- كشف لغة البحث تلقائياً (عربي -> بطاقات عربي | إنجليزي -> بطاقات إنجليزي) ---
+    function detectQueryLanguage(qRaw) {
+      const s = String(qRaw || '').trim();
+      if (!s) return 'ar';
+      const hasEn = /[a-zA-Z]/.test(s);
+      const hasAr = /[\u0600-\u06FF]/.test(s);
+      if (hasEn && !hasAr) return 'en';
+      if (hasAr && !hasEn) return 'ar';
+      if (hasEn && hasAr) {
+        const enCount = (s.match(/[a-zA-Z]/g) || []).length;
+        const arCount = (s.match(/[\u0600-\u06FF]/g) || []).length;
+        return enCount >= arCount ? 'en' : 'ar';
+      }
+      return 'ar';
+    }
+
     function normalizeSearchText(str) {
       return String(str || '')
         .toLowerCase()
@@ -673,9 +704,19 @@
       return res;
     }
 
+    function getProductDisplayTitle(p, lang) {
+      if (lang === 'en') {
+        const en = String(p.name_en || '').trim();
+        return en ? en : String(p.name || '');
+      }
+      return String(p.name || '');
+    }
+
     function smartSearchProducts(rawQuery, maxLimit = 120) {
       const qRaw = String(rawQuery || '').trim();
-      if (!qRaw) return { items: allProducts.slice(0, maxLimit), total: allProducts.length };
+      const lang = detectQueryLanguage(qRaw);
+      if (!qRaw) return { items: allProducts.slice(0, maxLimit), total: allProducts.length, lang: 'ar' };
+
       const qNorm = normalizeSearchText(qRaw);
       const qNoZero = qNorm.replace(/^0+/, '');
       const tokens = qNorm.split(/\s+/).filter(Boolean);
@@ -683,13 +724,16 @@
       const scored = [];
       for (let i = 0; i < allProducts.length; i++) {
         const p = allProducts[i];
-        const nameNorm = normalizeSearchText(p.name);
+        const nameArNorm = normalizeSearchText(p.name);
         const nameEnNorm = normalizeSearchText(p.name_en || '');
         const codeNorm = normalizeSearchText(p.item_number);
         const allBc = getProductAllBarcodes(p);
         const bcNormList = allBc.map(b => normalizeSearchText(b));
 
-        const combined = `${nameNorm} ${nameEnNorm} ${codeNorm} ${bcNormList.join(' ')}`;
+        const primaryNameNorm = (lang === 'en' && nameEnNorm) ? nameEnNorm : nameArNorm;
+        const secondaryNameNorm = (lang === 'en') ? nameArNorm : '';
+        const combined = `${primaryNameNorm} ${secondaryNameNorm} ${codeNorm} ${bcNormList.join(' ')}`;
+
         const allMatch = tokens.every(tok => {
           const tokNoZero = tok.replace(/^0+/, '');
           return combined.includes(tok) || (tokNoZero && bcNormList.some(b => b.replace(/^0+/, '').includes(tokNoZero)));
@@ -699,12 +743,14 @@
         let score = 50;
         if (codeNorm === qNorm || bcNormList.includes(qNorm) || (qNoZero && bcNormList.some(b => b.replace(/^0+/, '') === qNoZero))) {
           score = 1;
-        } else if (codeNorm.startsWith(qNorm) || nameNorm.startsWith(qNorm) || nameEnNorm.startsWith(qNorm)) {
+        } else if (codeNorm.startsWith(qNorm) || primaryNameNorm.startsWith(qNorm)) {
           score = 2;
-        } else if (nameNorm.split(/\s+/).some(w => w.startsWith(qNorm)) || nameEnNorm.split(/\s+/).some(w => w.startsWith(qNorm))) {
+        } else if (primaryNameNorm.split(/\s+/).some(w => w.startsWith(qNorm))) {
           score = 3;
-        } else if (nameNorm.includes(qNorm) || nameEnNorm.includes(qNorm)) {
+        } else if (primaryNameNorm.includes(qNorm)) {
           score = 4;
+        } else if (secondaryNameNorm && secondaryNameNorm.includes(qNorm)) {
+          score = 8;
         }
         scored.push({ p, score });
       }
@@ -712,7 +758,8 @@
       scored.sort((a, b) => a.score - b.score);
       return {
         items: scored.slice(0, maxLimit).map(x => x.p),
-        total: scored.length
+        total: scored.length,
+        lang
       };
     }
 
@@ -746,7 +793,7 @@
       if (!cloudRef || isApplyingRemoteUpdate) return;
       let payload = val;
       if (Array.isArray(val)) payload = val.length === 0 ? ['_EMPTY_'] : val;
-      else if (key === 'savedBatches' || key === 'masterEdits') payload = (!val || Object.keys(val).length === 0) ? { _empty: true } : val;
+      else if (key === 'savedBatches' || key === 'masterEdits' || key === 'englishNamesMap') payload = (!val || Object.keys(val).length === 0) ? { _empty: true } : val;
       cloudRef.child(key).set(payload).catch(() => {});
     }
 
@@ -793,6 +840,12 @@
           storeImagesMap = data.storeImagesMap;
           localStorage.setItem('ocare_store_images_map', JSON.stringify(storeImagesMap));
         }
+        if (data.englishNamesMap && typeof data.englishNamesMap === 'object') {
+          const cleanEn = {};
+          Object.keys(data.englishNamesMap).forEach(k => { if (k !== '_empty' && data.englishNamesMap[k]) cleanEn[k] = data.englishNamesMap[k]; });
+          englishNamesMap = cleanEn;
+          localStorage.setItem('ocare_english_names_map', JSON.stringify(englishNamesMap));
+        }
         if (data.masterEdits !== undefined) {
           masterEdits = cleanMasterEditsMap(data.masterEdits);
           localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
@@ -822,9 +875,13 @@
     function applyMasterEditsToProduct(p) {
       const mKey = getMasterEditKey(p);
       const codeStr = String(p.item_number || '').trim();
+      if (!p.name_en && codeStr && englishNamesMap[codeStr]) {
+        p.name_en = String(englishNamesMap[codeStr]).trim();
+      }
       const edit = masterEdits[mKey] || (codeStr ? masterEdits[codeStr] : null);
       if (edit) {
         if (edit.name) p.name = String(edit.name).trim();
+        if (edit.name_en !== undefined && String(edit.name_en).trim() !== '') p.name_en = String(edit.name_en).trim();
         if (edit.price !== undefined && edit.price !== '' && !isNaN(parseFloat(edit.price))) {
           p.price = Number(parseFloat(edit.price).toFixed(2));
         }
@@ -1097,6 +1154,7 @@
 
       const res = smartSearchProducts(qRaw, 60);
       const matches = res.items;
+      const isEn = res.lang === 'en';
 
       if (matches.length === 1 && (normalizeSearchText(matches[0].item_number) === q || getProductAllBarcodes(matches[0]).some(b => normalizeSearchText(b) === q))) {
         selectMasterItem(matches[0].uid);
@@ -1111,9 +1169,11 @@
       const header = `<div class="sub-search-header"><span>نتائج البحث: ${res.total} صنف مطابق</span><span>اختر الصنف</span></div>`;
       box.innerHTML = header + matches.map(p => {
         const allBc = getProductAllBarcodes(p);
+        const dispTitle = getProductDisplayTitle(p, res.lang);
+        const isEnTitle = isEn && p.name_en && p.name_en.trim();
         return `<div onclick="selectMasterItem('${p.uid}')" style="padding:10px 12px;background:var(--card-alt);border-bottom:1px solid var(--border);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;">
           <div style="min-width:0;flex:1;">
-            <div style="font-weight:900;font-size:0.83rem;color:var(--text);">${highlightSearchMatch(p.name, qRaw)}</div>
+            <div style="font-weight:900;font-size:0.83rem;color:var(--text);${isEnTitle ? 'direction:ltr;text-align:left;' : ''}">${highlightSearchMatch(dispTitle, qRaw)}</div>
             <div style="font-size:0.71rem;color:var(--muted);">رقم: <strong>${p.item_number || '-'}</strong> | باركود أساسي: <strong>${p.barcode || '-'}</strong> (${allBc.length}/7)</div>
           </div>
           <span class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</span>
@@ -1129,6 +1189,8 @@
       document.getElementById('mdSearchResults').innerHTML = '';
       document.getElementById('mdItemCode').innerText = p.item_number || p.uid;
       document.getElementById('mdItemName').value = p.name || '';
+      const nameEnInp = document.getElementById('mdItemNameEn');
+      if (nameEnInp) nameEnInp.value = p.name_en || '';
       document.getElementById('mdItemPrice').value = Number(p.price || 0);
       document.getElementById('mdItemCat').value = p.fia || '';
       activeMasterBarcodes = getProductAllBarcodes(p);
@@ -1195,6 +1257,8 @@
       if (!currentUser || currentUser.role !== 'admin') return alert('⛔ هذه الصلاحية للمشرف/المطور فقط');
       if (!activeMasterItem) return alert('اختر صنفاً أولاً');
       const newName = document.getElementById('mdItemName').value.trim();
+      const nameEnInp = document.getElementById('mdItemNameEn');
+      const newNameEn = nameEnInp ? nameEnInp.value.trim() : '';
       const newPrice = Number((parseFloat(document.getElementById('mdItemPrice').value) || 0).toFixed(2));
       const newCat = document.getElementById('mdItemCat').value.trim() || 'مورد عام';
       if (!newName) return alert('يرجى إدخال اسم الصنف');
@@ -1204,6 +1268,7 @@
       masterEdits[mKey] = {
         item_number: String(activeMasterItem.item_number || '').trim(),
         name: newName,
+        name_en: newNameEn,
         price: newPrice,
         fia: newCat,
         barcodes: [...activeMasterBarcodes].slice(0, 7),
@@ -1224,7 +1289,10 @@
 
     function openAddCustomProductModal() {
       if (checkMaintenanceBlock()) return;
-      ['cpItemNum','cpBarcode','cpName','cpFia','cpPrice','cpImage'].forEach(id => document.getElementById(id).value = '');
+      ['cpItemNum','cpBarcode','cpName','cpNameEn','cpFia','cpPrice','cpImage'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
       document.getElementById('addCustomProductModal').style.display = 'flex';
     }
 
@@ -1233,18 +1301,79 @@
       const itemNum = document.getElementById('cpItemNum').value.trim();
       const barcode = document.getElementById('cpBarcode').value.trim();
       const name = document.getElementById('cpName').value.trim();
+      const nameEn = (document.getElementById('cpNameEn') && document.getElementById('cpNameEn').value.trim()) || '';
       const fia = document.getElementById('cpFia').value.trim() || 'مورد عام';
       const price = parseFloat(document.getElementById('cpPrice').value) || 0;
       const image = document.getElementById('cpImage').value.trim();
       if (!name) return alert('يرجى إدخال اسم الصنف');
       const mainBc = barcode || itemNum || String(Date.now()).slice(-8);
-      customCloudProducts.unshift({ uid: 'cp_' + Date.now(), item_number: itemNum || String(Date.now()).slice(-5), barcode: mainBc, barcodes: [mainBc], name, fia, price: Number(price.toFixed(2)), image, batches: [] });
+      customCloudProducts.unshift({ uid: 'cp_' + Date.now(), item_number: itemNum || String(Date.now()).slice(-5), barcode: mainBc, barcodes: [mainBc], name, name_en: nameEn, fia, price: Number(price.toFixed(2)), image, batches: [] });
       localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
       pushDataToFirebase('customProducts', customCloudProducts);
       logAuditAction(`إضافة صنف (${name})`);
       rebuildAllProductsList(); renderInventory();
       document.getElementById('addCustomProductModal').style.display = 'none';
       showToast('✅ تم حفظ الصنف الجديد');
+    }
+
+    // رفع ملف إكسل لربط الأسماء الإنجليزية بالأصناف الموجودة حسب رقم الصنف ومزامنتها سحابياً
+    function handleEnglishNamesExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          if (!rows.length) return alert('الملف فارغ!');
+
+          const sampleKeys = Object.keys(rows[0]);
+          let linkedCount = 0;
+
+          rows.forEach(r => {
+            let code = String(
+              r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['ItemCode'] || r['Item Code'] || r['Item Number'] || r['Reference Number'] || r['Code'] || r['SKU'] || ''
+            ).replace(/\.0$/, '').trim();
+
+            let enName = String(
+              r['Item Name En'] || r['Item Name'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['اسم الصنف بالانجليزي'] || r['اسم الصنف بالإنجليزية'] || r['English Name'] || r['Name En'] || r['Name_En'] || r['En Name'] || ''
+            ).trim();
+
+            if ((!code || !enName) && sampleKeys.length >= 2) {
+              const v0 = String(r[sampleKeys[0]] || '').replace(/\.0$/, '').trim();
+              const v1 = String(r[sampleKeys[1]] || '').trim();
+              if (!code && /^\d+$/.test(v0)) code = v0;
+              else if (!code && /^\d+$/.test(v1)) code = v1;
+              if (!enName && /[a-zA-Z]/.test(v1)) enName = v1;
+              else if (!enName && /[a-zA-Z]/.test(v0)) enName = v0;
+            }
+
+            if (code && enName) {
+              englishNamesMap[code] = enName;
+              linkedCount++;
+            }
+          });
+
+          if (!linkedCount) {
+            alert('لم يتم العثور على أعمدة مطابقة (رقم الصنف + الاسم الإنجليزي).');
+            event.target.value = '';
+            return;
+          }
+
+          localStorage.setItem('ocare_english_names_map', JSON.stringify(englishNamesMap));
+          pushDataToFirebase('englishNamesMap', englishNamesMap);
+          logAuditAction(`ربط الأسماء الإنجليزية (${linkedCount} صنف)`);
+          rebuildAllProductsList();
+          renderInventory();
+          const badge = document.getElementById('linkedEnglishNamesBadge');
+          if (badge) badge.innerText = `✅ تم ربط ${linkedCount} اسم إنجليزي بنجاح ومزامنتها سحابياً! (إجمالي المربوط: ${Object.keys(englishNamesMap).length})`;
+          showToast(`✅ تم ربط ${linkedCount} اسم إنجليزي سحابياً`);
+          event.target.value = '';
+        } catch (err) {
+          alert('تعذر قراءة ملف الإكسل، تأكد من صحة الملف.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
 
     // رفع ملف إكسل بالأصناف الجديدة ودمجها مع المنتجات القديمة ومزامنتها سحابياً
@@ -1263,7 +1392,7 @@
           rows.forEach((r, idx) => {
             const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
             if (!name) return;
-            const nameEn = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['Name En'] || '').trim();
+            const nameEn = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['Name En'] || '').trim();
             const itemNum = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Number'] || '').replace(/\.0$/, '').trim();
             const barcode = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
             const extraBcRaw = String(r['باركودات إضافية'] || '').trim();
@@ -1362,7 +1491,7 @@
             rows.forEach((r, idx) => {
               const name = String(r['اسم الصنف '] || r['اسم الصنف'] || '').trim();
               if (name) {
-                const nameEn = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['Name En'] || '').trim();
+                const nameEn = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['Name En'] || '').trim();
                 const bc = String(r['الباركود '] || r['الباركود'] || '').replace(/\.0$/, '').trim();
                 const extraRaw = String(r['باركودات إضافية'] || '').trim();
                 const extraList = extraRaw ? extraRaw.split(/[,،|]/).map(x => x.trim()).filter(Boolean) : [];
@@ -1413,7 +1542,7 @@
           const valLen = String(r[c] !== undefined && r[c] !== null ? r[c] : '').length;
           if (valLen + 6 > maxLen) maxLen = valLen + 6;
         });
-        if (c.includes('اسم الصنف')) return { wch: Math.max(maxLen, 44) };
+        if (c.includes('اسم الصنف') || c.includes('بالإنجليزية')) return { wch: Math.max(maxLen, 44) };
         if (c.includes('باركود')) return { wch: Math.max(maxLen, 22) };
         if (c.includes('الفئة') || c.includes('الجهة')) return { wch: Math.max(maxLen, 22) };
         if (c.includes('رقم الصنف')) return { wch: Math.max(maxLen, 16) };
@@ -1483,6 +1612,7 @@
           'رقم الصنف': p.item_number,
           'الباركود': p.barcode,
           'اسم الصنف': p.name,
+          'الاسم بالإنجليزية': p.name_en || '',
           'الفئة': p.fia,
           'سعر البيع': p.price,
           'باركودات إضافية': allBc.slice(1).join(' , ')
@@ -1496,6 +1626,7 @@
       if (currentUser && currentUser.role === 'admin') document.getElementById('totalLoadedCount').innerText = allProducts.length.toLocaleString();
       const searchRes = smartSearchProducts(qRaw, 100);
       const filtered = searchRes.items;
+      const isEnSearch = searchRes.lang === 'en';
       if (currentUser && currentUser.role === 'admin') document.getElementById('filteredCountLbl').innerText = `المطابق للبحث: ${searchRes.total.toLocaleString()} صنف`;
       const box = document.getElementById('inventoryList');
       if (!filtered.length) { box.innerHTML = `<div class="bento-card" style="text-align:center;color:var(--muted);">لا توجد أصناف مطابقة للبحث.</div>`; return; }
@@ -1503,11 +1634,13 @@
         const bHtml = (p.batches && p.batches.length) ? p.batches.map(b => `<span class="b-chip b-exp">📅 ${b.exp} (${b.qty})</span>`).join('') : '';
         const allBc = getProductAllBarcodes(p);
         const extraBcBadge = allBc.length > 1 ? `<span class="b-chip b-multi">+${allBc.length - 1} باركود</span>` : '';
-        const thumb = p.image ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">` : `<span>${String(p.name || '💊').trim().slice(0, 2)}</span>`;
+        const dispTitle = getProductDisplayTitle(p, searchRes.lang);
+        const showEnStyle = isEnSearch && p.name_en && p.name_en.trim();
+        const thumb = p.image ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">` : `<span>${String(dispTitle || '💊').trim().slice(0, 2)}</span>`;
         return `<div class="inv-bento">
           <div class="inv-thumb">${thumb}</div>
           <div class="inv-info">
-            <div class="inv-title">${highlightSearchMatch(p.name, qRaw)}</div>
+            <div class="inv-title ${showEnStyle ? 'en-title' : ''}">${highlightSearchMatch(dispTitle, qRaw)}</div>
             <div class="inv-codes">رقم: <strong>${p.item_number || '-'}</strong> | باركود: <strong>${p.barcode || '-'}</strong></div>
             <div><span class="b-chip b-fia">${p.fia}</span>${extraBcBadge}${bHtml}</div>
           </div>
@@ -1825,6 +1958,7 @@
       if (!qRaw) { box.style.display = 'none'; return; }
 
       const res = smartSearchProducts(qRaw, 120);
+      const isEnSearch = res.lang === 'en';
       if (!res.items.length) {
         box.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:0.78rem;">لا توجد أصناف مطابقة لـ "${escapeHtmlSafe(qRaw)}"</div>`;
         box.style.display = 'block';
@@ -1832,15 +1966,18 @@
       }
 
       const header = `<div class="sub-search-header"><span>🔍 نتائج البحث: ${res.total} صنف مطابق</span><span>اضغط للإضافة</span></div>`;
-      box.innerHTML = header + res.items.map(p => `
+      box.innerHTML = header + res.items.map(p => {
+        const dispTitle = getProductDisplayTitle(p, res.lang);
+        const showEnStyle = isEnSearch && p.name_en && p.name_en.trim();
+        return `
         <div class="sub-search-row" onclick="handleSubModuleSelect('${mod}','${p.uid}')">
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:800;color:var(--text);line-height:1.3;"><strong>${escapeHtmlSafe(p.item_number)}</strong> - ${highlightSearchMatch(p.name, qRaw)}</div>
-            ${p.name_en ? `<div style="font-size:0.68rem;color:var(--muted);direction:ltr;text-align:right;">${highlightSearchMatch(p.name_en, qRaw)}</div>` : ''}
+            <div style="font-weight:800;color:var(--text);line-height:1.3;${showEnStyle ? 'direction:ltr;text-align:left;' : ''}"><strong>${escapeHtmlSafe(p.item_number)}</strong> - ${highlightSearchMatch(dispTitle, qRaw)}</div>
           </div>
           <span style="font-weight:900;color:var(--accent);white-space:nowrap;">${Number(p.price || 0).toFixed(2)} ر.س</span>
         </div>
-      `).join('');
+      `;
+      }).join('');
       box.style.display = 'block';
     }
 
@@ -2022,6 +2159,11 @@
       document.getElementById('prefMaintenanceMode').checked = Boolean(appConfig.maintenanceMode);
       changeSystemTheme(appConfig.activeTheme || 'slate-mint', false);
       renderAuditLogs();
+      const enBadge = document.getElementById('linkedEnglishNamesBadge');
+      const enCount = Object.keys(englishNamesMap || {}).length;
+      if (enBadge && enCount > 0) {
+        enBadge.innerText = `🌐 إجمالي الأسماء الإنجليزية المربوطة سحابياً: ${enCount} صنف`;
+      }
       const mergedBadge = document.getElementById('mergedNewProductsBadge');
       if (mergedBadge && customCloudProducts.length > 0) {
         mergedBadge.innerText = `📦 إجمالي الأصناف الإضافية المدمجة سحابياً: ${customCloudProducts.length} صنف`;
