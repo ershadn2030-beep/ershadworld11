@@ -508,7 +508,7 @@
     <div id="view_settings" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📄 التحديث الأسبوعي من تقارير ICP الثلاثة</h3></div>
-        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع ملفات ICP الخام مباشرة (يتجاهل أي أعمدة زائدة تلقائياً) ويعرض الفروقات قبل الاعتماد:</p>
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع ملفات ICP الخام مباشرة كما تنزل من النظام دون أي تعديل، ويعرض لك التطبيق الفروقات قبل الاعتماد:</p>
 
         <div class="icp-slot" id="icpSlotPrice">
           <div><strong style="font-size:0.78rem;">1. ملف الأسعار (.xlsx)</strong><div id="icpStatusPrice" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
@@ -542,7 +542,7 @@
 
         <div id="icpDeltaPreviewBox" style="display:none;margin-top:10px;padding:10px;border-radius:12px;background:var(--light);border:1.5px solid var(--primary);">
           <div id="icpDeltaSummary" style="font-size:0.76rem;font-weight:900;margin-bottom:6px;line-height:1.5;"></div>
-          <div id="icpDeltaDetails" style="max-height:150px;overflow-y:auto;font-size:0.72rem;margin-bottom:8px;"></div>
+          <div id="icpDeltaDetails" style="max-height:160px;overflow-y:auto;font-size:0.72rem;margin-bottom:8px;"></div>
           <button type="button" class="btn-glow" onclick="applyAndSyncIcpDeltas()">✅ اعتماد ومزامنة الفروقات مع Firebase</button>
         </div>
       </div>
@@ -1396,8 +1396,9 @@
       showToast('✅ تم حفظ التعديلات ومزامنتها فوراً');
     }
 
-    // --- معالج التحديث الأسبوعي الذكي لملفات ICP الثلاثة + مربع الاستثناءات التفاعلي ---
+    // --- معالج التحديث الأسبوعي الذكي لملفات ICP الثلاثة (متوافق مع إزاحة أعمدة ICP) ---
     const icpThreeBuffers = { price: null, barcode: null, english: null };
+    const icpSlotLayouts = { price: '', barcode: '', english: '' };
     let pendingIcpDeltas = {};
     let pendingIcpEnglishMap = {};
 
@@ -1466,13 +1467,22 @@
       });
     }
 
-    // قراءة ذكية تتخطى ترويسة تقارير ICP وتتجاهل أي أعمدة زائدة تلقائياً
-    function parseSmartIcpSheet(wb) {
+    function isUnitToken(v) {
+      const s = String(v || '').trim().toLowerCase();
+      return ['حبة', 'حبه', 'علبة', 'علبه', 'باكت', 'كيس', 'شريط', 'قطعة', 'قطعه', 'كرتون', 'amp', 'tab', 'cap', 'pcs', 'box', 'btl', 'tube'].includes(s);
+    }
+
+    function cleanIcpCode(v) {
+      return String(v ?? '').replace(/\.0$/, '').replace(/\.$/, '').trim();
+    }
+
+    // قراءة ذكية تتعامل مع إزاحة أعمدة Crystal Reports في ملفات ICP الخام وتلغي تذييل الصفحة
+    function parseSmartIcpSheet(wb, slot) {
       const sheet = wb.Sheets[wb.SheetNames[0]];
       const matrix = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-      if (!matrix || !matrix.length) return [];
+      if (!matrix || !matrix.length) return { records: [], layoutLabel: '' };
 
-      const headerKeywords = ['رقم الصنف', 'كود الصنف', 'رمز الصنف', 'اسم الصنف', 'سعر', 'باركود', 'الفئة', 'القسم', 'item', 'code', 'price', 'barcode', 'name'];
+      const headerKeywords = ['رقم الصنف', 'كود الصنف', 'رمز الصنف', 'اسم الصنف', 'بالضريبة', 'بدون ضريبه', 'بدون ضريبة', 'سعر', 'باركود', 'الفئة', 'القسم', 'رقم المرجع', 'item', 'code', 'price', 'barcode', 'name'];
       let headerRowIdx = 0;
       let bestScore = 0;
 
@@ -1489,17 +1499,112 @@
       }
 
       const rawHeaders = (matrix[headerRowIdx] || []).map((h, i) => String(h || '').trim() || `col_${i}`);
+      const sampleRows = matrix.slice(headerRowIdx + 1, headerRowIdx + 15).filter(r => r && r.some(v => String(v || '').trim() !== ''));
+
+      // 1) تقرير الأسعار المزاح من ICP (تحديد سعر.xlsx):
+      // Col 0 = بالضريبة، Col 3 = الباركود الدولي، Col 4 = الوحدة، Col 5 = اسم الصنف، Col 6 = رقم الصنف
+      const isShiftedIcpPrice = sampleRows.length > 0 && sampleRows.some(r =>
+        r.length >= 7 &&
+        !isNaN(parseFloat(r[0])) &&
+        isUnitToken(r[4]) &&
+        /^\d+$/.test(cleanIcpCode(r[6])) &&
+        String(r[5] || '').trim().length > 1
+      );
+
+      // 2) تقرير الفئات المزاح من ICP (تحديد فئة.xlsx):
+      // Col 0 = رقم المرجع، Col 2 = الفئة، Col 3 = الوحدة، Col 4 = اسم الصنف، Col 5 = رقم الصنف
+      const isShiftedIcpCat = !isShiftedIcpPrice && sampleRows.length > 0 && sampleRows.some(r =>
+        r.length >= 6 &&
+        isUnitToken(r[3]) &&
+        /^\d+$/.test(cleanIcpCode(r[5])) &&
+        String(r[4] || '').trim().length > 1
+      );
+
       const records = [];
+
+      if (isShiftedIcpPrice) {
+        for (let r = headerRowIdx + 1; r < matrix.length; r++) {
+          const row = matrix[r] || [];
+          const joined = row.map(x => String(x || '')).join(' ');
+          if (!joined.trim() || joined.includes('صفحة رقم') || joined.includes('DESKTOP-')) continue;
+          const code = cleanIcpCode(row[6]);
+          const name = String(row[5] || '').trim();
+          const bc = cleanIcpCode(row[3]);
+          const priceVat = parseFloat(String(row[0] ?? '').replace(/,/g, ''));
+          if (!code || !/^\d+$/.test(code) || !name) continue;
+          records.push({
+            'رقم الصنف': code,
+            'اسم الصنف': name,
+            'الباركود': bc,
+            'سعر البيع': (!isNaN(priceVat) && priceVat > 0) ? Number(priceVat.toFixed(2)) : 0
+          });
+        }
+        return { records, layoutLabel: 'تقرير أسعار ICP (بالضريبة)' };
+      }
+
+      if (isShiftedIcpCat) {
+        for (let r = headerRowIdx + 1; r < matrix.length; r++) {
+          const row = matrix[r] || [];
+          const joined = row.map(x => String(x || '')).join(' ');
+          if (!joined.trim() || joined.includes('صفحة رقم') || joined.includes('DESKTOP-')) continue;
+          const code = cleanIcpCode(row[5]) || cleanIcpCode(row[0]);
+          const name = String(row[4] || '').trim();
+          const fia = String(row[2] || '').trim();
+          if (!code || !/^\d+$/.test(code) || !name) continue;
+          records.push({
+            'رقم الصنف': code,
+            'اسم الصنف': name,
+            'الفئة': fia
+          });
+        }
+        return { records, layoutLabel: 'تقرير الفئات ICP' };
+      }
+
+      // 3) كشف ذكي لملف الأسماء الإنجليزية إذا كان مزاحاً من ICP
+      if (slot === 'english' && sampleRows.length > 0) {
+        const codeHeaderIdx = rawHeaders.findIndex(h => h.includes('رقم الصنف') || h.toLowerCase().includes('item code'));
+        const headerLooksShifted = codeHeaderIdx >= 0 && sampleRows.every(r => !/^\d+$/.test(cleanIcpCode(r[codeHeaderIdx])));
+        if (headerLooksShifted) {
+          let bestCodeCol = -1, bestEnCol = -1, bestCodeHits = 0, bestEnHits = 0;
+          const maxCols = Math.max(...sampleRows.map(r => r.length));
+          for (let c = 0; c < maxCols; c++) {
+            let codeHits = 0, enHits = 0;
+            sampleRows.forEach(r => {
+              const val = cleanIcpCode(r[c]);
+              if (/^\d{4,}$/.test(val)) codeHits++;
+              if (/[a-zA-Z]{3,}/.test(val) && !val.includes('@') && !val.includes('DESKTOP')) enHits++;
+            });
+            if (codeHits > bestCodeHits) { bestCodeHits = codeHits; bestCodeCol = c; }
+            if (enHits > bestEnHits) { bestEnHits = enHits; bestEnCol = c; }
+          }
+          if (bestCodeCol >= 0 && bestEnCol >= 0 && bestCodeCol !== bestEnCol) {
+            for (let r = headerRowIdx + 1; r < matrix.length; r++) {
+              const row = matrix[r] || [];
+              const joined = row.map(x => String(x || '')).join(' ');
+              if (!joined.trim() || joined.includes('صفحة رقم') || joined.includes('DESKTOP-')) continue;
+              const code = cleanIcpCode(row[bestCodeCol]);
+              const enName = String(row[bestEnCol] || '').trim();
+              if (code && /^\d+$/.test(code) && enName && /[a-zA-Z]/.test(enName)) {
+                records.push({ 'رقم الصنف': code, 'Item Name En': enName });
+              }
+            }
+            return { records, layoutLabel: 'تقرير الأسماء الإنجليزية ICP' };
+          }
+        }
+      }
+
+      // 4) القراءة القياسية للأعمدة المتطابقة مع العناوين
       for (let r = headerRowIdx + 1; r < matrix.length; r++) {
         const rowArr = matrix[r] || [];
-        if (!rowArr.some(v => String(v || '').trim() !== '')) continue;
+        const joined = rowArr.map(x => String(x || '')).join(' ');
+        if (!joined.trim() || joined.includes('صفحة رقم') || joined.includes('DESKTOP-')) continue;
         const obj = {};
         rawHeaders.forEach((h, i) => {
           obj[h] = rowArr[i] !== undefined ? rowArr[i] : '';
         });
         records.push(obj);
       }
-      return records;
+      return { records, layoutLabel: '' };
     }
 
     function getFlexCol(row, exactList, partialInclude = [], partialExclude = []) {
@@ -1524,7 +1629,6 @@
       return '';
     }
 
-    // استخراج ذكي لسعر البيع شامل الضريبة من أي تسمية عمود في ICP
     function extractIcpRowPrice(row) {
       const keys = Object.keys(row);
       const badWords = ['تكلفة', 'تكلفه', 'شراء', 'الشراء', 'قبل', 'بدون', 'خصم', 'ضريبة القيمة', 'الكمية', 'الرصيد', 'cost', 'purchase', 'before', 'without', 'discount', 'qty', 'stock'];
@@ -1536,7 +1640,7 @@
         return (!isNaN(n) && n > 0 && n < 100000) ? Number(n.toFixed(2)) : null;
       };
 
-      const priority1 = ['سعر البيع', 'سعر بعد الضريبة', 'السعر بعد الضريبة', 'سعر شامل الضريبة', 'السعر شامل الضريبة', 'شامل الضريبة', 'بعد الضريبة', 'سعر المستهلك', 'سعر الجمهور', 'السعر النهائي', 'retail price', 'selling price', 'sale price'];
+      const priority1 = ['سعر البيع', 'بالضريبة', 'سعر بعد الضريبة', 'السعر بعد الضريبة', 'سعر شامل الضريبة', 'السعر شامل الضريبة', 'شامل الضريبة', 'بعد الضريبة', 'سعر المستهلك', 'سعر الجمهور', 'retail price', 'selling price', 'sale price'];
       for (const target of priority1) {
         const k = keys.find(key => {
           const kl = key.trim().toLowerCase();
@@ -1561,17 +1665,6 @@
         return priceCandidates[0];
       }
 
-      const preVatKey = keys.find(k => {
-        const kl = k.trim().toLowerCase();
-        return (kl.includes('سعر') || kl.includes('price')) && (kl.includes('قبل') || kl.includes('بدون')) && !kl.includes('تكلف') && !kl.includes('شراء');
-      });
-      if (preVatKey !== undefined) {
-        const baseVal = parseNum(row[preVatKey]);
-        if (baseVal !== null) {
-          return { price: Number((baseVal * 1.15).toFixed(2)), colName: `${preVatKey.trim()} (+15%)` };
-        }
-      }
-
       return { price: null, colName: '' };
     }
 
@@ -1582,11 +1675,12 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = parseSmartIcpSheet(wb);
-          icpThreeBuffers[slot] = rows;
+          const parsed = parseSmartIcpSheet(wb, slot);
+          icpThreeBuffers[slot] = parsed.records;
+          icpSlotLayouts[slot] = parsed.layoutLabel;
           const cap = slot.charAt(0).toUpperCase() + slot.slice(1);
           document.getElementById('icpSlot' + cap).classList.add('loaded');
-          document.getElementById('icpStatus' + cap).innerText = `✅ ${file.name} (${rows.length} صف)`;
+          document.getElementById('icpStatus' + cap).innerText = `✅ ${file.name} (${parsed.records.length} صف)`;
         } catch (err) {
           alert('تعذر قراءة الملف');
         }
@@ -1607,21 +1701,21 @@
       const existingByCode = new Map(allProducts.map(p => [String(p.item_number || '').replace(/\.0$/, '').trim(), p]));
       const incoming = new Map();
       pendingIcpEnglishMap = {};
-      let detectedPriceCol = '';
+      let detectedPriceCol = icpSlotLayouts.price || '';
 
       allUploadedRows.forEach(r => {
-        let code = getFlexCol(
+        let code = cleanIcpCode(getFlexCol(
           r,
           ['رقم الصنف', 'كود الصنف', 'رمز الصنف', 'الكود', 'رقم', 'Item Code', 'Item No', 'Item Number', 'Code', 'SKU'],
           ['رقم الصنف', 'كود الصنف', 'item code', 'item no'],
           ['المرجع', 'المورد', 'الباركود', 'الرصيد', 'الكمية', 'barcode', 'qty', 'stock']
-        ).replace(/\.0$/, '').trim();
+        ));
 
-        const bc = getFlexCol(
+        const bc = cleanIcpCode(getFlexCol(
           r,
           ['الباركود', 'باركود', 'Barcode'],
           ['باركود', 'barcode']
-        ).replace(/\.0$/, '').trim();
+        ));
 
         if (!code && bc) {
           const byBc = findProductSmart(bc);
@@ -1665,8 +1759,7 @@
       });
 
       if (incoming.size === 0) {
-        const sampleCols = Object.keys(allUploadedRows[0] || {}).join(' | ');
-        return alert(`⚠️ لم يتم التعرف على عمود "رقم الصنف" في الملف.\nالأعمدة المكتشفة هي:\n${sampleCols}`);
+        return alert('⚠️ لم يتم العثور على أصناف صالحة في الملف المرفوع.');
       }
 
       pendingIcpDeltas = {};
@@ -1678,7 +1771,6 @@
         if (!old) old = findProductSmart(code);
 
         if (!old) {
-          // تجاهل الصفوف الفرعية التي لا تحتوي على اسم صنف نصي حقيقي
           const validNewName = inc.name || inc.name_en || '';
           if (!validNewName || /^\d+$/.test(validNewName)) return;
 
@@ -1740,11 +1832,12 @@
       });
 
       document.getElementById('icpDeltaPreviewBox').style.display = 'block';
-      const colInfo = detectedPriceCol ? `<div style="font-size:0.7rem;color:var(--primary-dark);margin-top:2px;">عمود السعر المقروء: [${escapeHtmlSafe(detectedPriceCol)}]</div>` : '';
+      const colInfo = detectedPriceCol ? `<div style="font-size:0.7rem;color:var(--primary-dark);margin-top:2px;">المصدر المقروء: [${escapeHtmlSafe(detectedPriceCol)}]</div>` : '';
       document.getElementById('icpDeltaSummary').innerHTML =
         `ملخص الفروقات (من ${incoming.size} صنف): 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🏷️ ${fiaCnt} فئة | 🛡️ ${protectedCnt} محمي${colInfo}`;
+      const moreCount = lines.length > 80 ? `<div style="margin-top:6px;font-weight:800;color:var(--primary-dark);">... وعدد ${lines.length - 80} تعديل إضافي سيُعتمد بالكامل</div>` : '';
       document.getElementById('icpDeltaDetails').innerHTML =
-        lines.length ? lines.slice(0, 80).join('<br>') : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
+        lines.length ? (lines.slice(0, 80).join('<br>') + moreCount) : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
     }
 
     function applyAndSyncIcpDeltas() {
@@ -1824,12 +1917,13 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = parseSmartIcpSheet(wb);
+          const parsed = parseSmartIcpSheet(wb, 'english');
+          const rows = parsed.records;
           if (!rows.length) return alert('الملف فارغ!');
           let linkedCount = 0;
 
           rows.forEach(r => {
-            const code = getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Code', 'Code', 'SKU'], ['رقم الصنف', 'كود الصنف', 'code']).replace(/\.0$/, '').trim();
+            const code = cleanIcpCode(getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Code', 'Code', 'SKU'], ['رقم الصنف', 'كود الصنف', 'code']));
             const enName = getFlexCol(r, ['Item Name En', 'Item Name', 'الاسم الانجليزي', 'الاسم بالإنجليزية', 'English Name', 'Name En'], ['انجليزي', 'إنجليزية', 'english', 'name en']);
             if (code && enName && !/^\d+$/.test(enName)) {
               englishNamesMap[code] = enName;
@@ -1866,7 +1960,8 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = parseSmartIcpSheet(wb);
+          const parsed = parseSmartIcpSheet(wb, 'price');
+          const rows = parsed.records;
           let addedCount = 0, updatedCount = 0;
           const nowTs = Date.now();
 
@@ -1874,8 +1969,8 @@
             const name = getFlexCol(r, ['اسم الصنف', 'الاسم', 'Name'], ['اسم الصنف'], ['انجليزي', 'english']);
             if (!name || /^\d+$/.test(name)) return;
             const nameEn = getFlexCol(r, ['Item Name En', 'الاسم الانجليزي', 'الاسم بالإنجليزية', 'Name En'], ['انجليزي', 'english']);
-            const itemNum = getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Number', 'Code'], ['رقم الصنف']).replace(/\.0$/, '').trim();
-            const barcode = getFlexCol(r, ['الباركود', 'باركود', 'Barcode'], ['باركود']).replace(/\.0$/, '').trim();
+            const itemNum = cleanIcpCode(getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Number', 'Code'], ['رقم الصنف']));
+            const barcode = cleanIcpCode(getFlexCol(r, ['الباركود', 'باركود', 'Barcode'], ['باركود']));
             const extraBcRaw = String(r['باركودات إضافية'] || '').trim();
             const extraBc = extraBcRaw ? extraBcRaw.split(/[,،|]/).map(x => x.trim()).filter(Boolean) : [];
             const fia = getFlexCol(r, ['الفئة', 'القسم', 'Category'], ['الفئة', 'القسم']) || 'مورد عام';
