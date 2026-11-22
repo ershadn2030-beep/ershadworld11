@@ -541,7 +541,7 @@
         <button type="button" class="btn-sub" style="width:100%;padding:10px;margin-top:4px;font-weight:900;color:var(--primary);border-color:var(--primary);" onclick="previewIcpWeeklyMerge()">🔍 معالجة ومعاينة الفروقات</button>
 
         <div id="icpDeltaPreviewBox" style="display:none;margin-top:10px;padding:10px;border-radius:12px;background:var(--light);border:1.5px solid var(--primary);">
-          <div id="icpDeltaSummary" style="font-size:0.76rem;font-weight:900;margin-bottom:6px;"></div>
+          <div id="icpDeltaSummary" style="font-size:0.76rem;font-weight:900;margin-bottom:6px;line-height:1.5;"></div>
           <div id="icpDeltaDetails" style="max-height:150px;overflow-y:auto;font-size:0.72rem;margin-bottom:8px;"></div>
           <button type="button" class="btn-glow" onclick="applyAndSyncIcpDeltas()">✅ اعتماد ومزامنة الفروقات مع Firebase</button>
         </div>
@@ -1396,7 +1396,7 @@
       showToast('✅ تم حفظ التعديلات ومزامنتها فوراً');
     }
 
-    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة + مربع الاستثناءات التفاعلي ---
+    // --- معالج التحديث الأسبوعي الذكي لملفات ICP الثلاثة + مربع الاستثناءات التفاعلي ---
     const icpThreeBuffers = { price: null, barcode: null, english: null };
     let pendingIcpDeltas = {};
     let pendingIcpEnglishMap = {};
@@ -1524,6 +1524,57 @@
       return '';
     }
 
+    // استخراج ذكي لسعر البيع شامل الضريبة من أي تسمية عمود في ICP
+    function extractIcpRowPrice(row) {
+      const keys = Object.keys(row);
+      const badWords = ['تكلفة', 'تكلفه', 'شراء', 'الشراء', 'قبل', 'بدون', 'خصم', 'ضريبة القيمة', 'الكمية', 'الرصيد', 'cost', 'purchase', 'before', 'without', 'discount', 'qty', 'stock'];
+
+      const parseNum = (v) => {
+        const s = String(v ?? '').replace(/,/g, '').replace(/[^\d.]/g, '');
+        if (!s) return null;
+        const n = parseFloat(s);
+        return (!isNaN(n) && n > 0 && n < 100000) ? Number(n.toFixed(2)) : null;
+      };
+
+      const priority1 = ['سعر البيع', 'سعر بعد الضريبة', 'السعر بعد الضريبة', 'سعر شامل الضريبة', 'السعر شامل الضريبة', 'شامل الضريبة', 'بعد الضريبة', 'سعر المستهلك', 'سعر الجمهور', 'السعر النهائي', 'retail price', 'selling price', 'sale price'];
+      for (const target of priority1) {
+        const k = keys.find(key => {
+          const kl = key.trim().toLowerCase();
+          return (kl === target.toLowerCase() || kl.includes(target.toLowerCase())) && !badWords.some(b => kl.includes(b));
+        });
+        if (k !== undefined) {
+          const val = parseNum(row[k]);
+          if (val !== null) return { price: val, colName: k.trim() };
+        }
+      }
+
+      const priceCandidates = [];
+      keys.forEach(k => {
+        const kl = k.trim().toLowerCase();
+        if ((kl.includes('سعر') || kl.includes('price')) && !badWords.some(b => kl.includes(b))) {
+          const val = parseNum(row[k]);
+          if (val !== null) priceCandidates.push({ price: val, colName: k.trim() });
+        }
+      });
+      if (priceCandidates.length > 0) {
+        priceCandidates.sort((a, b) => b.price - a.price);
+        return priceCandidates[0];
+      }
+
+      const preVatKey = keys.find(k => {
+        const kl = k.trim().toLowerCase();
+        return (kl.includes('سعر') || kl.includes('price')) && (kl.includes('قبل') || kl.includes('بدون')) && !kl.includes('تكلف') && !kl.includes('شراء');
+      });
+      if (preVatKey !== undefined) {
+        const baseVal = parseNum(row[preVatKey]);
+        if (baseVal !== null) {
+          return { price: Number((baseVal * 1.15).toFixed(2)), colName: `${preVatKey.trim()} (+15%)` };
+        }
+      }
+
+      return { price: null, colName: '' };
+    }
+
     function handleIcpThreeFiles(slot, input) {
       const file = input.files[0];
       if (!file) return;
@@ -1556,6 +1607,7 @@
       const existingByCode = new Map(allProducts.map(p => [String(p.item_number || '').replace(/\.0$/, '').trim(), p]));
       const incoming = new Map();
       pendingIcpEnglishMap = {};
+      let detectedPriceCol = '';
 
       allUploadedRows.forEach(r => {
         let code = getFlexCol(
@@ -1590,13 +1642,8 @@
           ['انجليزي', 'إنجليزية', 'english', 'name en']
         );
 
-        const rawPriceStr = getFlexCol(
-          r,
-          ['سعر البيع', 'السعر', 'سعر الجمهور', 'السعر شامل الضريبة', 'Retail Price', 'Sale Price', 'Selling Price', 'Price'],
-          ['سعر البيع', 'سعر الجمهور', 'السعر', 'price'],
-          ['التكلفة', 'تكلفة', 'الشراء', 'شراء', 'بدون ضريبة', 'cost', 'purchase', 'net']
-        ).replace(/,/g, '').replace(/[^\d.]/g, '');
-        const parsedPrice = rawPriceStr ? Number((parseFloat(rawPriceStr) || 0).toFixed(2)) : null;
+        const priceInfo = extractIcpRowPrice(r);
+        if (priceInfo.colName && !detectedPriceCol) detectedPriceCol = priceInfo.colName;
 
         const fia = getFlexCol(
           r,
@@ -1605,12 +1652,12 @@
         );
 
         const cur = incoming.get(code) || { item_number: code, barcodes: [] };
-        if (name) cur.name = name;
-        if (nameEn) {
+        if (name && !/^\d+$/.test(name)) cur.name = name;
+        if (nameEn && !/^\d+$/.test(nameEn)) {
           cur.name_en = nameEn;
           pendingIcpEnglishMap[code] = nameEn;
         }
-        if (parsedPrice !== null && parsedPrice > 0) cur.price = parsedPrice;
+        if (priceInfo.price !== null && priceInfo.price > 0) cur.price = priceInfo.price;
         if (fia) cur.fia = fia;
         if (bc) cur.barcodes = [...new Set([...(cur.barcodes || []), bc])].slice(0, 7);
 
@@ -1627,24 +1674,31 @@
       const lines = [];
 
       incoming.forEach((inc, code) => {
-        const old = existingByCode.get(code);
+        let old = existingByCode.get(code);
+        if (!old) old = findProductSmart(code);
+
         if (!old) {
+          // تجاهل الصفوف الفرعية التي لا تحتوي على اسم صنف نصي حقيقي
+          const validNewName = inc.name || inc.name_en || '';
+          if (!validNewName || /^\d+$/.test(validNewName)) return;
+
           newCnt++;
           const mKey = code.replace(/[.#$\[\]\/]/g, '_');
           pendingIcpDeltas[mKey] = {
             item_number: code,
-            name: inc.name || inc.name_en || 'صنف جديد',
+            name: validNewName,
             name_en: inc.name_en || '',
             price: inc.price || 0,
             fia: inc.fia || 'مورد عام',
             barcodes: (inc.barcodes && inc.barcodes.length) ? inc.barcodes : [code],
             isNew: true
           };
-          lines.push(`🆕 <b>جديد:</b> ${escapeHtmlSafe(pendingIcpDeltas[mKey].name)} (${pendingIcpDeltas[mKey].price} ر.س)`);
+          lines.push(`🆕 <b>جديد:</b> ${escapeHtmlSafe(validNewName)} (${pendingIcpDeltas[mKey].price} ر.س)`);
         } else {
+          const realItemCode = String(old.item_number || code).trim();
           let changed = false;
           const patch = {
-            item_number: code,
+            item_number: realItemCode,
             name: old.name,
             name_en: inc.name_en || old.name_en || '',
             price: old.price,
@@ -1679,15 +1733,16 @@
 
           if (inc.name_en && inc.name_en !== old.name_en) changed = true;
           if (changed) {
-            const mKey = code.replace(/[.#$\[\]\/]/g, '_');
+            const mKey = realItemCode.replace(/[.#$\[\]\/]/g, '_');
             pendingIcpDeltas[mKey] = patch;
           }
         }
       });
 
       document.getElementById('icpDeltaPreviewBox').style.display = 'block';
-      document.getElementById('icpDeltaSummary').innerText =
-        `ملخص الفروقات (من ${incoming.size} صنف): 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🏷️ ${fiaCnt} فئة | 🛡️ ${protectedCnt} محمي`;
+      const colInfo = detectedPriceCol ? `<div style="font-size:0.7rem;color:var(--primary-dark);margin-top:2px;">عمود السعر المقروء: [${escapeHtmlSafe(detectedPriceCol)}]</div>` : '';
+      document.getElementById('icpDeltaSummary').innerHTML =
+        `ملخص الفروقات (من ${incoming.size} صنف): 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🏷️ ${fiaCnt} فئة | 🛡️ ${protectedCnt} محمي${colInfo}`;
       document.getElementById('icpDeltaDetails').innerHTML =
         lines.length ? lines.slice(0, 80).join('<br>') : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
     }
@@ -1769,30 +1824,14 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          const rows = parseSmartIcpSheet(wb);
           if (!rows.length) return alert('الملف فارغ!');
-          const sampleKeys = Object.keys(rows[0]);
           let linkedCount = 0;
 
           rows.forEach(r => {
-            let code = String(
-              r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['ItemCode'] || r['Item Code'] || r['Item Number'] || r['Reference Number'] || r['Code'] || r['SKU'] || ''
-            ).replace(/\.0$/, '').trim();
-
-            let enName = String(
-              r['Item Name En'] || r['Item Name'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['اسم الصنف بالانجليزي'] || r['اسم الصنف بالإنجليزية'] || r['English Name'] || r['Name En'] || r['Name_En'] || r['En Name'] || ''
-            ).trim();
-
-            if ((!code || !enName) && sampleKeys.length >= 2) {
-              const v0 = String(r[sampleKeys[0]] || '').replace(/\.0$/, '').trim();
-              const v1 = String(r[sampleKeys[1]] || '').trim();
-              if (!code && /^\d+$/.test(v0)) code = v0;
-              else if (!code && /^\d+$/.test(v1)) code = v1;
-              if (!enName && /[a-zA-Z]/.test(v1)) enName = v1;
-              else if (!enName && /[a-zA-Z]/.test(v0)) enName = v0;
-            }
-
-            if (code && enName) {
+            const code = getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Code', 'Code', 'SKU'], ['رقم الصنف', 'كود الصنف', 'code']).replace(/\.0$/, '').trim();
+            const enName = getFlexCol(r, ['Item Name En', 'Item Name', 'الاسم الانجليزي', 'الاسم بالإنجليزية', 'English Name', 'Name En'], ['انجليزي', 'إنجليزية', 'english', 'name en']);
+            if (code && enName && !/^\d+$/.test(enName)) {
               englishNamesMap[code] = enName;
               linkedCount++;
             }
@@ -1827,20 +1866,21 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          const rows = parseSmartIcpSheet(wb);
           let addedCount = 0, updatedCount = 0;
           const nowTs = Date.now();
 
           rows.forEach((r, idx) => {
-            const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
-            if (!name) return;
-            const nameEn = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['Name En'] || '').trim();
-            const itemNum = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Number'] || '').replace(/\.0$/, '').trim();
-            const barcode = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
+            const name = getFlexCol(r, ['اسم الصنف', 'الاسم', 'Name'], ['اسم الصنف'], ['انجليزي', 'english']);
+            if (!name || /^\d+$/.test(name)) return;
+            const nameEn = getFlexCol(r, ['Item Name En', 'الاسم الانجليزي', 'الاسم بالإنجليزية', 'Name En'], ['انجليزي', 'english']);
+            const itemNum = getFlexCol(r, ['رقم الصنف', 'كود الصنف', 'Item Number', 'Code'], ['رقم الصنف']).replace(/\.0$/, '').trim();
+            const barcode = getFlexCol(r, ['الباركود', 'باركود', 'Barcode'], ['باركود']).replace(/\.0$/, '').trim();
             const extraBcRaw = String(r['باركودات إضافية'] || '').trim();
             const extraBc = extraBcRaw ? extraBcRaw.split(/[,،|]/).map(x => x.trim()).filter(Boolean) : [];
-            const fia = String(r['الفئة'] || r['الفئة '] || r['القسم'] || 'مورد عام').trim();
-            const price = Number((parseFloat(r['سعر البيع'] || r['السعر'] || r['Price']) || 0).toFixed(2));
+            const fia = getFlexCol(r, ['الفئة', 'القسم', 'Category'], ['الفئة', 'القسم']) || 'مورد عام';
+            const priceInfo = extractIcpRowPrice(r);
+            const price = priceInfo.price || 0;
             const image = String(r['الصورة'] || r['صورة الصنف'] || r['Image'] || '').trim();
 
             const existingIdx = customCloudProducts.findIndex(p =>
