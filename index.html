@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#091318">
+  <meta name="theme-color" content="#FFFFFF">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>أوكير O CARE - منظومة إدارة الصيدلية</title>
+  <title>أوكيـــــــر O CARE - منظومة إدارة الصيدلية</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Lalezar&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
@@ -15,83 +18,138 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
-    :root, :root[data-theme="slate-mint"] { --bg:#091318; --shell:linear-gradient(180deg,#0D1F27 0%,#081217 100%); --card:rgba(18,37,46,0.92); --card-solid:#12252E; --card-alt:#17313D; --text:#F0FDF4; --muted:#86A8B2; --border:rgba(45,212,191,0.2); --primary:#10B981; --glow:rgba(16,185,129,0.35); --light:rgba(16,185,129,0.15); --accent:#F59E0B; --danger:#EF4444; --banner:linear-gradient(135deg,#D9B166 0%,#B38738 100%); --banner-txt:#091318; --btn-txt:#06120E; }
-    :root[data-theme="world8"] { --navy: #0B1957; --primary: #0D9488; --primary-dark: #0F766E; --primary-light: #CCFBF1; --accent: #0D9488; --accent-2: #0F766E; --accent-glow: rgba(13,148,136,0.18); --glow: rgba(13,148,136,0.25); --light: #CCFBF1; --bg: #F1F5F9; --shell: linear-gradient(150deg, #F1F5F9 0%, #E2E8F0 100%); --card: rgba(255,255,255,0.95); --card-solid: #FFFFFF; --card-alt: #F8FAFC; --header: #0B1957; --text: #0F172A; --muted: #64748B; --border: #E2E8F0; --danger: #EF4444; --success: #10B981; --banner: linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%); --banner-txt: #0B1957; --btn-txt: #FFFFFF; }
-    :root[data-theme="world8"] .top-header { background: linear-gradient(135deg, #0B1957 0%, #0F2B6B 60%, #0D9488 100%) !important; color: #FFFFFF !important; border-radius: 0 0 24px 24px !important; border-bottom: none !important; }
-    :root[data-theme="world8"] .top-header h1, :root[data-theme="world8"] .top-header p, :root[data-theme="world8"] .top-header div { color: #FFFFFF !important; }
-    :root[data-theme="world8"] .top-header .exit-btn { background: rgba(220, 38, 38, 0.35) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
-    :root[data-theme="world8"] .top-header .role-tag, :root[data-theme="world8"] .top-header .circle-btn { background: rgba(255, 255, 255, 0.16) !important; color: #FFFFFF !important; border: 1px solid rgba(255,255,255,0.25) !important; }
-    :root[data-theme="world8"] .top-header input { background: #FFFFFF !important; color: #0F172A !important; }
-    :root[data-theme="world8"] .btn-glow { background: #0B1957 !important; color: #FFFFFF !important; box-shadow: 0 4px 14px rgba(11,25,87,0.25) !important; }
-    :root[data-theme="royal-obsidian"] { --bg:#080A0F; --shell:linear-gradient(180deg,#121722 0%,#080A0F 100%); --card:rgba(20,25,36,0.94); --card-solid:#141924; --card-alt:#1C2332; --text:#F8FAFC; --muted:#94A3B8; --border:rgba(212,175,55,0.24); --primary:#D4AF37; --glow:rgba(212,175,55,0.32); --light:rgba(212,175,55,0.15); --accent:#10B981; --danger:#EF4444; --banner:linear-gradient(135deg,#E5C158 0%,#AA821A 100%); --banner-txt:#080A0F; --btn-txt:#080A0F; }
-    :root[data-theme="clinical-daylight"] { --bg:#EEF2F6; --shell:linear-gradient(180deg,#F8FAFC 0%,#EEF2F6 100%); --card:#FFFFFF; --card-solid:#FFFFFF; --card-alt:#F1F5F9; --text:#0F172A; --muted:#64748B; --border:#CBD5E1; --primary:#0D9488; --glow:rgba(13,148,136,0.25); --light:#CCFBF1; --accent:#D97706; --danger:#EF4444; --banner:linear-gradient(135deg,#0B1957 0%,#0D9488 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
-    :root[data-theme="emerald-glass"] { --bg:#031A15; --shell:linear-gradient(180deg,#062F26 0%,#031A15 100%); --card:rgba(9,48,39,0.92); --card-solid:#093027; --card-alt:#0E4236; --text:#ECFDF5; --muted:#6EE7B7; --border:rgba(52,211,153,0.25); --primary:#34D399; --glow:rgba(52,211,153,0.35); --light:rgba(52,211,153,0.16); --accent:#FBBF24; --danger:#F87171; --banner:linear-gradient(135deg,#D9B166 0%,#A37A2D 100%); --banner-txt:#031A15; --btn-txt:#031A15; }
-    :root[data-theme="titanium-coral"] { --bg:#111216; --shell:linear-gradient(180deg,#1B1D24 0%,#111216 100%); --card:rgba(29,31,39,0.94); --card-solid:#1D1F27; --card-alt:#272A35; --text:#FAFAFA; --muted:#A1A1AA; --border:rgba(251,113,133,0.24); --primary:#FB7185; --glow:rgba(251,113,133,0.32); --light:rgba(251,113,133,0.15); --accent:#38BDF8; --danger:#EF4444; --banner:linear-gradient(135deg,#FB7185 0%,#E11D48 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
-    :root[data-theme="velvet-amethyst"] { --bg:#0D0818; --shell:linear-gradient(180deg,#1C1132 0%,#0D0818 100%); --card:rgba(30,19,54,0.92); --card-solid:#1E1336; --card-alt:#2A1B4A; --text:#F5F3FF; --muted:#C4B5FD; --border:rgba(168,85,247,0.25); --primary:#A855F7; --glow:rgba(168,85,247,0.35); --light:rgba(168,85,247,0.16); --accent:#F472B6; --danger:#EF4444; --banner:linear-gradient(135deg,#9333EA 0%,#6B21A8 100%); --banner-txt:#FFFFFF; --btn-txt:#FFFFFF; }
+    :root, :root[data-theme="clinical-daylight"] {
+      --bg:#F1F5F9; --shell:linear-gradient(180deg,#F8FAFC 0%,#EEF2F6 100%);
+      --card:#FFFFFF; --card-solid:#FFFFFF; --card-alt:#F8FAFC;
+      --text:#0F172A; --muted:#64748B; --border:#E2E8F0;
+      --primary:#0D9488; --primary-dark:#0F766E; --navy:#0B1957;
+      --glow:rgba(13,148,136,0.22); --light:#E6F4F1;
+      --accent:#0F766E; --danger:#EF4444;
+      --banner:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%); --banner-txt:#0B1957; --btn-txt:#FFFFFF;
+    }
+    :root[data-theme="world8"] {
+      --navy:#0B1957; --primary:#0D9488; --primary-dark:#0F766E;
+      --accent:#0D9488; --glow:rgba(13,148,136,0.25); --light:#CCFBF1;
+      --bg:#F1F5F9; --shell:linear-gradient(150deg,#F1F5F9 0%,#E2E8F0 100%);
+      --card:rgba(255,255,255,0.96); --card-solid:#FFFFFF; --card-alt:#F8FAFC;
+      --text:#0F172A; --muted:#64748B; --border:#E2E8F0; --danger:#EF4444;
+      --banner:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%); --banner-txt:#0B1957; --btn-txt:#FFFFFF;
+    }
+    :root[data-theme="slate-mint"] {
+      --bg:#091318; --shell:linear-gradient(180deg,#0D1F27 0%,#081217 100%);
+      --card:rgba(18,37,46,0.92); --card-solid:#12252E; --card-alt:#17313D;
+      --text:#F0FDF4; --muted:#86A8B2; --border:rgba(45,212,191,0.2);
+      --primary:#10B981; --primary-dark:#059669; --navy:#0B1957;
+      --glow:rgba(16,185,129,0.35); --light:rgba(16,185,129,0.15);
+      --accent:#F59E0B; --danger:#EF4444;
+      --banner:linear-gradient(135deg,#D9B166 0%,#B38738 100%); --banner-txt:#091318; --btn-txt:#06120E;
+    }
+    :root[data-theme="royal-obsidian"] {
+      --bg:#080A0F; --shell:linear-gradient(180deg,#121722 0%,#080A0F 100%);
+      --card:rgba(20,25,36,0.94); --card-solid:#141924; --card-alt:#1C2332;
+      --text:#F8FAFC; --muted:#94A3B8; --border:rgba(212,175,55,0.24);
+      --primary:#D4AF37; --primary-dark:#B45309; --navy:#0B1957;
+      --glow:rgba(212,175,55,0.32); --light:rgba(212,175,55,0.15);
+      --accent:#10B981; --danger:#EF4444;
+      --banner:linear-gradient(135deg,#E5C158 0%,#AA821A 100%); --banner-txt:#080A0F; --btn-txt:#080A0F;
+    }
+    :root[data-theme="emerald-glass"] {
+      --bg:#031A15; --shell:linear-gradient(180deg,#062F26 0%,#031A15 100%);
+      --card:rgba(9,48,39,0.92); --card-solid:#093027; --card-alt:#0E4236;
+      --text:#ECFDF5; --muted:#6EE7B7; --border:rgba(52,211,153,0.25);
+      --primary:#34D399; --primary-dark:#10B981; --navy:#0B1957;
+      --glow:rgba(52,211,153,0.35); --light:rgba(52,211,153,0.16);
+      --accent:#FBBF24; --danger:#F87171;
+      --banner:linear-gradient(135deg,#D9B166 0%,#A37A2D 100%); --banner-txt:#031A15; --btn-txt:#031A15;
+    }
 
-    * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',Tahoma,system-ui,sans-serif; -webkit-tap-highlight-color:transparent; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Cairo','Segoe UI',Tahoma,sans-serif; -webkit-tap-highlight-color:transparent; }
     body { background:var(--bg); color:var(--text); display:block; min-height:100vh; }
-    .app-shell { width:100%; max-width:480px; min-height:100vh; margin:0 auto; background:var(--shell); position:relative; padding-bottom:96px; box-shadow:0 0 50px rgba(0,0,0,0.5); display:flex; flex-direction:column; overflow-x:hidden; }
+    .app-shell { width:100%; max-width:480px; min-height:100vh; margin:0 auto; background:var(--shell); position:relative; padding-bottom:96px; box-shadow:0 0 40px rgba(15,23,42,0.1); display:flex; flex-direction:column; overflow-x:hidden; }
     #scanFlashOverlay { position:fixed; inset:0; background:rgba(16,185,129,0.42); z-index:100001; pointer-events:none; opacity:0; transition:opacity 0.18s; }
     #scanFlashOverlay.flash { opacity:1; }
 
-    #loginOverlay { position:fixed; inset:0; background:var(--shell); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:22px; }
-    .login-glass-box { width:100%; max-width:370px; background:var(--card); backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:30px; padding:32px 22px 24px; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.55); }
-    .fp-ring { width:66px; height:66px; border-radius:50%; margin:0 auto 12px; background:var(--light); border:1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px var(--glow); color:var(--primary); }
+    /* ================= 1. شاشة تسجيل الدخول ================= */
+    #loginOverlay { position:fixed; inset:0; background:linear-gradient(160deg,#F8FAFC 0%,#E2E8F0 100%); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:22px; }
+    .login-glass-box { width:100%; max-width:370px; background:#FFFFFF; border:1px solid #E2E8F0; border-radius:26px; padding:32px 24px 26px; text-align:center; box-shadow:0 20px 50px rgba(15,23,42,0.1); color:#0F172A; }
+    .fp-ring { width:62px; height:62px; border-radius:50%; margin:0 auto 12px; background:#E6F4F1; border:1.5px solid #0D9488; display:flex; align-items:center; justify-content:center; color:#0D9488; }
+    .brand-ar-wide { font-size:2rem; font-weight:900; color:#0B1957; line-height:1.1; }
+    .brand-en-sub { font-size:0.72rem; font-weight:800; letter-spacing:4px; color:#475569; margin-top:2px; margin-bottom:20px; }
     .inp-wrap { margin-bottom:12px; text-align:right; }
-    .inp-wrap label { display:block; font-size:0.74rem; font-weight:700; color:var(--muted); margin-bottom:5px; }
-    .inp-box { display:flex; align-items:center; background:var(--card-alt); border:1.5px solid var(--border); border-radius:14px; padding:0 12px; }
-    .inp-box input { width:100%; border:none; background:transparent; color:var(--text); padding:12px 6px; font-size:0.88rem; outline:none; }
-    .btn-glow { width:100%; background:var(--primary); color:var(--btn-txt); border:none; padding:13px; border-radius:15px; font-weight:900; font-size:0.94rem; cursor:pointer; box-shadow:0 6px 20px var(--glow); display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:6px; }
+    .inp-wrap label { display:block; font-size:0.75rem; font-weight:800; color:var(--muted); margin-bottom:5px; }
+    .inp-box { display:flex; align-items:center; background:var(--card-alt); border:1.5px solid var(--border); border-radius:13px; padding:0 12px; }
+    .login-glass-box .inp-box { background:#F8FAFC; border-color:#CBD5E1; }
+    .inp-box input { width:100%; border:none; background:transparent; color:var(--text); padding:11px 6px; font-size:0.88rem; font-weight:700; outline:none; }
+    .login-glass-box .inp-box input { color:#0F172A; }
+    .btn-glow { width:100%; background:var(--primary); color:var(--btn-txt); border:none; padding:13px; border-radius:14px; font-weight:900; font-size:0.92rem; cursor:pointer; box-shadow:0 6px 18px var(--glow); display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:6px; }
 
-    header.top-header { padding:14px 14px 10px; background:rgba(0,0,0,0.2); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:800; }
-    .h-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .b-mini { display:flex; align-items:center; gap:9px; }
-    .b-icon { width:36px; height:36px; border-radius:11px; background:var(--light); border:1.5px solid var(--primary); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:900; font-size:0.9rem; box-shadow:0 0 12px var(--glow); }
-    .h-tools { display:flex; align-items:center; gap:6px; }
-    .circle-btn { position:relative; width:35px; height:35px; border-radius:11px; background:var(--card-alt); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; }
-    .notif-dot { position:absolute; top:-4px; right:-4px; background:var(--danger); color:#FFF; font-size:0.62rem; font-weight:900; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; }
-    .role-tag { font-size:0.68rem; font-weight:800; padding:5px 9px; border-radius:10px; background:var(--light); color:var(--primary); border:1px solid var(--primary); }
-    .exit-btn { background:rgba(239,68,68,0.16); color:#FCA5A5; border:1px solid rgba(239,68,68,0.35); padding:5px 9px; border-radius:10px; font-size:0.68rem; font-weight:800; cursor:pointer; }
+    /* ================= 2. الشريط العلوي الأبيض الموحد ================= */
+    header.top-header { background:#FFFFFF !important; border-bottom:1px solid #E2E8F0; position:sticky; top:0; z-index:800; padding:0 0 10px; }
+    .top-white-nav { height:62px; padding:0 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F1F5F9; }
+    .nav-circle-icon { width:40px; height:40px; border-radius:50%; background:transparent; border:1px solid transparent; color:#0F172A; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; transition:background 0.15s; }
+    .nav-circle-icon:active { background:#F1F5F9; }
+    .notif-dot { position:absolute; top:5px; right:5px; background:#EF4444; color:#FFF; font-size:0.6rem; font-weight:900; min-width:16px; height:16px; padding:0 4px; border-radius:50%; display:none; align-items:center; justify-content:center; border:1.5px solid #FFFFFF; }
+    .center-brand-stack { text-align:center; user-select:none; }
+    .center-brand-stack .ar { font-size:1.68rem; font-weight:900; color:#0B1957; line-height:1.05; }
+    .center-brand-stack .en { font-size:0.62rem; font-weight:800; color:#475569; letter-spacing:3.8px; margin-top:1px; }
 
-    .laser-bar { display:flex; align-items:center; gap:8px; background:var(--card-alt); border:1.5px solid var(--border); border-radius:16px; padding:5px 12px 5px 6px; }
-    .laser-bar input { flex:1; background:transparent; border:none; color:var(--text); font-size:0.85rem; padding:7px 4px; outline:none; }
-    .laser-btn { width:40px; height:36px; border-radius:12px; background:var(--primary); color:var(--btn-txt); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 14px var(--glow); }
+    /* الترحيب بالخط المطابق للصورة (Lalezar) في الصفحات الهادئة فقط */
+    .greeting-display-bar {
+      display:none;
+      text-align:right;
+      padding:8px 16px 2px;
+      font-family:'Lalezar', cursive, sans-serif;
+      font-size:1.42rem;
+      font-weight:400;
+      color:#0B1957;
+      letter-spacing:0.2px;
+    }
 
-    .pills-bar { display:flex; gap:6px; overflow-x:auto; padding:10px 12px 6px; scrollbar-width:none; }
+    .header-search-wrap { padding:10px 12px 0; }
+    .laser-bar { display:flex; align-items:center; gap:8px; background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:15px; padding:4px 12px 4px 5px; }
+    .laser-bar:focus-within { border-color:#0D9488; background:#FFFFFF; }
+    .laser-bar input { flex:1; background:transparent; border:none; color:#0F172A; font-size:0.86rem; font-weight:700; padding:7px 4px; outline:none; }
+    .laser-btn { width:40px; height:38px; border-radius:11px; background:#0D9488; color:#FFFFFF; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 3px 10px rgba(13,148,136,0.25); }
+    .inline-scan-btn { width:42px; height:42px; border-radius:12px; background:#0D9488; color:#FFFFFF; border:none; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; box-shadow:0 3px 10px rgba(13,148,136,0.22); }
+
+    /* مربعات التنقل العلوية */
+    .pills-bar { display:flex; gap:8px; overflow-x:auto; padding:10px 12px 8px; scrollbar-width:none; }
     .pills-bar::-webkit-scrollbar { display:none; }
-    .pill-tab { flex:0 0 auto; padding:7px 13px; border-radius:12px; background:var(--card); border:1px solid var(--border); color:var(--muted); font-size:0.74rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:5px; }
-    .pill-tab.active { background:var(--primary); color:var(--btn-txt); border-color:var(--primary); box-shadow:0 4px 14px var(--glow); }
+    .pill-tab { flex:0 0 auto; min-height:46px; padding:8px 14px; border-radius:14px; background:var(--card); border:1.5px solid var(--border); color:var(--text); font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 6px rgba(15,23,42,0.04); transition:all 0.15s; }
+    .pill-tab.active { background:var(--primary); color:var(--btn-txt); border-color:var(--primary); box-shadow:0 4px 12px var(--glow); }
 
-    .bento-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:14px; margin:8px 12px; box-shadow:0 8px 24px rgba(0,0,0,0.22); }
+    .bento-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:14px; margin:8px 12px; box-shadow:0 4px 16px rgba(15,23,42,0.05); }
     .bento-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .bento-head h3 { font-size:0.88rem; font-weight:900; color:var(--text); }
+    .bento-head h3 { font-size:0.9rem; font-weight:900; color:var(--text); }
 
-    .inv-stack { display:flex; flex-direction:column; gap:9px; padding:4px 12px 18px; }
-    .inv-bento { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:11px 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-    .inv-thumb { width:48px; height:48px; border-radius:13px; background:var(--card-alt); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; font-weight:900; color:var(--primary); font-size:0.9rem; }
-    .inv-thumb img { width:100%; height:100%; object-fit:cover; }
+    /* ================= 3. بطاقات المخزون مع QR حر بدون مربع محشور ================= */
+    .inv-stack { display:flex; flex-direction:column; gap:10px; padding:4px 12px 18px; }
+    .inv-bento { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:11px; box-shadow:0 2px 8px rgba(15,23,42,0.04); }
+    /* مربع QR حر بدون خلفية أو إطار محشور */
+    .inv-qr-free { width:56px; height:56px; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; background:transparent; border:none; padding:0; }
+    .inv-qr-free img, .inv-qr-free canvas { width:56px !important; height:56px !important; display:block; image-rendering:pixelated; }
     .inv-info { flex:1; min-width:0; }
-    .inv-title { font-size:0.84rem; font-weight:900; color:var(--text); margin-bottom:3px; line-height:1.3; }
-    .inv-title.en-title { direction:ltr; text-align:left; font-size:0.81rem; letter-spacing:0.1px; }
-    .inv-codes { font-size:0.7rem; color:var(--muted); margin-bottom:5px; }
-    .b-chip { font-size:0.65rem; font-weight:800; padding:2px 7px; border-radius:7px; display:inline-block; margin-left:4px; }
-    .b-fia { background:rgba(168,85,247,0.16); color:#C084FC; border:1px solid rgba(168,85,247,0.3); }
-    .b-exp { background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.3); }
-    .b-multi { background:rgba(16,185,129,0.16); color:var(--primary); border:1px solid rgba(16,185,129,0.35); }
-    .inv-left { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
-    .price-tag { font-size:0.85rem; font-weight:900; color:var(--accent); background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.32); padding:3px 9px; border-radius:9px; }
-    .btn-add-p { background:var(--primary); color:var(--btn-txt); border:none; padding:6px 10px; border-radius:9px; font-size:0.72rem; font-weight:900; cursor:pointer; }
-    .btn-sub { background:var(--card-alt); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:9px; font-size:0.7rem; font-weight:800; cursor:pointer; }
+    .inv-title { font-size:0.86rem; font-weight:900; color:var(--text); margin-bottom:2px; line-height:1.35; word-break:break-word; }
+    .inv-title.en-title { direction:ltr; text-align:left; font-size:0.84rem; }
+    .inv-sub-title { font-size:0.74rem; font-weight:600; color:var(--muted); margin-bottom:4px; line-height:1.3; word-break:break-word; }
+    .inv-sub-title.en-sub { direction:ltr; text-align:left; }
+    .inv-codes { font-size:0.72rem; color:var(--muted); margin-bottom:4px; }
+    .b-chip { font-size:0.66rem; font-weight:800; padding:2px 7px; border-radius:7px; display:inline-block; margin-left:4px; }
+    .b-exp { background:rgba(14,165,233,0.14); color:#0284C7; border:1px solid rgba(14,165,233,0.3); }
+    .inv-left { display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex-shrink:0; }
+    .price-tag { font-size:0.88rem; font-weight:900; color:#0F766E; background:#E6F4F1; border:1.5px solid #0D9488; padding:4px 11px; border-radius:11px; white-space:nowrap; }
+    .btn-add-p { background:var(--primary); color:var(--btn-txt); border:none; padding:6px 10px; border-radius:9px; font-size:0.73rem; font-weight:900; cursor:pointer; }
+    .btn-sub { background:var(--card-alt); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:9px; font-size:0.72rem; font-weight:800; cursor:pointer; }
 
-    .sub-search-dropdown { max-height:260px; overflow-y:auto; border:1.5px solid var(--primary); border-radius:12px; margin-top:5px; margin-bottom:8px; display:none; background:var(--card-solid); box-shadow:0 10px 25px rgba(0,0,0,0.35); }
+    .sub-search-dropdown { max-height:260px; overflow-y:auto; border:1.5px solid var(--primary); border-radius:12px; margin-top:5px; margin-bottom:8px; display:none; background:var(--card-solid); box-shadow:0 10px 25px rgba(0,0,0,0.18); }
     .sub-search-header { position:sticky; top:0; background:var(--card-alt); padding:6px 12px; font-size:0.71rem; font-weight:900; color:var(--primary); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; z-index:5; }
     .sub-search-row { padding:9px 12px; border-bottom:1px solid var(--border); cursor:pointer; font-size:0.79rem; display:flex; justify-content:space-between; align-items:center; gap:8px; }
     .sub-search-row:hover, .sub-search-row:active { background:var(--light); }
 
-    .gold-banner { margin:10px 12px; background:var(--banner); color:var(--banner-txt); border-radius:22px; padding:18px 16px; text-align:center; box-shadow:0 12px 28px rgba(0,0,0,0.35); }
-    .gold-banner .val { font-size:1.95rem; font-weight:900; margin:2px 0; }
-    .calc-row { background:var(--card-alt); border:1px solid var(--border); border-radius:16px; padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    /* ================= 4. عرض السعر (حاسبة الأسعار الكلاسيكية) ================= */
+    .gold-banner { margin:10px 12px; background:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%); color:#0B1957; border:1.5px solid #FDE047; border-radius:20px; padding:18px 16px; text-align:center; box-shadow:0 6px 18px rgba(245,158,11,0.12); }
+    .gold-banner .val { font-size:2rem; font-weight:900; margin:2px 0; color:#0F172A; }
+    .calc-row { background:var(--card-alt); border:1px solid var(--border); border-radius:14px; padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
     .stepper { display:inline-flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:3px 6px; }
     .stepper button { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); background:var(--card-alt); color:var(--text); font-weight:900; cursor:pointer; }
     .stepper span { min-width:22px; text-align:center; font-size:0.82rem; font-weight:900; }
@@ -99,17 +157,19 @@
     .stepper input.qty-manual-inp::-webkit-outer-spin-button,
     .stepper input.qty-manual-inp::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
 
+    /* ================= 5. مربعات طباعة الباركود ================= */
     .bo-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
-    .bo-card { background:var(--card-alt); border:1.5px solid var(--border); border-radius:20px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; }
+    .bo-card { background:var(--card-alt); border:1.5px solid var(--border); border-radius:18px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px; }
     .bo-card.printed { opacity:0.48; border-style:dashed; }
-    .bo-num { font-size:1.8rem; font-weight:900; text-align:center; padding:10px 6px; border-radius:14px; background:var(--light); color:var(--primary); border:1.5px solid var(--primary); }
-    .bo-card:nth-child(even) .bo-num { background:rgba(245,158,11,0.15); color:#F59E0B; border-color:rgba(245,158,11,0.45); }
-    .bo-pill { font-size:0.66rem; font-weight:800; padding:4px 8px; border-radius:8px; text-align:center; cursor:pointer; background:rgba(56,189,248,0.16); color:#38BDF8; border:1px solid rgba(56,189,248,0.35); }
-    .bo-pill.done { background:rgba(16,185,129,0.2); color:#34D399; border-color:rgba(16,185,129,0.4); }
+    .bo-num { font-size:1.75rem; font-weight:900; text-align:center; padding:10px 6px; border-radius:14px; background:var(--light); color:var(--primary); border:1.5px solid var(--primary); }
+    .bo-card:nth-child(even) .bo-num { background:rgba(245,158,11,0.15); color:#D97706; border-color:rgba(245,158,11,0.45); }
+    .bo-pill { font-size:0.68rem; font-weight:800; padding:4px 8px; border-radius:8px; text-align:center; cursor:pointer; background:rgba(14,165,233,0.14); color:#0284C7; border:1px solid rgba(14,165,233,0.35); }
+    .bo-pill.done { background:rgba(16,185,129,0.18); color:#059669; border-color:rgba(16,185,129,0.4); }
 
+    /* ================= 6. التقارير والإعدادات ================= */
     .rep-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:12px; }
     .rep-box { background:var(--card-alt); border:1px solid var(--border); border-radius:18px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:7px; }
-    .rep-box h4 { font-size:0.77rem; font-weight:900; }
+    .rep-box h4 { font-size:0.78rem; font-weight:900; }
     .brands-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-height:300px; overflow-y:auto; padding:4px; }
     .brand-card { background:var(--card-alt); border:1px solid var(--border); border-radius:14px; padding:10px 6px; text-align:center; cursor:pointer; }
     .brand-av { width:38px; height:38px; border-radius:50%; background:var(--light); color:var(--primary); border:1px solid var(--primary); font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 5px; }
@@ -117,7 +177,7 @@
     .theme-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:8px; }
     .theme-tile { padding:10px; border-radius:14px; border:1.5px solid var(--border); background:var(--card-alt); cursor:pointer; display:flex; align-items:center; gap:8px; }
     .theme-tile.active { border-color:var(--primary); background:var(--light); }
-    .theme-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:2px solid rgba(255,255,255,0.4); }
+    .theme-dot { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:2px solid rgba(0,0,0,0.15); }
     .theme-tile span { font-size:0.72rem; font-weight:800; }
     .sw-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); gap:10px; }
     .sw-row:last-child { border-bottom:none; }
@@ -125,33 +185,42 @@
     .sw-row small { font-size:0.68rem; color:var(--muted); }
     .sw-toggle { position:relative; width:44px; height:24px; flex-shrink:0; display:inline-block; }
     .sw-toggle input { opacity:0; width:0; height:0; }
-    .sw-slider { position:absolute; cursor:pointer; inset:0; background:var(--card-alt); border:1px solid var(--border); border-radius:24px; transition:0.25s; }
-    .sw-slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:2px; background:var(--muted); border-radius:50%; transition:0.25s; }
-    .sw-toggle input:checked + .sw-slider { background:var(--light); border-color:var(--primary); }
-    .sw-toggle input:checked + .sw-slider:before { transform:translateX(19px); background:var(--primary); }
+    .sw-slider { position:absolute; cursor:pointer; inset:0; background:#CBD5E1; border-radius:24px; transition:0.25s; }
+    .sw-slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:#FFFFFF; border-radius:50%; transition:0.25s; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+    .sw-toggle input:checked + .sw-slider { background:var(--primary); }
+    .sw-toggle input:checked + .sw-slider:before { transform:translateX(20px); }
 
     .md-barcode-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; background:var(--card-solid); border:1px solid var(--border); font-size:0.8rem; font-weight:800; color:var(--text); }
     .md-barcode-pill.primary-bc { border-color:var(--primary); background:var(--light); }
 
-    nav.bottom-dock { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:var(--card-solid); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; padding:7px 6px 12px; box-shadow:0 -8px 25px rgba(0,0,0,0.4); z-index:900; }
-    .dock-btn { border:none; background:transparent; color:var(--muted); font-size:0.67rem; font-weight:800; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
-    .dock-btn.active { color:var(--primary); }
-    .dock-btn span.ico { font-size:1.15rem; }
-    .dock-fab { position:relative; top:-15px; width:54px; height:54px; border-radius:18px; background:var(--primary); color:var(--btn-txt); border:4px solid var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 22px var(--glow); }
+    .icp-slot { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1.5px dashed #CBD5E1; border-radius:12px; margin-bottom:8px; background:var(--card-alt); }
+    .icp-slot.loaded { border-color:var(--primary); background:var(--light); }
+    .icp-pick-btn { padding:6px 12px; border-radius:9px; background:#FFFFFF; border:1px solid #CBD5E1; font-size:0.74rem; font-weight:800; color:#0F172A; cursor:pointer; }
 
-    #previewModal, #scannerModal, #addCustomProductModal { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:14px; }
-    .modal-box { background:var(--card-solid); color:var(--text); width:100%; max-width:460px; max-height:88vh; border-radius:24px; border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
-    .modal-head { background:rgba(0,0,0,0.25); padding:14px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+    .app-footer { text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); padding:14px 10px 6px; margin-top:auto; }
+
+    /* الشريط السفلي */
+    nav.bottom-dock { position:fixed; bottom:0; left:0; right:0; max-width:480px; margin:0 auto; background:#FFFFFF; border-top:1px solid #E2E8F0; display:flex; justify-content:space-around; align-items:center; padding:7px 6px 12px; box-shadow:0 -4px 20px rgba(15,23,42,0.06); z-index:900; }
+    .dock-btn { border:none; background:transparent; color:#64748B; font-size:0.68rem; font-weight:800; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
+    .dock-btn.active { color:#0D9488; }
+    .dock-btn span.ico { font-size:1.15rem; }
+    .dock-fab { position:relative; top:-15px; width:54px; height:54px; border-radius:18px; background:#0D9488; color:#FFFFFF; border:4px solid #F1F5F9; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 6px 18px rgba(13,148,136,0.35); }
+
+    /* النوافذ المنبثقة */
+    #previewModal, #scannerModal, #addCustomProductModal, #qrZoomModal, #alertsModal { position:fixed; inset:0; background:rgba(15,23,42,0.75); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:14px; }
+    .modal-box { background:var(--card-solid); color:var(--text); width:100%; max-width:450px; max-height:88vh; border-radius:22px; border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.35); }
+    .modal-head { background:var(--card-alt); padding:13px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
     .modal-body { padding:14px; overflow-y:auto; flex:1; }
     .laser-line { position:absolute; left:8%; right:8%; top:50%; height:2.5px; background:#10B981; box-shadow:0 0 12px #10B981,0 0 24px #10B981; z-index:20; pointer-events:none; animation:sweep 1.7s infinite ease-in-out; }
-    @keyframes sweep { 0%,100%{transform:translateY(-45px);} 50%{transform:translateY(45px);} }
-    .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%); background:var(--card-solid); color:var(--text); border:1.5px solid var(--primary); padding:10px 18px; border-radius:20px; font-size:0.8rem; font-weight:800; z-index:100000; opacity:0; pointer-events:none; transition:0.25s; }
+    @keyframes sweep { 0%,100%{transform:translateY(-35px);} 50%{transform:translateY(35px);} }
+    .toast { position:fixed; top:72px; left:50%; transform:translateX(-50%); background:#0F172A; color:#FFFFFF; border:1.5px solid #0D9488; padding:10px 18px; border-radius:16px; font-size:0.8rem; font-weight:800; z-index:100000; opacity:0; pointer-events:none; transition:0.25s; white-space:nowrap; }
     .toast.show { opacity:1; }
   </style>
 </head>
-<body data-theme="slate-mint">
+<body data-theme="clinical-daylight">
   <div id="scanFlashOverlay"></div>
 
+  <!-- أيقونة الماسح الليزري القديم المعتمدة -->
   <svg style="display:none;">
     <symbol id="icon-laser-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
@@ -160,110 +229,135 @@
     </symbol>
   </svg>
 
-  <!-- 1. شاشة تسجيل الدخول -->
+  <!-- 1. شاشة تسجيل الدخول (بدون رسالة مقتصر على الحسابات المخصصة) -->
   <div id="loginOverlay">
     <div class="login-glass-box">
       <div class="fp-ring">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg>
       </div>
-      <div style="font-size:1.75rem;font-weight:900;letter-spacing:2px;color:var(--primary);">O CARE</div>
-      <div style="font-size:1.35rem;font-weight:900;margin-bottom:20px;">أوكير</div>
+      <div class="brand-ar-wide">أوكيـــــــر</div>
+      <div class="brand-en-sub">O CARE</div>
       <form onsubmit="handleLogin(event); return false;">
         <div class="inp-wrap">
-          <label>اسم المستخدم أو البريد المعتمد *</label>
-          <div class="inp-box"><span>👤</span><input type="text" id="loginEmail" placeholder="أدخل اسمك أو بريدك المسجل"></div>
+          <label>اسم المستخدم أو البريد الإلكتروني *</label>
+          <div class="inp-box"><span>👤</span><input type="text" id="loginEmail" placeholder="أدخل اسمك أو بريدك..."></div>
         </div>
         <div class="inp-wrap">
           <label>رمز الدخول *</label>
-          <div class="inp-box"><span>🔒</span><input type="password" id="loginPass" placeholder="أدخل رمز المرور"></div>
+          <div class="inp-box"><span>🔒</span><input type="password" id="loginPass" inputmode="numeric" placeholder="أدخل رمز المرور..."></div>
         </div>
         <button type="button" class="btn-glow" onclick="handleLogin(event)">تسجيل الدخول</button>
       </form>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:0.73rem;color:var(--muted);">🛡️ الدخول متاح فقط للحسابات المعتمدة لدى الإدارة</div>
     </div>
-    <div style="margin-top:16px;font-size:0.73rem;color:var(--muted);font-weight:700;">جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد</div>
+    <div style="margin-top:16px;font-size:0.73rem;color:#64748B;font-weight:700;">جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد</div>
   </div>
 
   <div class="app-shell">
+    <!-- الشريط العلوي الأبيض الموحد -->
     <header class="top-header">
-      <div class="h-row">
-        <div class="b-mini">
-          <div class="b-icon" style="overflow:hidden;padding:2px;background:#F8F7F4;"><img src="icon-192.png" alt="O CARE" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"></div>
-          <div><h1 style="font-size:1rem;font-weight:900;">أوكير O CARE</h1><p id="userGreeting" style="font-size:0.72rem;color:var(--muted);">مرحباً 👋</p></div>
+      <div class="top-white-nav">
+        <!-- أقصى اليمين: خروج -->
+        <button class="nav-circle-icon" onclick="handleLogout()" title="تسجيل الخروج">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+
+        <!-- المنتصف: شعار أوكيـــــــر / O CARE الموسع -->
+        <div class="center-brand-stack">
+          <div class="ar">أوكيـــــــر</div>
+          <div class="en">O CARE</div>
         </div>
-        <div class="h-tools">
-          <button class="circle-btn" onclick="switchTab('notes')">🔔<span class="notif-dot" id="notifBadge">0</span></button>
-          <span class="role-tag" id="roleBadge">مطور</span>
-          <button class="exit-btn" onclick="handleLogout()">خروج</button>
-        </div>
+
+        <!-- أقصى اليسار: التنبيهات -->
+        <button class="nav-circle-icon" onclick="openAlertsModal()" title="التنبيهات">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot" id="notifBadge">0</span>
+        </button>
       </div>
-      <div class="laser-bar">
-        <button class="laser-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري"><svg width="22" height="22"><use href="#icon-laser-scanner"></use></svg></button>
-        <input type="text" id="mainSearch" placeholder="ابحث بالعربي أو English أو الباركود أو الرقم..." oninput="renderInventory()">
-        <span style="color:var(--muted);">🔍</span>
+
+      <!-- الترحيب بالخط المطابق للصورة (Lalezar) في الصفحات الهادئة فقط -->
+      <div id="userGreeting" class="greeting-display-bar">مرحباً، إرشاد</div>
+
+      <!-- شريط البحث العام والماسح الليزري القديم -->
+      <div class="header-search-wrap">
+        <div class="laser-bar">
+          <button class="laser-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري"><svg width="22" height="22"><use href="#icon-laser-scanner"></use></svg></button>
+          <input type="text" id="mainSearch" placeholder="ابحث عن صنف..." oninput="renderInventory()">
+          <button id="clearMainSearchBtn" onclick="document.getElementById('mainSearch').value='';renderInventory();" style="display:none;border:none;background:#E2E8F0;color:#475569;width:22px;height:22px;border-radius:50%;font-size:0.72rem;font-weight:900;cursor:pointer;">✕</button>
+          <span style="color:#64748B;">🔍</span>
+        </div>
       </div>
     </header>
 
+    <!-- مربعات الصفحات المكبرة -->
     <div class="pills-bar">
       <button class="pill-tab active" id="tabBtn_inventory" onclick="switchTab('inventory')">📦 المخزون والبحث</button>
-      <button class="pill-tab" id="tabBtn_pricing" onclick="switchTab('pricing')">💰 حاسبة الأسعار</button>
+      <button class="pill-tab" id="tabBtn_pricing" onclick="switchTab('pricing')">💰 عرض السعر</button>
       <button class="pill-tab" id="tabBtn_expiry" onclick="switchTab('expiry')">📅 تواريخ الصلاحية</button>
       <button class="pill-tab" id="tabBtn_barcodeOrder" onclick="switchTab('barcodeOrder')">🏷️ طباعة الباركود</button>
       <button class="pill-tab" id="tabBtn_shortages" onclick="switchTab('shortages')">🏥 النواقص والفروع</button>
-      <button class="pill-tab" id="tabBtn_notes" onclick="switchTab('notes')">📝 تسليم الشفت</button>
       <button class="pill-tab" id="tabBtn_reports" onclick="switchTab('reports')">📊 التقارير</button>
       <button class="pill-tab" id="tabBtn_masterData" style="display:none;" onclick="switchTab('masterData')">🗂️ البيانات الأساسية</button>
       <button class="pill-tab" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
     </div>
 
-    <!-- 1. المخزون (الإجمالي مخفي عن الموظف ويظهر للمطور فقط) -->
+    <!-- 1. المخزون والبحث (بدون إجمالي المخزون + مربع QR حر بدون إطار) -->
     <div id="view_inventory">
-      <div class="bento-card" id="adminInventoryHeaderCard" style="display:none;padding:11px 14px;margin-bottom:4px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div><strong style="font-size:0.82rem;">إجمالي المخزون (<span id="totalLoadedCount">0</span>)</strong><div style="font-size:0.7rem;color:var(--muted);" id="filteredCountLbl">خاص بالمطور</div></div>
-          <button class="btn-add-p" onclick="openAddCustomProductModal()">+ إضافة صنف</button>
-        </div>
+      <div id="adminInventoryHeaderCard" style="display:none;padding:4px 12px 6px;">
+        <button class="btn-add-p" style="padding:8px 14px;border-radius:11px;font-size:0.78rem;" onclick="openAddCustomProductModal()">+ إضافة صنف</button>
       </div>
       <div class="inv-stack" id="inventoryList"></div>
     </div>
 
-    <!-- 2. حاسبة الأسعار المستقلة -->
+    <!-- 2. عرض السعر (حاسبة الأسعار الكلاسيكية + البحث والماسح) -->
     <div id="view_pricing" style="display:none;">
       <div class="gold-banner">
-        <div style="font-size:0.8rem;font-weight:800;">إجمالي السعر:</div>
+        <div style="font-size:0.82rem;font-weight:800;">إجمالي السعر:</div>
         <div class="val"><span id="priceCalcTotal">0.00</span> ر.س</div>
-        <div style="font-size:0.73rem;font-weight:800;" id="priceCalcSubCount">(0 أصناف - شامل الضريبة)</div>
+        <div style="font-size:0.74rem;font-weight:800;" id="priceCalcSubCount">(0 أصناف - شامل الضريبة)</div>
       </div>
       <div class="bento-card">
         <div style="margin-bottom:10px;">
-          <input type="text" id="priceSearchInp" placeholder="ابحث بالعربي أو English لإضافته للسلة..." oninput="searchForSubModule('pricing', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="text" id="priceSearchInp" placeholder="ابحث عن صنف لإضافته..." oninput="searchForSubModule('pricing', this.value)" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+            <button type="button" class="inline-scan-btn" onclick="openScanner('price')" title="مسح بالليزر"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg></button>
+          </div>
           <div id="priceSearchResults" class="sub-search-dropdown"></div>
         </div>
         <div id="priceCalcList"></div>
-        <button class="btn-glow" style="margin-top:10px;" onclick="openScanner('price')"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg><span>مسح صنف للسعر (ليزري)</span></button>
+        <button class="btn-glow" style="margin-top:10px;background:#0B1957;color:#FFFFFF;" onclick="openScanner('price')"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg><span>مسح صنف للسعر (ليزري)</span></button>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-          <button class="btn-sub" style="padding:10px;color:#38BDF8;" onclick="sharePriceInvoice()">📤 مشاركة / طباعة الفاتورة</button>
-          <button class="btn-sub" style="padding:10px;color:#FCA5A5;" onclick="clearPriceCalc()">🗑️ تفريغ السلة</button>
+          <button class="btn-sub" style="padding:10px;color:#0284C7;" onclick="sharePriceInvoice()">📤 مشاركة / طباعة الفاتورة</button>
+          <button class="btn-sub" style="padding:10px;color:#DC2626;" onclick="clearPriceCalc()">🗑️ تفريغ السلة</button>
         </div>
       </div>
     </div>
 
-    <!-- 3. تواريخ الصلاحية -->
+    <!-- 3. تواريخ الصلاحية (نفس المربعات السابقة + كتابة التاريخ نصياً + البحث والماسح) -->
     <div id="view_expiry" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📅 تسجيل تواريخ الصلاحية</h3><button class="btn-add-p" onclick="openScanner('expiry')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح</button></div>
-        <input type="text" id="expSearchInp" placeholder="ابحث بالعربي أو English أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+          <input type="text" id="expSearchInp" placeholder="ابحث بالعربي أو English أو رقم الصنف أو الباركود..." oninput="searchForSubModule('expiry', this.value)" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <button type="button" class="inline-scan-btn" onclick="openScanner('expiry')" title="مسح بالليزر"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg></button>
+        </div>
         <div id="expSearchResults" class="sub-search-dropdown"></div>
-        <input type="text" id="expSelectedName" readonly placeholder="الصنف المختار سيظهر هنا..." style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--primary);background:var(--light);color:var(--text);font-weight:900;margin-bottom:10px;outline:none;">
+        <input type="text" id="expSelectedName" readonly placeholder="الصنف المختار سيظهر هنا..." style="width:100%;padding:10px;border-radius:12px;border:1.5px solid var(--primary);background:var(--light);color:var(--text);font-weight:900;margin-bottom:10px;outline:none;">
         <input type="hidden" id="expSelectedUid">
         <div id="expiryBatchesBox"></div>
         <button type="button" class="btn-sub" style="width:100%;padding:10px;margin-bottom:8px;border-style:dashed;border-color:var(--primary);color:var(--primary);" onclick="addExpiryBatchRow()">+ إضافة دفعة أخرى</button>
-        <button class="btn-glow" onclick="saveItemExpiryBatches()">💾 حفظ التواريخ والدفعات</button>
+        <button class="btn-glow" style="background:#0B1957;color:#FFFFFF;" onclick="saveItemExpiryBatches()">💾 حفظ التواريخ والدفعات</button>
       </div>
-      <div class="bento-card"><div class="bento-head"><h3>الأصناف المسجلة تواريخها</h3><span class="b-chip b-exp" id="expRegisteredCount">0</span></div><div id="expRegisteredList"></div></div>
+      <div class="bento-card"><div class="bento-head"><h3>الأصناف المسجلة تواريخها</h3><span class="b-chip b-exp" id="expRegisteredCount">0 صنف</span></div><div id="expRegisteredList"></div></div>
     </div>
 
-    <!-- 4. طباعة الباركود (المربعات الضخمة 2x2 + طباعة Zebra 60x40 مم المطابقة للنظام) -->
+    <!-- 4. طباعة الباركود (المربعات 2x2 + البحث والماسح + طباعة Zebra 60x40mm) -->
     <div id="view_barcodeOrder" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>🏷️ طباعة الباركود</h3><button class="btn-add-p" onclick="openScanner('barcodeOrder')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
@@ -271,44 +365,37 @@
           <select id="boGroupSelect" onchange="renderBarcodeOrders()" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;">
             <option value="مجموعة 1">المجموعة النشطة: مجموعة 1</option><option value="مجموعة 2">المجموعة النشطة: مجموعة 2</option><option value="مجموعة 3">المجموعة النشطة: مجموعة 3</option><option value="مجموعة 4">المجموعة النشطة: مجموعة 4</option>
           </select>
-          <button class="btn-sub" id="btnClearPrintedBO" style="display:none;color:#FCA5A5;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع</button>
+          <button class="btn-sub" id="btnClearPrintedBO" style="display:none;color:#DC2626;" onclick="clearPrintedBarcodeOrders()">🗑️ حذف المطبوع</button>
         </div>
         <button type="button" class="btn-glow" style="margin-bottom:10px;padding:11px;" onclick="printZebraOCareLabels()">🖨️ طباعة ملصقات Zebra (60×40 مم)</button>
-        <input type="text" id="boSearchInp" placeholder="ابحث بالعربي أو English لإضافة صنف للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input type="text" id="boSearchInp" placeholder="ابحث عن صنف لإضافته للمجموعة..." oninput="searchForSubModule('barcodeOrder', this.value)" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <button type="button" class="inline-scan-btn" onclick="openScanner('barcodeOrder')" title="مسح بالليزر"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg></button>
+        </div>
         <div id="boSearchResults" class="sub-search-dropdown"></div>
         <div class="bo-grid" id="barcodeOrdersContainer"></div>
       </div>
     </div>
 
-    <!-- 5. النواقص وطلبات الفروع -->
+    <!-- 5. النواقص والفروع (بدون نواقص المشتريات + البحث والماسح) -->
     <div id="view_shortages" style="display:none;">
       <div class="bento-card">
-        <div class="bento-head"><h3>🏥 النواقص وطلبات الفروع</h3><button class="btn-add-p" onclick="openScanner('shortages')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
+        <div class="bento-head"><h3>🏥 النواقص والفروع</h3><button class="btn-add-p" onclick="openScanner('shortages')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
         <select id="branchSelect" onchange="renderShortages()" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;margin-bottom:10px;">
-          <option value="فرع الشرائع">🏪 فرع الشرائع</option><option value="فرع النوارية">🏪 فرع النوارية</option><option value="المستودع">📦 المستودع الرئيسي</option><option value="نواقص المشتريات">⚠️ قائمة النواقص السريعة</option>
+          <option value="فرع الشرائع">🏪 فرع الشرائع</option>
+          <option value="فرع النوارية">🏪 فرع النوارية</option>
+          <option value="المستودع">📦 المستودع الرئيسي</option>
         </select>
-        <input type="text" id="shortSearchInp" placeholder="ابحث بالعربي أو English لإضافة الصنف للمطلوب..." oninput="searchForSubModule('shortages', this.value)" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:10px;outline:none;">
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;">
+          <input type="text" id="shortSearchInp" placeholder="ابحث عن صنف لإضافته للمطلوب..." oninput="searchForSubModule('shortages', this.value)" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <button type="button" class="inline-scan-btn" onclick="openScanner('shortages')" title="مسح بالليزر"><svg width="20" height="20"><use href="#icon-laser-scanner"></use></svg></button>
+        </div>
         <div id="shortSearchResults" class="sub-search-dropdown"></div>
         <div id="shortagesListContainer"></div>
       </div>
     </div>
 
-    <!-- 6. تسليم الشفت -->
-    <div id="view_notes" style="display:none;">
-      <div class="bento-card">
-        <div class="bento-head"><h3>📝 تسليم الشفت وملاحظات الزملاء</h3></div>
-        <select id="noteTargetSelect" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-weight:800;margin-bottom:8px;">
-          <option value="الجميع">🔔 توجيه إلى: جميع الزملاء</option><option value="المطور">🔒 توجيه إلى: المطور فقط</option>
-        </select>
-        <textarea id="noteTextInp" rows="3" placeholder="كتابة الملاحظات اليومية..." style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;"></textarea>
-        <label class="btn-sub" style="display:block;text-align:center;padding:9px;margin-bottom:8px;cursor:pointer;">📷 إرفاق صورة مباشرة<input type="file" id="noteImgInp" accept="image/*" capture="environment" onchange="previewNoteImage(event)" style="display:none;"></label>
-        <img id="noteImgPreview" style="max-width:100%;max-height:140px;border-radius:10px;margin-bottom:8px;display:none;">
-        <button class="btn-glow" onclick="addShiftNote()">🚀 إرسال الملاحظة</button>
-      </div>
-      <div class="bento-card"><div class="bento-head"><h3>سجل الملاحظات</h3></div><div id="shiftNotesContainer"></div></div>
-    </div>
-
-    <!-- 7. منظومة التقارير الـ 5 -->
+    <!-- 6. منظومة التقارير الـ 5 الرسمية -->
     <div id="view_reports" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📊 منظومة التقارير الـ 5 الرسمية</h3></div>
@@ -328,11 +415,10 @@
           <div class="rep-box">
             <h4>3️⃣ النواقص والفروع</h4>
             <select id="shortageReportBranchFilter" style="width:100%;padding:5px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.72rem;font-weight:700;">
-              <option value="ALL">الكل (جميع الجهات)</option>
+              <option value="ALL">الكل (جميع الفروع)</option>
               <option value="فرع الشرائع">فرع الشرائع</option>
               <option value="فرع النوارية">فرع النوارية</option>
               <option value="المستودع">المستودع الرئيسي</option>
-              <option value="نواقص المشتريات">قائمة النواقص السريعة</option>
             </select>
             <button class="btn-sub" onclick="openReportPreview('shortages')">👁️ معاينة</button>
             <div class="admin-export-btns" style="display:flex;gap:5px;"><button class="btn-add-p" style="flex:1;background:#10B981;" onclick="exportReportExcel('shortages')">Excel</button><button class="btn-add-p" style="flex:1;background:#EF4444;color:#fff;" onclick="exportReportPDF('shortages')">PDF</button></div>
@@ -346,31 +432,39 @@
           </div>
         </div>
         <div class="bento-head"><h3>5️⃣ العلامات التجارية (الشركات)</h3></div>
-        <input type="text" id="brandSearchInp" placeholder="ابحث عن شركة (بيبي جوي، جرجنز، بيجن)..." oninput="renderBrandsGrid()" style="width:100%;padding:9px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);margin-bottom:8px;outline:none;">
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+          <input type="text" id="brandSearchInp" placeholder="ابحث عن شركة (بيبي جوي، جرجنز، بيجن)..." oninput="renderBrandsGrid()" style="flex:1;padding:9px;border-radius:12px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);outline:none;">
+          <button type="button" class="inline-scan-btn" style="width:38px;height:38px;" onclick="openScanner('brandSearch')" title="مسح بالليزر"><svg width="18" height="18"><use href="#icon-laser-scanner"></use></svg></button>
+        </div>
         <div class="brands-grid" id="brandsGridBox"></div>
       </div>
     </div>
 
-    <!-- 8. البيانات الأساسية (للمشرف فقط - تعديل الأصناف وتعدد الباركود حتى 7) -->
+    <!-- 7. البيانات الأساسية (مستقلة + تتضمن تعديل رقم الصنف + تعدد الباركود حتى 7) -->
     <div id="view_masterData" style="display:none;">
       <div class="bento-card">
         <div class="bento-head">
-          <h3>🗂️ البيانات الأساسية وتعدد الباركود (للمشرف)</h3>
-          <span class="b-chip b-multi" id="mdEditedCountBadge">0 معدّل</span>
+          <h3>🗂️ البيانات الأساسية وتعديل الأصناف</h3>
+          <span class="b-chip b-exp" id="mdEditedCountBadge">0 معدّل</span>
         </div>
-        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:10px;">ابحث عن أي صنف بالعربي أو English أو الرقم أو الباركود لتعديل بياناته أو ربط حتى 7 باركودات لنفس رقم الصنف:</p>
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ابحث أو امسح أي صنف لتعديل رقم الصنف والاسم والباركودات (حتى 7 باركودات) والسعر:</p>
 
         <div style="display:flex;gap:7px;margin-bottom:10px;">
-          <input type="text" id="mdSearchInput" placeholder="ابحث بالعربي أو English أو رقم الصنف أو الباركود..." oninput="searchMasterItem()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.83rem;outline:none;">
-          <button type="button" class="btn-add-p" onclick="openScanner('masterSearch')" style="padding:0 13px;border-radius:12px;display:flex;align-items:center;gap:4px;"><svg width="17" height="17"><use href="#icon-laser-scanner"></use></svg> مسح</button>
+          <input type="text" id="mdSearchInput" placeholder="ابحث عن صنف أو رقم أو باركود..." oninput="searchMasterItem()" style="flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.83rem;outline:none;">
+          <button type="button" class="btn-add-p" onclick="openScanner('masterSearch')" style="padding:0 13px;border-radius:12px;display:flex;align-items:center;gap:4px;"><svg width="18" height="18"><use href="#icon-laser-scanner"></use></svg> مسح</button>
         </div>
 
         <div id="mdSearchResults" style="max-height:260px;overflow-y:auto;margin-bottom:10px;border-radius:12px;"></div>
 
         <div id="mdEditorCard" style="display:none;border-top:1px solid var(--border);padding-top:14px;margin-top:6px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:0.84rem;font-weight:900;color:var(--primary);">رقم الصنف: <strong id="mdItemCode" style="font-size:0.95rem;"></strong></span>
-            <span id="mdBarcodeCounter" class="b-chip b-multi">1 / 7 باركود</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:0.84rem;font-weight:900;color:var(--primary);">تعديل بيانات الصنف</span>
+            <span id="mdBarcodeCounter" class="b-chip b-exp">1 / 7 باركود</span>
+          </div>
+
+          <div class="inp-wrap">
+            <label style="color:var(--primary-dark);">رقم الصنف (قابل للتعديل) *</label>
+            <div class="inp-box" style="border-color:var(--primary);"><input type="text" id="mdItemCodeInput" placeholder="أدخل رقم الصنف"></div>
           </div>
 
           <div class="inp-wrap">
@@ -403,7 +497,7 @@
 
             <div id="mdAddBarcodeRow" style="display:flex;gap:6px;">
               <input type="text" id="mdNewBarcodeInput" placeholder="امسح بالليزر أو اكتب باركود إضافي..." onkeydown="if(event.key==='Enter'){event.preventDefault();addMasterBarcode();}" style="flex:1;padding:10px;border-radius:11px;border:1px solid var(--border);background:var(--card-solid);color:var(--text);font-size:0.82rem;outline:none;">
-              <button type="button" class="btn-sub" onclick="openScanner('masterAdd')" title="مسح بالكاميرا" style="padding:0 11px;border-radius:11px;"><svg width="17" height="17"><use href="#icon-laser-scanner"></use></svg></button>
+              <button type="button" class="btn-sub" onclick="openScanner('masterAdd')" title="مسح بالكاميرا" style="padding:0 11px;border-radius:11px;"><svg width="18" height="18"><use href="#icon-laser-scanner"></use></svg></button>
               <button type="button" class="btn-add-p" onclick="addMasterBarcode()" style="padding:0 13px;border-radius:11px;">+ إضافة</button>
             </div>
           </div>
@@ -413,27 +507,41 @@
       </div>
     </div>
 
-    <!-- 9. إعدادات المطور الشاملة -->
+    <!-- 8. إعدادات المطور الشاملة -->
     <div id="view_settings" style="display:none;">
+      <!-- معالج التحديث الأسبوعي لملفات ICP الثلاثة (للمطور فقط) -->
       <div class="bento-card">
-        <div class="bento-head"><h3>🎨 اختيار الثيم (ثيمات تفاعلية)</h3></div>
-        <div class="theme-grid">
-          <div class="theme-tile" id="themeCard_world8" onclick="changeSystemTheme('world8', true)">
-            <div class="theme-dot" style="background:linear-gradient(135deg, #0B1957 0%, #0D9488 55%, #F1F5F9 100%);"></div>
-            <span>أوكير الكلاسيكي (World 8)</span>
-          </div>
-          <div class="theme-tile" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0D1F27,#10B981);"></div><span>Slate & Mint</span></div>
-          <div class="theme-tile" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#080A0F,#D4AF37);"></div><span>الفخامة الملكية</span></div>
-          <div class="theme-tile" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div><span>البياض الطبي</span></div>
-          <div class="theme-tile" id="themeCard_emerald-glass" onclick="changeSystemTheme('emerald-glass', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#031A15,#34D399);"></div><span>الزمرد الزجاجي</span></div>
-          <div class="theme-tile" id="themeCard_titanium-coral" onclick="changeSystemTheme('titanium-coral', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#111216,#FB7185);"></div><span>التيتانيوم</span></div>
-          <div class="theme-tile" id="themeCard_velvet-amethyst" onclick="changeSystemTheme('velvet-amethyst', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#1C1132,#A855F7);"></div><span>الأرجواني الملكي</span></div>
+        <div class="bento-head"><h3>📄 التحديث الأسبوعي من تقارير ICP الثلاثة</h3></div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع الملفات الثلاثة الخام ليتم دمجها وتنظيفها وحماية أسعار (بيبي جوي، سنسوداين 10290012، ديوركس 1016122) ومزامنة الفروقات فقط:</p>
+
+        <div class="icp-slot" id="icpSlotPrice">
+          <div><strong style="font-size:0.78rem;">1. ملف الأسعار (.xlsx)</strong><div id="icpStatusPrice" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
+          <label class="icp-pick-btn">اختيار ملف<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="handleIcpThreeFiles('price', this)"></label>
+        </div>
+
+        <div class="icp-slot" id="icpSlotBarcode">
+          <div><strong style="font-size:0.78rem;">2. ملف الباركود والفئة (.xlsx)</strong><div id="icpStatusBarcode" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
+          <label class="icp-pick-btn">اختيار ملف<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="handleIcpThreeFiles('barcode', this)"></label>
+        </div>
+
+        <div class="icp-slot" id="icpSlotEnglish">
+          <div><strong style="font-size:0.78rem;">3. ملف الأسماء الإنجليزية (.xlsx)</strong><div id="icpStatusEnglish" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
+          <label class="icp-pick-btn">اختيار ملف<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="handleIcpThreeFiles('english', this)"></label>
+        </div>
+
+        <button type="button" class="btn-sub" style="width:100%;padding:10px;margin-top:4px;font-weight:900;color:var(--primary);border-color:var(--primary);" onclick="previewIcpWeeklyMerge()">🔍 معالجة ومعاينة الفروقات</button>
+
+        <div id="icpDeltaPreviewBox" style="display:none;margin-top:10px;padding:10px;border-radius:12px;background:var(--light);border:1.5px solid var(--primary);">
+          <div id="icpDeltaSummary" style="font-size:0.76rem;font-weight:900;margin-bottom:6px;"></div>
+          <div id="icpDeltaDetails" style="max-height:150px;overflow-y:auto;font-size:0.72rem;margin-bottom:8px;"></div>
+          <button type="button" class="btn-glow" onclick="applyAndSyncIcpDeltas()">✅ اعتماد ومزامنة الفروقات مع Firebase</button>
         </div>
       </div>
 
+      <!-- إدارة حسابات الزملاء المعتمدين والرموز المسموحة (للمطور فقط) -->
       <div class="bento-card">
-        <div class="bento-head"><h3>👥 إدارة حسابات الزملاء المعتمدين</h3></div>
-        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">الدخول محصور فقط على الأسماء أو الإيميلات المضافة هنا:</p>
+        <div class="bento-head"><h3>👥 إدارة حسابات الزملاء والرموز المسموحة</h3></div>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">إضافة وتعديل الحسابات والرموز الشخصية المسموح لها بالدخول لدى المطور فقط:</p>
         <div style="display:grid;grid-template-columns:1.1fr 1fr 0.8fr auto;gap:5px;margin-bottom:10px;">
           <input type="text" id="newEmpEmail" placeholder="الإيميل أو المعرف" style="padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.74rem;">
           <input type="text" id="newEmpName" placeholder="الاسم" style="padding:8px;border-radius:9px;border:1px solid var(--border);background:var(--card-alt);color:var(--text);font-size:0.74rem;">
@@ -443,6 +551,7 @@
         <div id="authorizedEmployeesList"></div>
       </div>
 
+      <!-- خصائص النظام والماسح الليزري (كما في الصورة تماماً) -->
       <div class="bento-card">
         <div class="bento-head"><h3>⚙️ خصائص النظام والماسح الليزري</h3></div>
         <div class="sw-row"><div><strong>🔒 حصر الدخول على الحسابات المسجلة فقط</strong><small>منع أي موظف غير مضاف في القائمة أعلاه من الدخول</small></div><label class="sw-toggle"><input type="checkbox" id="prefStrictWhitelist" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
@@ -452,28 +561,42 @@
         <div class="sw-row"><div><strong>🛠️ وضع الجرد والصيانة (قفل تعديل الموظفين)</strong><small>إيقاف الحذف أو الإضافة للموظفين مؤقتاً أثناء الجرد</small></div><label class="sw-toggle"><input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
       </div>
 
+      <!-- اختيار الثيم -->
+      <div class="bento-card">
+        <div class="bento-head"><h3>🎨 اختيار الثيم</h3></div>
+        <div class="theme-grid">
+          <div class="theme-tile" id="themeCard_clinical-daylight" onclick="changeSystemTheme('clinical-daylight', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#FFFFFF,#0D9488);"></div><span>البياض الطبي</span></div>
+          <div class="theme-tile" id="themeCard_world8" onclick="changeSystemTheme('world8', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0B1957,#0D9488);"></div><span>أوكير الكلاسيكي</span></div>
+          <div class="theme-tile" id="themeCard_slate-mint" onclick="changeSystemTheme('slate-mint', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#0D1F27,#10B981);"></div><span>Slate & Mint</span></div>
+          <div class="theme-tile" id="themeCard_royal-obsidian" onclick="changeSystemTheme('royal-obsidian', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#080A0F,#D4AF37);"></div><span>الفخامة الملكية</span></div>
+          <div class="theme-tile" id="themeCard_emerald-glass" onclick="changeSystemTheme('emerald-glass', true)"><div class="theme-dot" style="background:linear-gradient(135deg,#031A15,#34D399);"></div><span>الزمرد الزجاجي</span></div>
+        </div>
+      </div>
+
       <!-- ربط الأسماء الإنجليزية للأصناف من قاعدة البيانات بملف إكسل -->
       <div class="bento-card">
         <div class="bento-head"><h3>🌐 ربط الأسماء الإنجليزية للأصناف (بملف إكسل)</h3></div>
-        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على <strong>رقم الصنف</strong> و<strong>الاسم الإنجليزي</strong> ليتم ربطها بالأصناف الموجودة تلقائياً ومزامنتها لجميع الموظفين (عند البحث بالعربي تظهر البطاقات عربي وعند البحث بالإنجليزي تظهر إنجليزي):</p>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على <strong>رقم الصنف</strong> و<strong>الاسم الإنجليزي</strong> ليتم ربطها بالأصناف الموجودة تلقائياً ومزامنتها لجميع الموظفين:</p>
         <input type="file" accept=".xlsx,.xls,.csv" onchange="handleEnglishNamesExcelUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
         <div id="linkedEnglishNamesBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
-      <!-- إضافة الأصناف الجديدة بملف إكسل مع المزامنة التلقائية الدائمة -->
+      <!-- إضافة الأصناف الجديدة بملف إكسل -->
       <div class="bento-card">
         <div class="bento-head"><h3>📦 إضافة أصناف جديدة بملف إكسل (تُضم للمنتجات القديمة)</h3></div>
-        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على الأصناف الجديدة ليتم دمجها تلقائياً مع المخزون ومزامنتها فوراً لدى جميع الموظفين دون الحاجة لرفعها كل مرة:</p>
+        <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على الأصناف الجديدة ليتم دمجها تلقائياً مع المخزون ومزامنتها فوراً لدى جميع الموظفين:</p>
         <input type="file" accept=".xlsx,.xls,.csv" onchange="handleNewProductsExcelUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
         <div id="mergedNewProductsBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
+      <!-- ربط صور الأصناف -->
       <div class="bento-card">
         <div class="bento-head"><h3>🖼️ ربط صور الأصناف من المتجر الإلكتروني</h3></div>
         <input type="file" accept=".xlsx,.xls,.csv" onchange="handleStoreImagesUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
         <div id="linkedImagesCountBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
+      <!-- التحكم بالرموز السرية -->
       <div class="bento-card">
         <div class="bento-head"><h3>🔐 التحكم بالرموز السرية</h3></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -483,6 +606,7 @@
         <button class="btn-glow" onclick="saveSecuritySettings()">💾 حفظ الرموز السرية</button>
       </div>
 
+      <!-- سجل الرقابة وتنزيل الإكسل الكامل -->
       <div class="bento-card">
         <div class="bento-head"><h3>🕵️ سجل الرقابة (Audit Log)</h3><button class="btn-sub" onclick="clearAuditLogs()">مسح</button></div>
         <div id="auditLogsContainer" style="max-height:150px;overflow-y:auto;font-size:0.73rem;margin-bottom:10px;"></div>
@@ -490,19 +614,43 @@
       </div>
     </div>
 
+    <!-- التذييل السفلي -->
+    <footer class="app-footer">جميع الحقوق محفوظة © 2026 | تصميم وتطوير: إرشاد</footer>
+
+    <!-- شريط التنقل السفلي -->
     <nav class="bottom-dock">
       <button class="dock-btn active" id="bottomNav_inventory" onclick="switchTab('inventory')"><span class="ico">📦</span><span>المخزون</span></button>
-      <button class="dock-btn" id="bottomNav_pricing" onclick="switchTab('pricing')"><span class="ico">💰</span><span>الأسعار</span></button>
+      <button class="dock-btn" id="bottomNav_pricing" onclick="switchTab('pricing')"><span class="ico">💰</span><span>عرض السعر</span></button>
       <div class="dock-fab" onclick="openScanner('search')"><svg width="26" height="26"><use href="#icon-laser-scanner"></use></svg></div>
       <button class="dock-btn" id="bottomNav_barcodeOrder" onclick="switchTab('barcodeOrder')"><span class="ico">🏷️</span><span>الباركود</span></button>
       <button class="dock-btn" id="bottomNav_reports" onclick="switchTab('reports')"><span class="ico">📊</span><span>التقارير</span></button>
     </nav>
   </div>
 
-  <!-- نافذة إضافة صنف -->
-  <div id="addCustomProductModal">
+  <!-- نافذة تكبير QR Code للمسح المباشر على ICP -->
+  <div id="qrZoomModal" onclick="if(event.target===this) this.style.display='none'">
+    <div class="modal-box" style="text-align:center;">
+      <div class="modal-head"><strong id="qrZoomTitle" style="font-size:0.86rem;">رمز الصنف</strong><button onclick="document.getElementById('qrZoomModal').style.display='none'" style="background:transparent;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-body">
+        <div id="qrZoomSub" style="font-size:0.76rem;color:var(--muted);margin-bottom:12px;"></div>
+        <div id="qrZoomBigBox" style="background:#FFFFFF;padding:14px;border:2px solid #0D9488;border-radius:16px;display:inline-block;"></div>
+        <div id="qrZoomCodeText" style="font-size:1.15rem;font-weight:900;letter-spacing:2px;margin-top:10px;font-family:monospace;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة التنبيهات -->
+  <div id="alertsModal" onclick="if(event.target===this) this.style.display='none'">
     <div class="modal-box">
-      <div class="modal-head"><strong>➕ إضافة صنف جديد</strong><button onclick="document.getElementById('addCustomProductModal').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-head"><strong>🔔 التنبيهات والإشعارات</strong><button onclick="document.getElementById('alertsModal').style.display='none'" style="background:transparent;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-body" id="alertsModalContent"></div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة صنف -->
+  <div id="addCustomProductModal" onclick="if(event.target===this) this.style.display='none'">
+    <div class="modal-box">
+      <div class="modal-head"><strong>➕ إضافة صنف جديد</strong><button onclick="document.getElementById('addCustomProductModal').style.display='none'" style="background:transparent;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">✕</button></div>
       <div class="modal-body">
         <div class="inp-wrap"><label>رقم الصنف *</label><div class="inp-box"><input type="text" id="cpItemNum"></div></div>
         <div class="inp-wrap"><label>الباركود *</label><div class="inp-box"><input type="text" id="cpBarcode"></div></div>
@@ -517,9 +665,9 @@
   </div>
 
   <!-- نافذة معاينة التقارير -->
-  <div id="previewModal">
+  <div id="previewModal" onclick="if(event.target===this) this.style.display='none'">
     <div class="modal-box">
-      <div class="modal-head"><strong id="previewModalTitle">معاينة التقرير</strong><button onclick="document.getElementById('previewModal').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button></div>
+      <div class="modal-head"><strong id="previewModalTitle">معاينة التقرير</strong><button onclick="document.getElementById('previewModal').style.display='none'" style="background:transparent;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">✕</button></div>
       <div class="modal-body" id="previewModalContent"></div>
     </div>
   </div>
@@ -527,16 +675,16 @@
   <!-- نافذة الماسح الليزري عالي الدقة + التقريب + الكشاف -->
   <div id="scannerModal">
     <div class="modal-box" style="background:#000;color:#fff;">
-      <div class="modal-head">
+      <div class="modal-head" style="background:#0B1218;border-color:rgba(255,255,255,0.12);">
         <div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" style="color:#10B981;"><use href="#icon-laser-scanner"></use></svg><strong>ماسح الباركود الليزري HD</strong></div>
         <div style="display:flex;align-items:center;gap:8px;">
           <button id="torchBtn" onclick="toggleScannerTorch()" style="background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:5px 10px;border-radius:9px;font-size:0.75rem;font-weight:800;cursor:pointer;">🔦 الفلاش</button>
           <button onclick="stopScanner()" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button>
         </div>
       </div>
-      <div onclick="refocusScannerCamera()" style="position:relative;width:100%;min-height:310px;overflow:hidden;background:#000;cursor:pointer;">
+      <div onclick="refocusScannerCamera()" style="position:relative;width:100%;height:210px;overflow:hidden;background:#000;cursor:pointer;">
         <div class="laser-line"></div>
-        <div id="reader" style="width:100%;min-height:310px;"></div>
+        <div id="reader" style="width:100%;height:210px;"></div>
         <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:0.68rem;color:rgba(255,255,255,0.75);pointer-events:none;z-index:25;">اضغط على الشاشة لإعادة التركيز (Focus)</div>
       </div>
       <div id="scannerZoomControls" style="display:flex;justify-content:center;gap:8px;padding:10px;background:#0B1218;border-top:1px solid rgba(255,255,255,0.12);">
@@ -558,7 +706,7 @@
     try { if (typeof firebase !== 'undefined') { firebase.initializeApp(firebaseConfig); db = firebase.database(); cloudRef = db.ref('ocare_cloud_sync'); } } catch(e) {}
 
     let appConfig = safeGetStorage('ocare_app_config', null) || {
-      adminPin: '2020', empPin: '1235', activeTheme: 'slate-mint',
+      adminPin: '2020', empPin: '1235', activeTheme: 'clinical-daylight',
       strictWhitelist: true, soundBeep: true, flashLight: true, sfdaParser: true, maintenanceMode: false,
       employees: [
         { email: 'emp1@ocare.com', name: 'موظف الفترة الصباحية', pin: '', active: true },
@@ -574,11 +722,10 @@
     let priceCart = safeGetStorage('ocare_price_cart', []);
     let barcodeOrders = safeGetStorage('ocare_barcode_orders', []);
     let shortagesList = safeGetStorage('ocare_shortages_list', []);
-    let shiftNotes = safeGetStorage('ocare_shift_notes', []);
     let auditLogs = safeGetStorage('ocare_audit_logs', []);
-    let scannerInstance = null, scannerTargetMode = 'search', torchEnabled = false, tempNoteImageBase64 = '', activeBrandName = '';
+    let scannerInstance = null, scannerTargetMode = 'search', torchEnabled = false, activeBrandName = '';
     let activeMasterItem = null, activeMasterBarcodes = [];
-    let currentZoomLevel = 2;
+    let currentZoomLevel = 2, activeCurrentTab = 'inventory';
 
     function showToast(msg) {
       const t = document.getElementById('toastBox');
@@ -588,7 +735,7 @@
     }
 
     function changeSystemTheme(themeKey, saveCloud) {
-      const valid = themeKey || 'slate-mint';
+      const valid = themeKey || 'clinical-daylight';
       document.documentElement.setAttribute('data-theme', valid);
       document.body.setAttribute('data-theme', valid);
       localStorage.setItem('ocare_selected_theme', valid);
@@ -660,7 +807,6 @@
       });
     }
 
-    // --- كشف لغة البحث تلقائياً (عربي -> بطاقات عربي | إنجليزي -> بطاقات إنجليزي) ---
     function detectQueryLanguage(qRaw) {
       const s = String(qRaw || '').trim();
       if (!s) return 'ar';
@@ -712,7 +858,7 @@
       return String(p.name || '');
     }
 
-    function smartSearchProducts(rawQuery, maxLimit = 120) {
+    function smartSearchProducts(rawQuery, maxLimit = 100) {
       const qRaw = String(rawQuery || '').trim();
       const lang = detectQueryLanguage(qRaw);
       if (!qRaw) return { items: allProducts.slice(0, maxLimit), total: allProducts.length, lang: 'ar' };
@@ -731,7 +877,7 @@
         const bcNormList = allBc.map(b => normalizeSearchText(b));
 
         const primaryNameNorm = (lang === 'en' && nameEnNorm) ? nameEnNorm : nameArNorm;
-        const secondaryNameNorm = (lang === 'en') ? nameArNorm : '';
+        const secondaryNameNorm = (lang === 'en') ? nameArNorm : nameEnNorm;
         const combined = `${primaryNameNorm} ${secondaryNameNorm} ${codeNorm} ${bcNormList.join(' ')}`;
 
         const allMatch = tokens.every(tok => {
@@ -756,11 +902,7 @@
       }
 
       scored.sort((a, b) => a.score - b.score);
-      return {
-        items: scored.slice(0, maxLimit).map(x => x.p),
-        total: scored.length,
-        lang
-      };
+      return { items: scored.slice(0, maxLimit).map(x => x.p), total: scored.length, lang };
     }
 
     function cleanArray(val) {
@@ -824,7 +966,7 @@
           appConfig = {
             adminPin: String(data.appConfig.adminPin || '2020'),
             empPin: String(data.appConfig.empPin || '1235'),
-            activeTheme: String(data.appConfig.activeTheme || 'slate-mint'),
+            activeTheme: String(data.appConfig.activeTheme || 'clinical-daylight'),
             strictWhitelist: data.appConfig.strictWhitelist !== false,
             soundBeep: data.appConfig.soundBeep !== false,
             flashLight: data.appConfig.flashLight !== false,
@@ -859,10 +1001,8 @@
         localStorage.setItem('ocare_barcode_orders', JSON.stringify(barcodeOrders));
         shortagesList = cleanArray(data.shortagesList);
         localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList));
-        shiftNotes = cleanArray(data.shiftNotes);
-        localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes));
         if (data.auditLogs) { auditLogs = cleanArray(data.auditLogs); localStorage.setItem('ocare_audit_logs', JSON.stringify(auditLogs)); }
-        renderInventory(); renderPriceCalc(); renderRegisteredExpiryList(); renderBarcodeOrders(); renderShortages(); renderShiftNotes(); renderAuditLogs(); updateNotifBadge(); updateMasterEditedBadge();
+        renderInventory(); renderPriceCalc(); renderRegisteredExpiryList(); renderBarcodeOrders(); renderShortages(); renderAuditLogs(); updateNotifBadge(); updateMasterEditedBadge();
         isApplyingRemoteUpdate = false;
       });
     }
@@ -880,6 +1020,7 @@
       }
       const edit = masterEdits[mKey] || (codeStr ? masterEdits[codeStr] : null);
       if (edit) {
+        if (edit.item_number && String(edit.item_number).trim() !== '') p.item_number = String(edit.item_number).trim();
         if (edit.name) p.name = String(edit.name).trim();
         if (edit.name_en !== undefined && String(edit.name_en).trim() !== '') p.name_en = String(edit.name_en).trim();
         if (edit.price !== undefined && edit.price !== '' && !isNaN(parseFloat(edit.price))) {
@@ -944,19 +1085,19 @@
       const empPin = String((appConfig && appConfig.empPin) || '1235').trim();
 
       if (pass === '2020' || pass === adminPin) {
-        currentUser = { email: emailLow || 'admin@ocare.com', name: 'إرشاد (المطور)', role: 'admin' };
+        currentUser = { email: emailLow || 'admin@ocare.com', name: 'إرشاد', role: 'admin' };
       } else {
-        if (!emailLow) return alert('يرجى كتابة اسمك أو بريدك المسجل لدى الإدارة أولاً');
+        if (!emailLow) return alert('يرجى كتابة اسمك أو بريدك أولاً');
         const empList = cleanArray(appConfig && appConfig.employees);
         const matchedEmp = empList.find(u => {
           const uEm = String(u.email || '').trim().toLowerCase(), uNm = String(u.name || '').trim().toLowerCase();
           return (uEm && uEm === emailLow) || (uNm && uNm === emailLow);
         });
         if (appConfig.strictWhitelist !== false && !matchedEmp) {
-          return alert('⛔ عفواً، هذا الحساب غير مدرج في قائمة الموظفين المصرح لهم بالدخول!');
+          return alert('⛔ عفواً، هذا الحساب غير مسجل لدى الإدارة!');
         }
         if (matchedEmp && matchedEmp.active === false) {
-          return alert('⛔ هذا الحساب موقوف من قِبل الإدارة!');
+          return alert('⛔ هذا الحساب موقوف حالياً!');
         }
         const reqPin = (matchedEmp && matchedEmp.pin && String(matchedEmp.pin).trim() !== '') ? String(matchedEmp.pin).trim() : empPin;
         if (pass === reqPin || (!matchedEmp && pass === empPin)) {
@@ -969,7 +1110,7 @@
       document.getElementById('loginOverlay').style.display = 'none';
       applyPermissionsUI();
       renderInventory();
-      showToast('مرحباً بك، ' + currentUser.name + ' 👋');
+      showToast('مرحباً بك، ' + currentUser.name);
     }
 
     function handleLogout() {
@@ -978,21 +1119,29 @@
       document.getElementById('loginOverlay').style.display = 'flex';
     }
 
+    function updateGreetingVisibility(tab) {
+      const gEl = document.getElementById('userGreeting');
+      if (!gEl || !currentUser) return;
+      // إظهار الترحيب بالخط الجميل في الصفحات الهادئة فقط وإخفاؤه في الصفحات المزدحمة
+      const calmTabs = ['pricing', 'expiry', 'barcodeOrder', 'reports', 'masterData', 'settings'];
+      gEl.innerText = `مرحباً، ${currentUser.name}`;
+      gEl.style.display = calmTabs.includes(tab) ? 'block' : 'none';
+    }
+
     function applyPermissionsUI() {
       if (!currentUser) return;
       const isAdm = currentUser.role === 'admin';
-      document.getElementById('userGreeting').innerText = `مرحباً، ${currentUser.name} 👋`;
-      document.getElementById('roleBadge').innerText = isAdm ? '🟢 مطور' : '👤 موظف';
       document.getElementById('adminInventoryHeaderCard').style.display = isAdm ? 'block' : 'none';
       document.getElementById('tabBtn_masterData').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('tabBtn_settings').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('btnClearPrintedBO').style.display = isAdm ? 'inline-block' : 'none';
       document.querySelectorAll('.admin-export-btns').forEach(el => { el.style.display = isAdm ? 'flex' : 'none'; });
+      updateGreetingVisibility(activeCurrentTab);
       updateNotifBadge();
       if (isAdm) { renderSettingsUI(); updateMasterEditedBadge(); }
     }
 
-    // --- طباعة ملصقات التسعير المطابقة لتصميم ICP الأصلي (60×40 مم - خط Arial محبّر بأبعاد دقيقة) ---
+    // --- طباعة ملصقات Zebra 60×40 مم المطابقة لتصميم ICP ---
     function printZebraOCareLabels() {
       const grp = document.getElementById('boGroupSelect').value;
       const list = barcodeOrders.filter(x => x.group === grp && !x.done);
@@ -1021,78 +1170,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
   <style>
     @page { size: 60mm 40mm; margin: 0; }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      font-weight: 700;
-      color: #000 !important;
-      -webkit-font-smoothing: none;
-      print-color-adjust: exact;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; font-weight: 700; color: #000 !important; -webkit-font-smoothing: none; print-color-adjust: exact; }
     html, body { width: 60mm; background: #fff; margin: 0; padding: 0; }
-    .label-sheet {
-      width: 60mm;
-      height: 40mm;
-      padding: 3.4mm 4mm 3.6mm 5mm;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      page-break-after: always;
-      overflow: hidden;
-    }
+    .label-sheet { width: 60mm; height: 40mm; padding: 3.4mm 4mm 3.6mm 5mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; overflow: hidden; }
     .label-sheet:last-child { page-break-after: auto; }
-    .header-block {
-      width: 100%;
-    }
-    .brand-top {
-      text-align: center;
-      font-size: 8.8pt;
-      letter-spacing: 0.2px;
-      line-height: 1.15;
-      margin-bottom: 1mm;
-    }
-    .item-title {
-      direction: rtl;
-      text-align: left;
-      font-size: 8.4pt;
-      line-height: 1.24;
-      max-height: 2.5em;
-      overflow: hidden;
-    }
-    .bottom-split {
-      display: flex;
-      direction: ltr;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4.5mm;
-      flex: 1;
-      margin-top: 0.8mm;
-    }
-    .qr-box {
-      width: 14.5mm;
-      height: 14.5mm;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      image-rendering: pixelated;
-    }
-    .qr-box img, .qr-box canvas {
-      width: 14.5mm !important;
-      height: 14.5mm !important;
-      image-rendering: pixelated;
-    }
-    .info-col {
-      width: 27mm;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      line-height: 1.26;
-    }
+    .header-block { width: 100%; }
+    .brand-top { text-align: center; font-size: 8.8pt; letter-spacing: 0.2px; line-height: 1.15; margin-bottom: 1mm; }
+    .item-title { direction: rtl; text-align: left; font-size: 8.4pt; line-height: 1.24; max-height: 2.5em; overflow: hidden; }
+    .bottom-split { display: flex; direction: ltr; align-items: center; justify-content: flex-start; gap: 4.5mm; flex: 1; margin-top: 0.8mm; }
+    .qr-box { width: 14.5mm; height: 14.5mm; display: flex; align-items: center; justify-content: center; flex-shrink: 0; image-rendering: pixelated; }
+    .qr-box img, .qr-box canvas { width: 14.5mm !important; height: 14.5mm !important; image-rendering: pixelated; }
+    .info-col { width: 27mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.26; }
     .code-num { font-size: 8.6pt; margin-bottom: 1.2mm; }
     .vat-txt { font-size: 7.2pt; margin: 0.2mm 0; }
     .price-val { font-size: 8.8pt; direction: ltr; margin: 0.2mm 0; }
@@ -1138,7 +1226,7 @@
       win.document.close();
     }
 
-    // --- برمجة صفحة البيانات الأساسية وتعدد الباركود (حتى 7 باركودات) ---
+    // --- صفحة البيانات الأساسية (تتضمن تعديل رقم الصنف + تعدد الباركود حتى 7) ---
     function updateMasterEditedBadge() {
       const badge = document.getElementById('mdEditedCountBadge');
       if (badge) badge.innerText = `${Object.keys(masterEdits || {}).length} معدّل`;
@@ -1187,7 +1275,7 @@
       activeMasterItem = p;
       document.getElementById('mdEditorCard').style.display = 'block';
       document.getElementById('mdSearchResults').innerHTML = '';
-      document.getElementById('mdItemCode').innerText = p.item_number || p.uid;
+      document.getElementById('mdItemCodeInput').value = p.item_number || '';
       document.getElementById('mdItemName').value = p.name || '';
       const nameEnInp = document.getElementById('mdItemNameEn');
       if (nameEnInp) nameEnInp.value = p.name_en || '';
@@ -1256,17 +1344,24 @@
     function saveMasterItemChanges() {
       if (!currentUser || currentUser.role !== 'admin') return alert('⛔ هذه الصلاحية للمشرف/المطور فقط');
       if (!activeMasterItem) return alert('اختر صنفاً أولاً');
+      const newItemNumber = document.getElementById('mdItemCodeInput').value.trim();
       const newName = document.getElementById('mdItemName').value.trim();
       const nameEnInp = document.getElementById('mdItemNameEn');
       const newNameEn = nameEnInp ? nameEnInp.value.trim() : '';
       const newPrice = Number((parseFloat(document.getElementById('mdItemPrice').value) || 0).toFixed(2));
       const newCat = document.getElementById('mdItemCat').value.trim() || 'مورد عام';
+      if (!newItemNumber) return alert('يرجى إدخال رقم الصنف');
       if (!newName) return alert('يرجى إدخال اسم الصنف');
       if (!activeMasterBarcodes.length) return alert('يرجى إضافة باركود واحد على الأقل');
 
-      const mKey = getMasterEditKey(activeMasterItem);
-      masterEdits[mKey] = {
-        item_number: String(activeMasterItem.item_number || '').trim(),
+      const oldKey = getMasterEditKey(activeMasterItem);
+      const newKey = String(newItemNumber).replace(/[.#$\[\]\/]/g, '_');
+      if (oldKey && oldKey !== newKey && masterEdits[oldKey]) {
+        delete masterEdits[oldKey];
+      }
+
+      masterEdits[newKey] = {
+        item_number: newItemNumber,
         name: newName,
         name_en: newNameEn,
         price: newPrice,
@@ -1276,15 +1371,199 @@
         updatedBy: currentUser.name
       };
 
+      // تحديث رقم الصنف في المصدر الأساسي محلياً أيضاً لعدم الازدواج
+      activeMasterItem.item_number = newItemNumber;
+      const baseMatch = baseExcelProducts.find(x => x.uid === activeMasterItem.uid);
+      if (baseMatch) baseMatch.item_number = newItemNumber;
+      const customMatch = customCloudProducts.find(x => x.uid === activeMasterItem.uid);
+      if (customMatch) {
+        customMatch.item_number = newItemNumber;
+        localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
+        pushDataToFirebase('customProducts', customCloudProducts);
+      }
+
       localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
       pushDataToFirebase('masterEdits', masterEdits);
-      logAuditAction(`تعديل البيانات الأساسية للصنف (${newName} - ${activeMasterBarcodes.length} باركود)`);
+      logAuditAction(`تعديل البيانات الأساسية (${newName} | رقم: ${newItemNumber})`);
       rebuildAllProductsList();
       renderInventory();
       renderPriceCalc();
       renderBarcodeOrders();
       renderShortages();
-      showToast('✅ تم حفظ التعديلات ومزامنتها مع جميع الصفحات والأجهزة');
+      showToast('✅ تم حفظ التعديلات ومزامنتها فوراً');
+    }
+
+    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة (مع حماية أسعار بيبي جوي وسنسوداين وديوركس) ---
+    const icpThreeBuffers = { price: null, barcode: null, english: null };
+    let pendingIcpDeltas = {};
+    let pendingIcpEnglishMap = {};
+    const PROTECTED_PRICE_KEYWORDS = ['بيبي جوي', 'baby joy', 'babyjoy', 'سنسوداين', 'sensodyne', 'ديوركس', 'durex'];
+    const PROTECTED_PRICE_CODES = new Set(['10290012', '1016122']);
+
+    function isProtectedPriceProduct(item) {
+      const code = String(item.item_number || '').trim();
+      if (PROTECTED_PRICE_CODES.has(code)) return true;
+      const fullTxt = `${item.name || ''} ${item.name_en || ''}`.toLowerCase();
+      return PROTECTED_PRICE_KEYWORDS.some(k => fullTxt.includes(k));
+    }
+
+    function handleIcpThreeFiles(slot, input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          icpThreeBuffers[slot] = rows;
+          const cap = slot.charAt(0).toUpperCase() + slot.slice(1);
+          document.getElementById('icpSlot' + cap).classList.add('loaded');
+          document.getElementById('icpStatus' + cap).innerText = `✅ ${file.name} (${rows.length} صف)`;
+        } catch (err) {
+          alert('تعذر قراءة الملف');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function previewIcpWeeklyMerge() {
+      if (!icpThreeBuffers.price && !icpThreeBuffers.barcode && !icpThreeBuffers.english) {
+        return alert('يرجى رفع ملف واحد على الأقل من تقارير ICP الثلاثة أولاً');
+      }
+      const existingByCode = new Map(allProducts.map(p => [String(p.item_number || '').trim(), p]));
+      const incoming = new Map();
+
+      (icpThreeBuffers.price || []).forEach(r => {
+        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
+        if (!code) return;
+        const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
+        const price = Number((parseFloat(r['سعر البيع'] || r['السعر'] || r['Price']) || 0).toFixed(2));
+        incoming.set(code, { ...(incoming.get(code) || {}), item_number: code, name, price });
+      });
+
+      (icpThreeBuffers.barcode || []).forEach(r => {
+        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
+        if (!code) return;
+        const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
+        const bc = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
+        const fia = String(r['الفئة'] || r['الفئة '] || r['القسم'] || r['Category'] || '').trim();
+        const cur = incoming.get(code) || { item_number: code, barcodes: [] };
+        if (name && !cur.name) cur.name = name;
+        if (fia) cur.fia = fia;
+        if (bc) {
+          cur.barcodes = [...new Set([...(cur.barcodes || []), bc])].slice(0, 7);
+        }
+        incoming.set(code, cur);
+      });
+
+      pendingIcpEnglishMap = {};
+      (icpThreeBuffers.english || []).forEach(r => {
+        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
+        const en = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['English Name'] || r['Name En'] || '').trim();
+        if (code && en) {
+          pendingIcpEnglishMap[code] = en;
+          const cur = incoming.get(code) || { item_number: code };
+          cur.name_en = en;
+          incoming.set(code, cur);
+        }
+      });
+
+      pendingIcpDeltas = {};
+      let newCnt = 0, priceCnt = 0, protectedCnt = 0;
+      const lines = [];
+
+      incoming.forEach((inc, code) => {
+        const old = existingByCode.get(code);
+        if (!old) {
+          newCnt++;
+          const mKey = code.replace(/[.#$\[\]\/]/g, '_');
+          pendingIcpDeltas[mKey] = {
+            item_number: code,
+            name: inc.name || inc.name_en || 'صنف جديد',
+            name_en: inc.name_en || '',
+            price: inc.price || 0,
+            fia: inc.fia || 'مورد عام',
+            barcodes: (inc.barcodes && inc.barcodes.length) ? inc.barcodes : [code],
+            isNew: true
+          };
+          lines.push(`🆕 <b>جديد:</b> ${escapeHtmlSafe(pendingIcpDeltas[mKey].name)} (${pendingIcpDeltas[mKey].price} ر.س)`);
+        } else {
+          let changed = false;
+          const patch = {
+            item_number: code,
+            name: old.name,
+            name_en: inc.name_en || old.name_en || '',
+            price: old.price,
+            fia: inc.fia || old.fia,
+            barcodes: getProductAllBarcodes(old)
+          };
+          if (inc.barcodes && inc.barcodes.length) {
+            patch.barcodes = [...new Set([...patch.barcodes, ...inc.barcodes])].slice(0, 7);
+          }
+          if (typeof inc.price === 'number' && inc.price > 0 && Math.abs(inc.price - old.price) > 0.009) {
+            if (isProtectedPriceProduct(old) || isProtectedPriceProduct(inc)) {
+              protectedCnt++;
+            } else {
+              priceCnt++;
+              patch.price = inc.price;
+              changed = true;
+              lines.push(`💰 <b>تحديث سعر:</b> ${escapeHtmlSafe(old.name)} (${old.price} ← ${inc.price})`);
+            }
+          }
+          if (inc.name_en && inc.name_en !== old.name_en) changed = true;
+          if (changed) {
+            const mKey = code.replace(/[.#$\[\]\/]/g, '_');
+            pendingIcpDeltas[mKey] = patch;
+          }
+        }
+      });
+
+      document.getElementById('icpDeltaPreviewBox').style.display = 'block';
+      document.getElementById('icpDeltaSummary').innerText =
+        `ملخص الفروقات: 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🌐 ${Object.keys(pendingIcpEnglishMap).length} إنجليزي | 🛡️ ${protectedCnt} محمي`;
+      document.getElementById('icpDeltaDetails').innerHTML =
+        lines.length ? lines.slice(0, 60).join('<br>') : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
+    }
+
+    function applyAndSyncIcpDeltas() {
+      const nowTs = Date.now();
+      let addedNew = 0;
+      Object.entries(pendingIcpDeltas).forEach(([k, val]) => {
+        if (val.isNew) {
+          addedNew++;
+          customCloudProducts.unshift({
+            uid: 'cp_' + nowTs + '_' + addedNew,
+            item_number: val.item_number,
+            barcode: val.barcodes[0] || val.item_number,
+            barcodes: val.barcodes,
+            name: val.name,
+            name_en: val.name_en,
+            fia: val.fia,
+            price: val.price,
+            image: '',
+            batches: []
+          });
+        } else {
+          masterEdits[k] = { ...val, updatedAt: nowTs, updatedBy: currentUser ? currentUser.name : 'المطور' };
+        }
+      });
+
+      if (Object.keys(pendingIcpEnglishMap).length > 0) {
+        englishNamesMap = { ...englishNamesMap, ...pendingIcpEnglishMap };
+        localStorage.setItem('ocare_english_names_map', JSON.stringify(englishNamesMap));
+        pushDataToFirebase('englishNamesMap', englishNamesMap);
+      }
+      if (addedNew > 0) {
+        localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
+        pushDataToFirebase('customProducts', customCloudProducts);
+      }
+      localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
+      pushDataToFirebase('masterEdits', masterEdits);
+      logAuditAction(`اعتماد تحديث ICP الأسبوعي (${Object.keys(pendingIcpDeltas).length} فرق)`);
+      rebuildAllProductsList();
+      renderInventory();
+      document.getElementById('icpDeltaPreviewBox').style.display = 'none';
+      showToast('✅ تمت مزامنة الفروقات بنجاح');
     }
 
     function openAddCustomProductModal() {
@@ -1316,7 +1595,6 @@
       showToast('✅ تم حفظ الصنف الجديد');
     }
 
-    // رفع ملف إكسل لربط الأسماء الإنجليزية بالأصناف الموجودة حسب رقم الصنف ومزامنتها سحابياً
     function handleEnglishNamesExcelUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1326,7 +1604,6 @@
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
           const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
           if (!rows.length) return alert('الملف فارغ!');
-
           const sampleKeys = Object.keys(rows[0]);
           let linkedCount = 0;
 
@@ -1366,17 +1643,16 @@
           rebuildAllProductsList();
           renderInventory();
           const badge = document.getElementById('linkedEnglishNamesBadge');
-          if (badge) badge.innerText = `✅ تم ربط ${linkedCount} اسم إنجليزي بنجاح ومزامنتها سحابياً! (إجمالي المربوط: ${Object.keys(englishNamesMap).length})`;
-          showToast(`✅ تم ربط ${linkedCount} اسم إنجليزي سحابياً`);
+          if (badge) badge.innerText = `✅ تم ربط ${linkedCount} اسم إنجليزي بنجاح ومزامنتها سحابياً!`;
+          showToast(`✅ تم ربط ${linkedCount} اسم إنجليزي`);
           event.target.value = '';
         } catch (err) {
-          alert('تعذر قراءة ملف الإكسل، تأكد من صحة الملف.');
+          alert('تعذر قراءة ملف الإكسل');
         }
       };
       reader.readAsArrayBuffer(file);
     }
 
-    // رفع ملف إكسل بالأصناف الجديدة ودمجها مع المنتجات القديمة ومزامنتها سحابياً
     function handleNewProductsExcelUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1385,8 +1661,7 @@
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
           const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
-          let addedCount = 0;
-          let updatedCount = 0;
+          let addedCount = 0, updatedCount = 0;
           const nowTs = Date.now();
 
           rows.forEach((r, idx) => {
@@ -1446,10 +1721,10 @@
           renderInventory();
           const badge = document.getElementById('mergedNewProductsBadge');
           if (badge) badge.innerText = `✅ تم دمج ${addedCount} صنف جديد وتحديث ${updatedCount} صنف ومزامنتها سحابياً!`;
-          showToast(`✅ تم ضم ${addedCount + updatedCount} صنف للمخزون سحابياً`);
+          showToast(`✅ تم ضم ${addedCount + updatedCount} صنف للمخزون`);
           event.target.value = '';
         } catch (err) {
-          alert('تعذر قراءة ملف الإكسل، تأكد من صحة الملف.');
+          alert('تعذر قراءة ملف الإكسل');
         }
       };
       reader.readAsArrayBuffer(file);
@@ -1516,11 +1791,9 @@
       }
     }
 
-    // دالة موحدة لبناء وتنسيق ملف الإكسل (RTL + ترويسة كحلية + مسافات واسعة + حدود + توسيط)
     function writeStyledExcelWorkbook(rows, sheetName, fileName) {
       if (!rows || !rows.length) return;
       const cols = Object.keys(rows[0]);
-
       const normalizedRows = rows.map(r => {
         const obj = {};
         cols.forEach(c => {
@@ -1535,7 +1808,6 @@
 
       const ws = XLSX.utils.json_to_sheet(normalizedRows);
       ws['!views'] = [{ rightToLeft: true }];
-
       ws['!cols'] = cols.map(c => {
         let maxLen = c.length + 6;
         normalizedRows.slice(0, 500).forEach(r => {
@@ -1551,9 +1823,7 @@
       });
 
       const rowHeights = [{ hpt: 28 }];
-      for (let i = 0; i < normalizedRows.length; i++) {
-        rowHeights.push({ hpt: 22 });
-      }
+      for (let i = 0; i < normalizedRows.length; i++) rowHeights.push({ hpt: 22 });
       ws['!rows'] = rowHeights;
 
       const range = XLSX.utils.decode_range(ws['!ref']);
@@ -1569,23 +1839,16 @@
           const cellRef = XLSX.utils.encode_cell({ r: R, c: C });
           if (!ws[cellRef]) continue;
           const colName = cols[C] || '';
-
           if (R > 0 && (colName.includes('باركود') || colName.includes('رقم الصنف'))) {
             ws[cellRef].t = 's';
             ws[cellRef].v = String(ws[cellRef].v ?? '');
           }
-
           if (R === 0) {
             ws[cellRef].s = {
               fill: { patternType: 'solid', fgColor: { rgb: '0B1957' } },
               font: { name: 'Arial', sz: 11, bold: true, color: { rgb: 'FFFFFF' } },
               alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
-              border: {
-                top: { style: 'thin', color: { rgb: '0B1957' } },
-                bottom: { style: 'thin', color: { rgb: '0B1957' } },
-                left: { style: 'thin', color: { rgb: '1E3A8A' } },
-                right: { style: 'thin', color: { rgb: '1E3A8A' } }
-              }
+              border: { top: { style: 'thin', color: { rgb: '0B1957' } }, bottom: { style: 'thin', color: { rgb: '0B1957' } }, left: { style: 'thin', color: { rgb: '1E3A8A' } }, right: { style: 'thin', color: { rgb: '1E3A8A' } } }
             };
           } else {
             ws[cellRef].s = {
@@ -1621,28 +1884,38 @@
       writeStyledExcelWorkbook(rows, 'المخزون', 'مخزون_أوكير_الكامل.xlsx');
     }
 
+    // --- عرض المخزون (مربع QR حر بدون قالب + اسم عربي وإنجليزي كامل + إخفاء الإجمالي) ---
     function renderInventory() {
-      const qRaw = String((document.getElementById('mainSearch') && document.getElementById('mainSearch').value) || '').trim();
-      if (currentUser && currentUser.role === 'admin') document.getElementById('totalLoadedCount').innerText = allProducts.length.toLocaleString();
+      const qInp = document.getElementById('mainSearch');
+      const qRaw = String((qInp && qInp.value) || '').trim();
+      const clrBtn = document.getElementById('clearMainSearchBtn');
+      if (clrBtn) clrBtn.style.display = qRaw ? 'inline-block' : 'none';
+
       const searchRes = smartSearchProducts(qRaw, 100);
       const filtered = searchRes.items;
       const isEnSearch = searchRes.lang === 'en';
-      if (currentUser && currentUser.role === 'admin') document.getElementById('filteredCountLbl').innerText = `المطابق للبحث: ${searchRes.total.toLocaleString()} صنف`;
       const box = document.getElementById('inventoryList');
-      if (!filtered.length) { box.innerHTML = `<div class="bento-card" style="text-align:center;color:var(--muted);">لا توجد أصناف مطابقة للبحث.</div>`; return; }
-      box.innerHTML = filtered.map(p => {
+      if (!filtered.length) {
+        box.innerHTML = `<div class="bento-card" style="text-align:center;color:var(--muted);">لا توجد أصناف مطابقة للبحث.</div>`;
+        return;
+      }
+
+      box.innerHTML = filtered.map((p, idx) => {
         const bHtml = (p.batches && p.batches.length) ? p.batches.map(b => `<span class="b-chip b-exp">📅 ${b.exp} (${b.qty})</span>`).join('') : '';
-        const allBc = getProductAllBarcodes(p);
-        const extraBcBadge = allBc.length > 1 ? `<span class="b-chip b-multi">+${allBc.length - 1} باركود</span>` : '';
-        const dispTitle = getProductDisplayTitle(p, searchRes.lang);
-        const showEnStyle = isEnSearch && p.name_en && p.name_en.trim();
-        const thumb = p.image ? `<img src="${p.image}" alt="" onerror="this.parentElement.innerText='💊'">` : `<span>${String(dispTitle || '💊').trim().slice(0, 2)}</span>`;
+        const dispPrimary = getProductDisplayTitle(p, searchRes.lang);
+        const dispSecondary = (isEnSearch && p.name_en && p.name_en.trim()) ? String(p.name || '') : String(p.name_en || '');
+        const primaryIsEn = isEnSearch && p.name_en && p.name_en.trim();
+        const secondaryIsEn = !primaryIsEn && dispSecondary;
+        const scanCode = String(p.barcode || p.item_number || '').trim();
+
         return `<div class="inv-bento">
-          <div class="inv-thumb">${thumb}</div>
+          <!-- مربع QR حر بدون قالب مربع -->
+          <div class="inv-qr-free" id="inv_qr_${idx}" data-qr="${escapeHtmlSafe(scanCode)}" onclick="openQrZoomModal('${p.uid}')" title="اضغط لتكبير الباركود ومسحه"></div>
           <div class="inv-info">
-            <div class="inv-title ${showEnStyle ? 'en-title' : ''}">${highlightSearchMatch(dispTitle, qRaw)}</div>
-            <div class="inv-codes">رقم: <strong>${p.item_number || '-'}</strong> | باركود: <strong>${p.barcode || '-'}</strong></div>
-            <div><span class="b-chip b-fia">${p.fia}</span>${extraBcBadge}${bHtml}</div>
+            <div class="inv-title ${primaryIsEn ? 'en-title' : ''}">${highlightSearchMatch(dispPrimary, qRaw)}</div>
+            ${dispSecondary ? `<div class="inv-sub-title ${secondaryIsEn ? 'en-sub' : ''}">${highlightSearchMatch(dispSecondary, qRaw)}</div>` : ''}
+            <div class="inv-codes">رقم: <strong>${p.item_number || '-'}</strong> | باركود: <strong>${scanCode || '-'}</strong></div>
+            ${bHtml ? `<div>${bHtml}</div>` : ''}
           </div>
           <div class="inv-left">
             <div class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</div>
@@ -1654,15 +1927,47 @@
           </div>
         </div>`;
       }).join('');
+
+      if (typeof QRCode !== 'undefined') {
+        filtered.forEach((p, idx) => {
+          const el = document.getElementById('inv_qr_' + idx);
+          if (el) {
+            new QRCode(el, {
+              text: el.getAttribute('data-qr') || '0',
+              width: 112,
+              height: 112,
+              colorDark: '#0F172A',
+              colorLight: '#FFFFFF',
+              correctLevel: QRCode.CorrectLevel.L
+            });
+          }
+        });
+      }
     }
 
+    function openQrZoomModal(uid) {
+      const p = allProducts.find(x => x.uid === uid);
+      if (!p) return;
+      const scanCode = String(p.barcode || p.item_number || '').trim();
+      document.getElementById('qrZoomTitle').innerText = p.name || '';
+      document.getElementById('qrZoomSub').innerText = `رقم الصنف: ${p.item_number || '-'} | السعر: ${Number(p.price || 0).toFixed(2)} ر.س`;
+      document.getElementById('qrZoomCodeText').innerText = scanCode;
+      const box = document.getElementById('qrZoomBigBox');
+      box.innerHTML = '';
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(box, { text: scanCode || '0', width: 210, height: 210, correctLevel: QRCode.CorrectLevel.M });
+      }
+      document.getElementById('qrZoomModal').style.display = 'flex';
+    }
+
+    // --- عرض السعر (حاسبة الأسعار) ---
     function addToPriceCalc(uid) {
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
       const ex = priceCart.find(x => x.uid === uid);
       if (ex) ex.qty += 1; else priceCart.push({ uid: p.uid, name: p.name, item_number: p.item_number, price: p.price, qty: 1 });
       localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart));
-      renderPriceCalc(); showToast(`💰 أضيف للأسعار: ${p.name}`);
+      renderPriceCalc(); showToast(`💰 أضيف لعرض السعر: ${p.name}`);
     }
     function changePriceCartQty(i, d) { if (!priceCart[i]) return; priceCart[i].qty = Math.max(1, priceCart[i].qty + d); localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart)); renderPriceCalc(); }
     function removeFromPriceCart(i) { priceCart.splice(i, 1); localStorage.setItem('ocare_price_cart', JSON.stringify(priceCart)); renderPriceCalc(); }
@@ -1681,7 +1986,7 @@
         return `<div class="calc-row">
           <div style="flex:1;"><div style="font-size:0.82rem;font-weight:900;">${it.name}</div><div style="font-size:0.72rem;color:var(--accent);font-weight:800;">${sub.toFixed(2)} ر.س (${Number(it.price).toFixed(2)} × ${it.qty})</div></div>
           <div class="stepper"><button onclick="changePriceCartQty(${idx},-1)">-</button><span>${it.qty}</span><button onclick="changePriceCartQty(${idx},1)">+</button></div>
-          <button onclick="removeFromPriceCart(${idx})" style="border:none;background:rgba(239,68,68,0.18);color:#FCA5A5;width:30px;height:30px;border-radius:9px;cursor:pointer;">🗑️</button>
+          <button onclick="removeFromPriceCart(${idx})" style="border:none;background:rgba(239,68,68,0.16);color:#DC2626;width:30px;height:30px;border-radius:9px;cursor:pointer;">🗑️</button>
         </div>`;
       }).join('');
       totalEl.innerText = sum.toFixed(2);
@@ -1692,11 +1997,12 @@
       if (!priceCart.length) return alert('السلة فارغة');
       let sum = 0;
       const lines = priceCart.map((it, i) => { const s = it.price * it.qty; sum += s; return `${i+1}. ${it.name} (×${it.qty}) = ${s.toFixed(2)} ر.س`; });
-      const text = `🧾 *بيان أسعار - أوكير O CARE*\n` + lines.join('\n') + `\n---\n💰 *الإجمالي:* ${sum.toFixed(2)} ر.س`;
+      const text = `🧾 *بيان أسعار - أوكيـــــــر O CARE*\n` + lines.join('\n') + `\n---\n💰 *الإجمالي:* ${sum.toFixed(2)} ر.س`;
       if (navigator.share) navigator.share({ title: 'بيان أسعار', text }).catch(() => {});
       else { navigator.clipboard.writeText(text); showToast('📋 تم نسخ الفاتورة'); }
     }
 
+    // --- تواريخ الصلاحية (كتابة التاريخ نصياً + المربعات المعتمدة) ---
     function saveBatchesToStorage() {
       const map = {};
       allProducts.forEach(p => { if (p.batches && p.batches.length > 0) map[String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_')] = p.batches; });
@@ -1707,9 +2013,9 @@
     function addExpiryBatchRow(exp = '', qty = '') {
       const row = document.createElement('div');
       row.className = 'calc-row';
-      row.innerHTML = `<input type="text" class="b-exp-inp" placeholder="التاريخ (2026/10)" value="${exp}" style="flex:1;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);">
-        <input type="number" class="b-qty-inp" placeholder="الكمية (12)" value="${qty}" style="width:90px;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-align:center;">
-        <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.2);color:#FCA5A5;border:none;width:30px;height:30px;border-radius:9px;cursor:pointer;">✕</button>`;
+      row.innerHTML = `<input type="text" class="b-exp-inp" placeholder="التاريخ (2026/10)" value="${exp}" style="flex:1;padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-weight:700;">
+        <input type="number" class="b-qty-inp" placeholder="الكمية (12)" value="${qty}" style="width:95px;padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-align:center;font-weight:700;">
+        <button type="button" onclick="this.parentElement.remove()" style="background:rgba(239,68,68,0.16);color:#DC2626;border:none;width:32px;height:32px;border-radius:9px;font-weight:900;cursor:pointer;">✕</button>`;
       document.getElementById('expiryBatchesBox').appendChild(row);
     }
 
@@ -1738,13 +2044,13 @@
         const exp = r.querySelector('.b-exp-inp').value.trim(), qty = r.querySelector('.b-qty-inp').value.trim();
         if (exp && qty) newB.push({ exp, qty: parseInt(qty, 10) || 1, by: currentUser ? currentUser.name : 'موظف', date: new Date().toLocaleDateString('ar-SA') });
       });
-      p.batches = newB; saveBatchesToStorage(); logAuditAction(`تسجيل تاريخ (${p.name})`); renderRegisteredExpiryList(); renderInventory(); showToast('✅ تم حفظ التواريخ');
+      p.batches = newB; saveBatchesToStorage(); logAuditAction(`تسجيل تاريخ (${p.name})`); renderRegisteredExpiryList(); renderInventory(); updateNotifBadge(); showToast('✅ تم حفظ التواريخ');
     }
 
     function deleteAllProductBatches(uid) {
       if (checkMaintenanceBlock()) return;
       const p = allProducts.find(x => x.uid === uid);
-      if (p) { p.batches = []; saveBatchesToStorage(); renderRegisteredExpiryList(); renderInventory(); }
+      if (p) { p.batches = []; saveBatchesToStorage(); renderRegisteredExpiryList(); renderInventory(); updateNotifBadge(); }
     }
 
     function renderRegisteredExpiryList() {
@@ -1755,10 +2061,11 @@
       box.innerHTML = reg.map(p => `<div class="calc-row">
         <div style="flex:1;"><div style="font-size:0.82rem;font-weight:900;">${p.name}</div><div style="margin-top:4px;">${p.batches.map(b => `<span class="b-chip b-exp">📅 (${b.exp}) - العدد (${b.qty}) ${isAdm ? `| ${b.by}` : ''}</span>`).join('')}</div></div>
         <button class="btn-sub" onclick="selectProductForExpiry('${p.uid}')">✏️</button>
-        <button class="btn-sub" style="color:#FCA5A5;" onclick="deleteAllProductBatches('${p.uid}')">🗑️</button>
+        <button class="btn-sub" style="color:#DC2626;" onclick="deleteAllProductBatches('${p.uid}')">🗑️</button>
       </div>`).join('');
     }
 
+    // --- طباعة الباركود ---
     function syncBarcodeOrders() { localStorage.setItem('ocare_barcode_orders', JSON.stringify(barcodeOrders)); pushDataToFirebase('barcodeOrders', barcodeOrders); renderBarcodeOrders(); }
 
     function addItemToBarcodeOrder(uid) {
@@ -1782,11 +2089,11 @@
         const dispNum = liveP ? (liveP.item_number || it.item_number) : it.item_number;
         return `<div class="bo-card ${it.done ? 'printed' : ''}">
           <div class="bo-num">${dispNum}</div>
-          <div style="font-size:0.75rem;font-weight:800;text-align:center;height:32px;overflow:hidden;">${dispName}</div>
+          <div style="font-size:0.75rem;font-weight:800;text-align:center;height:34px;overflow:hidden;">${dispName}</div>
           <div class="bo-pill ${it.done ? 'done' : ''}" onclick="toggleBarcodeOrderDone('${it.uid}','${it.group}')">${it.done ? '✔️ مطبوع' : 'مطبوع / غير مطبوع'}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div class="stepper"><button onclick="changeBOQty('${it.uid}','${it.group}',-1)">-</button><span>${it.qty}</span><button onclick="changeBOQty('${it.uid}','${it.group}',1)">+</button></div>
-            ${isAdm ? `<button onclick="deleteBOItem('${it.uid}','${it.group}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:5px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+            ${isAdm ? `<button onclick="deleteBOItem('${it.uid}','${it.group}')" style="border:none;background:rgba(239,68,68,0.16);color:#DC2626;padding:5px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
           </div>
         </div>`;
       }).join('');
@@ -1800,6 +2107,7 @@
     function deleteBOItem(uid, grp) { barcodeOrders = barcodeOrders.filter(x => !(x.uid === uid && x.group === grp)); syncBarcodeOrders(); }
     function clearPrintedBarcodeOrders() { barcodeOrders = barcodeOrders.filter(x => !x.done); syncBarcodeOrders(); }
 
+    // --- النواقص والفروع (بدون نواقص المشتريات) ---
     function syncShortages() { localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList)); pushDataToFirebase('shortagesList', shortagesList); renderShortages(); }
 
     function addItemToShortages(uid) {
@@ -1824,7 +2132,7 @@
         return `<div class="calc-row">
           <div style="flex:1;"><span class="b-chip b-exp" style="margin-bottom:4px;">حالة: مطلوب (${it.date || ''})</span><div style="font-size:0.82rem;font-weight:900;">${dispName}</div><div style="font-size:0.7rem;color:var(--muted);">رقم: ${dispNum} | ${it.branch}</div></div>
           <div class="stepper"><button onclick="changeShortQty('${it.uid}','${it.branch}',-1)">-</button><input type="number" min="1" class="qty-manual-inp" value="${it.qty}" onclick="this.select()" onchange="setShortQty('${it.uid}','${it.branch}',this.value)"><button onclick="changeShortQty('${it.uid}','${it.branch}',1)">+</button></div>
-          ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.2);color:#FCA5A5;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
+          ${isAdm ? `<button onclick="deleteShortItem('${it.uid}','${it.branch}')" style="border:none;background:rgba(239,68,68,0.16);color:#DC2626;padding:6px 8px;border-radius:8px;cursor:pointer;">🗑️</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -1832,37 +2140,29 @@
     function setShortQty(uid, br, val) { const it = shortagesList.find(x => x.uid === uid && x.branch === br); if (it) { it.qty = Math.max(1, parseInt(val, 10) || 1); syncShortages(); } }
     function deleteShortItem(uid, br) { shortagesList = shortagesList.filter(x => !(x.uid === uid && x.branch === br)); syncShortages(); }
 
-    function previewNoteImage(e) {
-      const f = e.target.files[0]; if (!f) return;
-      const r = new FileReader();
-      r.onload = ev => { tempNoteImageBase64 = ev.target.result; const img = document.getElementById('noteImgPreview'); img.src = tempNoteImageBase64; img.style.display = 'block'; };
-      r.readAsDataURL(f);
+    // --- التنبيهات ---
+    function updateNotifBadge() {
+      const regCount = allProducts.filter(p => p.batches && p.batches.length > 0).length;
+      const b = document.getElementById('notifBadge');
+      if (b) { b.style.display = regCount > 0 ? 'flex' : 'none'; b.innerText = regCount; }
     }
 
-    function addShiftNote() {
-      const txt = document.getElementById('noteTextInp').value.trim(), target = document.getElementById('noteTargetSelect').value;
-      if (!txt && !tempNoteImageBase64) return alert('اكتب ملاحظة أو أرفق صورة');
-      shiftNotes.unshift({ id: 'n_' + Date.now(), text: txt, target, img: tempNoteImageBase64, by: currentUser ? currentUser.name : 'موظف', time: new Date().toLocaleString('ar-SA'), read: false });
-      localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes);
-      document.getElementById('noteTextInp').value = ''; document.getElementById('noteImgPreview').style.display = 'none'; tempNoteImageBase64 = '';
-      renderShiftNotes(); updateNotifBadge(); showToast('✅ تم إرسال الملاحظة');
+    function openAlertsModal() {
+      const reg = allProducts.filter(p => p.batches && p.batches.length > 0);
+      const box = document.getElementById('alertsModalContent');
+      if (!reg.length) {
+        box.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">لا توجد تنبيهات صلاحية مسجلة حالياً.</div>`;
+      } else {
+        box.innerHTML = reg.slice(0, 30).map(p => `
+          <div class="calc-row">
+            <div><strong style="font-size:0.82rem;">${p.name}</strong><div style="font-size:0.72rem;color:var(--muted);">${p.batches.map(b => `📅 ${b.exp} (العدد: ${b.qty})`).join(' | ')}</div></div>
+          </div>
+        `).join('');
+      }
+      document.getElementById('alertsModal').style.display = 'flex';
     }
 
-    function renderShiftNotes() {
-      const box = document.getElementById('shiftNotesContainer'), isAdm = currentUser && currentUser.role === 'admin';
-      const vis = shiftNotes.filter(n => n.target !== 'المطور' || isAdm);
-      if (!vis.length) { box.innerHTML = `<div style="text-align:center;padding:16px;color:var(--muted);font-size:0.8rem;">لا توجد ملاحظات.</div>`; return; }
-      box.innerHTML = vis.map(n => `<div class="calc-row" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);"><strong>👤 ${n.by} (${n.target})</strong><span>${n.time}</span></div>
-        <p style="font-size:0.83rem;margin:6px 0;">${n.text}</p>
-        ${n.img ? `<img src="${n.img}" style="max-width:100%;border-radius:10px;margin-bottom:6px;">` : ''}
-        <div style="display:flex;gap:6px;">${!n.read ? `<button class="btn-sub" onclick="markNoteRead('${n.id}')">✅ تم الاطلاع</button>` : ''}<button class="btn-sub" style="color:#FCA5A5;" onclick="deleteShiftNote('${n.id}')">🗑️ حذف</button></div>
-      </div>`).join('');
-    }
-    function markNoteRead(id) { const n = shiftNotes.find(x => x.id === id); if (n) { n.read = true; localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes); renderShiftNotes(); updateNotifBadge(); } }
-    function deleteShiftNote(id) { shiftNotes = shiftNotes.filter(x => x.id !== id); localStorage.setItem('ocare_shift_notes', JSON.stringify(shiftNotes)); pushDataToFirebase('shiftNotes', shiftNotes); renderShiftNotes(); updateNotifBadge(); }
-    function updateNotifBadge() { const u = shiftNotes.filter(n => !n.read).length, b = document.getElementById('notifBadge'); if (b) { b.style.display = u > 0 ? 'flex' : 'none'; b.innerText = u; } }
-
+    // --- التقارير الـ 5 الرسمية ---
     function renderBrandsGrid() {
       const q = (document.getElementById('brandSearchInp').value || '').trim().toLowerCase(), map = {};
       allProducts.forEach(p => {
@@ -1900,18 +2200,17 @@
       if (type === 'shortages') {
         const selEl = document.getElementById('shortageReportBranchFilter');
         const selBranch = selEl ? selEl.value : 'ALL';
+        const validBranches = ['فرع الشرائع', 'فرع النوارية', 'المستودع'];
         const filteredShortages = selBranch === 'ALL'
-          ? shortagesList
+          ? shortagesList.filter(x => validBranches.includes(x.branch))
           : shortagesList.filter(x => x.branch === selBranch);
-        const titleLabel = selBranch === 'ALL'
-          ? 'تقرير النواقص - جميع الجهات'
-          : `تقرير النواقص - ${selBranch}`;
+        const titleLabel = selBranch === 'ALL' ? 'تقرير النواقص - جميع الفروع' : `تقرير النواقص - ${selBranch}`;
         return {
           title: titleLabel,
           rows: filteredShortages.map(x => {
             const liveP = allProducts.find(p => p.uid === x.uid || (x.item_number && p.item_number === x.item_number));
             return {
-              'الجهة': x.branch,
+              'الفرع': x.branch,
               'رقم الصنف': liveP ? (liveP.item_number || x.item_number) : x.item_number,
               'الباركود': liveP ? (liveP.barcode || x.barcode) : x.barcode,
               'اسم الصنف': liveP ? liveP.name : x.name,
@@ -1947,25 +2246,26 @@
       const data = getReportDataset(type);
       if (!data.rows.length) return alert('لا توجد بيانات');
       const cols = Object.keys(data.rows[0]), win = window.open('', '_blank');
-      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Arial,Tahoma;padding:20px;}table{width:100%;border-collapse:collapse;font-size:12px;}th{background:#0B1957;color:#FFFFFF;padding:10px 8px;border:1px solid #0B1957;text-align:center;font-weight:bold;}td{padding:8px;border:1px solid #CBD5E1;text-align:center;}</style></head><body><h2 style="text-align:center;color:#0B1957;">أوكير O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
+      win.document.write(`<html dir="rtl" lang="ar"><head><title>${data.title}</title><style>body{font-family:Arial,Tahoma;padding:20px;}table{width:100%;border-collapse:collapse;font-size:12px;}th{background:#0B1957;color:#FFFFFF;padding:10px 8px;border:1px solid #0B1957;text-align:center;font-weight:bold;}td{padding:8px;border:1px solid #CBD5E1;text-align:center;}</style></head><body><h2 style="text-align:center;color:#0B1957;">أوكيـــــــر O CARE - ${data.title}</h2><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${data.rows.map(r=>`<tr>${cols.map(c=>`<td>${r[c]}</td>`).join('')}</tr>`).join('')}</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>`);
       win.document.close();
     }
 
+    // --- البحث داخل الصفحات الفرعية ---
     function searchForSubModule(mod, val) {
       const map = { pricing: 'priceSearchResults', expiry: 'expSearchResults', barcodeOrder: 'boSearchResults', shortages: 'shortSearchResults' };
       const box = document.getElementById(map[mod]); if (!box) return;
       const qRaw = String(val || '').trim();
       if (!qRaw) { box.style.display = 'none'; return; }
 
-      const res = smartSearchProducts(qRaw, 120);
+      const res = smartSearchProducts(qRaw, 100);
       const isEnSearch = res.lang === 'en';
       if (!res.items.length) {
-        box.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:0.78rem;">لا توجد أصناف مطابقة لـ "${escapeHtmlSafe(qRaw)}"</div>`;
+        box.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:0.78rem;">لا توجد أصناف مطابقة</div>`;
         box.style.display = 'block';
         return;
       }
 
-      const header = `<div class="sub-search-header"><span>🔍 نتائج البحث: ${res.total} صنف مطابق</span><span>اضغط للإضافة</span></div>`;
+      const header = `<div class="sub-search-header"><span>🔍 نتائج البحث: ${res.total} صنف</span><span>اضغط للإضافة</span></div>`;
       box.innerHTML = header + res.items.map(p => {
         const dispTitle = getProductDisplayTitle(p, res.lang);
         const showEnStyle = isEnSearch && p.name_en && p.name_en.trim();
@@ -1975,8 +2275,7 @@
             <div style="font-weight:800;color:var(--text);line-height:1.3;${showEnStyle ? 'direction:ltr;text-align:left;' : ''}"><strong>${escapeHtmlSafe(p.item_number)}</strong> - ${highlightSearchMatch(dispTitle, qRaw)}</div>
           </div>
           <span style="font-weight:900;color:var(--accent);white-space:nowrap;">${Number(p.price || 0).toFixed(2)} ر.س</span>
-        </div>
-      `;
+        </div>`;
       }).join('');
       box.style.display = 'block';
     }
@@ -1988,6 +2287,7 @@
       else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
+    // --- الماسح الليزري المدمج ---
     function applyCameraHardwareEnhancements(targetZoom) {
       try {
         const video = document.querySelector("#reader video");
@@ -1996,13 +2296,8 @@
         if (!track) return;
         const caps = track.getCapabilities ? track.getCapabilities() : {};
         const advancedRules = [];
-
-        if (caps.focusMode && caps.focusMode.includes('continuous')) {
-          advancedRules.push({ focusMode: 'continuous' });
-        }
-        if (caps.exposureMode && caps.exposureMode.includes('continuous')) {
-          advancedRules.push({ exposureMode: 'continuous' });
-        }
+        if (caps.focusMode && caps.focusMode.includes('continuous')) advancedRules.push({ focusMode: 'continuous' });
+        if (caps.exposureMode && caps.exposureMode.includes('continuous')) advancedRules.push({ exposureMode: 'continuous' });
         if (caps.zoom) {
           const clampedZoom = Math.min(Math.max(targetZoom, caps.zoom.min || 1), caps.zoom.max || 1);
           advancedRules.push({ zoom: clampedZoom });
@@ -2011,10 +2306,7 @@
           video.style.transformOrigin = 'center center';
           video.style.transform = `scale(${targetZoom})`;
         }
-
-        if (advancedRules.length > 0) {
-          track.applyConstraints({ advanced: advancedRules }).catch(() => {});
-        }
+        if (advancedRules.length > 0) track.applyConstraints({ advanced: advancedRules }).catch(() => {});
       } catch (e) {}
     }
 
@@ -2035,17 +2327,10 @@
         if (!video || !video.srcObject) return;
         const track = video.srcObject.getVideoTracks()[0];
         const caps = track.getCapabilities ? track.getCapabilities() : {};
-        if (caps.focusMode) {
-          if (caps.focusMode.includes('single-shot')) {
-            track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] })
-              .then(() => {
-                if (caps.focusMode.includes('continuous')) {
-                  setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {}), 400);
-                }
-              }).catch(() => {});
-          } else if (caps.focusMode.includes('continuous')) {
-            track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
-          }
+        if (caps.focusMode && caps.focusMode.includes('single-shot')) {
+          track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] }).then(() => {
+            if (caps.focusMode.includes('continuous')) setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {}), 400);
+          }).catch(() => {});
         }
         showToast('🎯 تم تحديث التركيز');
       } catch (e) {}
@@ -2056,22 +2341,12 @@
       const tBtn = document.getElementById('torchBtn'); if (tBtn) tBtn.innerText = '🔦 الفلاش';
       setScannerZoom(2);
       document.getElementById('scannerModal').style.display = 'flex';
-      scannerInstance = new Html5Qrcode("reader", {
-        verbose: false,
-        experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-      });
+      scannerInstance = new Html5Qrcode("reader", { verbose: false, experimentalFeatures: { useBarCodeDetectorIfSupported: true } });
 
       const scanConfig = {
         fps: 25,
-        qrbox: (vw, vh) => ({
-          width: Math.min(Math.floor(vw * 0.86), 340),
-          height: Math.min(Math.floor(vh * 0.45), 185)
-        }),
-        videoConstraints: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
+        qrbox: (vw, vh) => ({ width: Math.min(Math.floor(vw * 0.86), 340), height: Math.min(Math.floor(vh * 0.65), 145) }),
+        videoConstraints: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
       };
 
       scannerInstance.start({ facingMode: "environment" }, scanConfig, (decoded) => {
@@ -2083,20 +2358,21 @@
         else if (scannerTargetMode === 'expiry') { if (found) selectProductForExpiry(found.uid, parsed.expiryDate); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
         else if (scannerTargetMode === 'barcodeOrder') { if (found) addItemToBarcodeOrder(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
         else if (scannerTargetMode === 'shortages') { if (found) addItemToShortages(found.uid); else showToast(`⚠️ غير موجود (${parsed.barcode})`); }
+        else if (scannerTargetMode === 'brandSearch') {
+          if (found) { document.getElementById('brandSearchInp').value = String(found.name || '').split(/\s+/)[0]; renderBrandsGrid(); }
+          else showToast(`⚠️ غير موجود (${parsed.barcode})`);
+        }
         else if (scannerTargetMode === 'masterSearch') {
           if (found) { selectMasterItem(found.uid); showToast(`✅ تم تحديد الصنف: ${found.name}`); }
           else { document.getElementById('mdSearchInput').value = parsed.barcode; searchMasterItem(); showToast(`⚠️ لم يتم العثور على باركود (${parsed.barcode})`); }
         }
         else if (scannerTargetMode === 'masterAdd') { addMasterBarcode(parsed.barcode); }
-      }, () => {}).then(() => {
-        setTimeout(() => setScannerZoom(2), 250);
-      }).catch(() => stopScanner());
+      }, () => {}).then(() => { setTimeout(() => setScannerZoom(2), 250); }).catch(() => stopScanner());
     }
 
     function toggleScannerTorch() {
       torchEnabled = !torchEnabled;
       const tBtn = document.getElementById('torchBtn');
-
       try {
         const video = document.querySelector("#reader video");
         if (video && video.srcObject) {
@@ -2110,7 +2386,6 @@
           }
         }
       } catch (err) {}
-
       let whiteOverlay = document.getElementById('screenFlashOverlayLight');
       if (!whiteOverlay) {
         whiteOverlay = document.createElement('div');
@@ -2118,10 +2393,8 @@
         whiteOverlay.style.cssText = 'position:fixed;inset:0;background:#ffffff;z-index:9998;opacity:0.92;pointer-events:none;display:none;';
         document.body.appendChild(whiteOverlay);
       }
-
       whiteOverlay.style.display = torchEnabled ? 'block' : 'none';
       if (tBtn) tBtn.innerText = torchEnabled ? '🌟 إطفاء الشاشة' : '💡 كشاف الشاشة';
-      showToast(torchEnabled ? 'تم تفعيل كشاف الشاشة للإضاءة' : 'تم إطفاء الإضاءة');
     }
 
     function stopScanner() {
@@ -2131,22 +2404,25 @@
       else document.getElementById('scannerModal').style.display = 'none';
     }
 
+    // --- التنقل بين الصفحات ---
     function switchTab(tab) {
-      ['inventory','pricing','expiry','barcodeOrder','shortages','notes','reports','masterData','settings'].forEach(v => {
+      activeCurrentTab = tab;
+      ['inventory','pricing','expiry','barcodeOrder','shortages','reports','masterData','settings'].forEach(v => {
         const el = document.getElementById('view_' + v); if (el) el.style.display = v === tab ? 'block' : 'none';
         const b = document.getElementById('tabBtn_' + v); if (b) b.classList.toggle('active', v === tab);
         const nb = document.getElementById('bottomNav_' + v); if (nb) nb.classList.toggle('active', v === tab);
       });
+      updateGreetingVisibility(tab);
       if (tab === 'pricing') renderPriceCalc();
       if (tab === 'expiry') renderRegisteredExpiryList();
       if (tab === 'barcodeOrder') renderBarcodeOrders();
       if (tab === 'shortages') renderShortages();
-      if (tab === 'notes') renderShiftNotes();
       if (tab === 'reports') renderBrandsGrid();
       if (tab === 'masterData') updateMasterEditedBadge();
       if (tab === 'settings') renderSettingsUI();
     }
 
+    // --- الإعدادات وإدارة الحسابات ---
     function renderSettingsUI() {
       const empList = cleanArray(appConfig && appConfig.employees);
       appConfig.employees = empList;
@@ -2157,20 +2433,16 @@
       document.getElementById('prefFlashLight').checked = appConfig.flashLight !== false;
       document.getElementById('prefSfdaParser').checked = appConfig.sfdaParser !== false;
       document.getElementById('prefMaintenanceMode').checked = Boolean(appConfig.maintenanceMode);
-      changeSystemTheme(appConfig.activeTheme || 'slate-mint', false);
+      changeSystemTheme(appConfig.activeTheme || 'clinical-daylight', false);
       renderAuditLogs();
       const enBadge = document.getElementById('linkedEnglishNamesBadge');
       const enCount = Object.keys(englishNamesMap || {}).length;
-      if (enBadge && enCount > 0) {
-        enBadge.innerText = `🌐 إجمالي الأسماء الإنجليزية المربوطة سحابياً: ${enCount} صنف`;
-      }
+      if (enBadge && enCount > 0) enBadge.innerText = `🌐 إجمالي الأسماء الإنجليزية المربوطة سحابياً: ${enCount} صنف`;
       const mergedBadge = document.getElementById('mergedNewProductsBadge');
-      if (mergedBadge && customCloudProducts.length > 0) {
-        mergedBadge.innerText = `📦 إجمالي الأصناف الإضافية المدمجة سحابياً: ${customCloudProducts.length} صنف`;
-      }
+      if (mergedBadge && customCloudProducts.length > 0) mergedBadge.innerText = `📦 إجمالي الأصناف الإضافية المدمجة سحابياً: ${customCloudProducts.length} صنف`;
       document.getElementById('authorizedEmployeesList').innerHTML = empList.map((u, i) => `<div class="calc-row" style="opacity:${u.active === false ? '0.5' : '1'};">
-        <div><strong style="font-size:0.8rem;">${u.name || ''} ${u.active === false ? '<span style="color:#FCA5A5;">(موقوف)</span>' : '<span style="color:#34D399;">(نشط)</span>'}</strong><div style="font-size:0.7rem;color:var(--muted);">${u.email || ''} ${u.pin ? `| رمز: ${u.pin}` : ''}</div></div>
-        <div style="display:flex;gap:5px;"><button class="btn-sub" onclick="toggleEmployeeActive(${i})">${u.active === false ? 'تفعيل' : 'إيقاف'}</button><button class="btn-sub" style="color:#FCA5A5;" onclick="removeEmployee(${i})">حذف</button></div>
+        <div><strong style="font-size:0.8rem;">${u.name || ''} ${u.active === false ? '<span style="color:#DC2626;">(موقوف)</span>' : '<span style="color:#059669;">(نشط)</span>'}</strong><div style="font-size:0.7rem;color:var(--muted);">${u.email || ''} ${u.pin ? `| رمز: ${u.pin}` : ''}</div></div>
+        <div style="display:flex;gap:5px;"><button class="btn-sub" onclick="toggleEmployeeActive(${i})">${u.active === false ? 'تفعيل' : 'إيقاف'}</button><button class="btn-sub" style="color:#DC2626;" onclick="removeEmployee(${i})">حذف</button></div>
       </div>`).join('');
     }
 
@@ -2217,7 +2489,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      changeSystemTheme(localStorage.getItem('ocare_selected_theme') || appConfig.activeTheme || 'slate-mint', false);
+      changeSystemTheme(localStorage.getItem('ocare_selected_theme') || appConfig.activeTheme || 'clinical-daylight', false);
       addExpiryBatchRow();
       initRealtimeFirebaseSync();
       const s = safeGetStorage('ocare_session_user', null);
