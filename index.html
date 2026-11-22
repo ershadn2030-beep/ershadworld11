@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Lalezar&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Rakkas&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
@@ -93,16 +93,17 @@
     .center-brand-stack .ar { font-size:1.68rem; font-weight:900; color:#0B1957; line-height:1.05; }
     .center-brand-stack .en { font-size:0.62rem; font-weight:800; color:#475569; letter-spacing:3.8px; margin-top:1px; }
 
-    /* الترحيب بالخط المطابق للصورة (Lalezar) في الصفحات الهادئة فقط */
+    /* الترحيب بخط Rakkas المطابق للصورة في الصفحات الهادئة فقط */
     .greeting-display-bar {
       display:none;
       text-align:right;
-      padding:8px 16px 2px;
-      font-family:'Lalezar', cursive, sans-serif;
-      font-size:1.42rem;
+      padding:6px 16px 2px;
+      font-family:'Rakkas', serif;
+      font-size:1.52rem;
       font-weight:400;
       color:#0B1957;
       letter-spacing:0.2px;
+      line-height:1.25;
     }
 
     .header-search-wrap { padding:10px 12px 0; }
@@ -125,7 +126,6 @@
     /* ================= 3. بطاقات المخزون مع QR حر بدون مربع محشور ================= */
     .inv-stack { display:flex; flex-direction:column; gap:10px; padding:4px 12px 18px; }
     .inv-bento { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:11px; box-shadow:0 2px 8px rgba(15,23,42,0.04); }
-    /* مربع QR حر بدون خلفية أو إطار محشور */
     .inv-qr-free { width:56px; height:56px; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; background:transparent; border:none; padding:0; }
     .inv-qr-free img, .inv-qr-free canvas { width:56px !important; height:56px !important; display:block; image-rendering:pixelated; }
     .inv-info { flex:1; min-width:0; }
@@ -139,7 +139,7 @@
     .inv-left { display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex-shrink:0; }
     .price-tag { font-size:0.88rem; font-weight:900; color:#0F766E; background:#E6F4F1; border:1.5px solid #0D9488; padding:4px 11px; border-radius:11px; white-space:nowrap; }
     .btn-add-p { background:var(--primary); color:var(--btn-txt); border:none; padding:6px 10px; border-radius:9px; font-size:0.73rem; font-weight:900; cursor:pointer; }
-    .btn-sub { background:var(--card-alt); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:9px; font-size:0.72rem; font-weight:800; cursor:pointer; }
+    .btn-sub { background:var(--card-alt); color:var(--text); border:1px solid var(--border); padding:6px 8px; border-radius:9px; font-size:0.75rem; font-weight:800; cursor:pointer; }
 
     .sub-search-dropdown { max-height:260px; overflow-y:auto; border:1.5px solid var(--primary); border-radius:12px; margin-top:5px; margin-bottom:8px; display:none; background:var(--card-solid); box-shadow:0 10px 25px rgba(0,0,0,0.18); }
     .sub-search-header { position:sticky; top:0; background:var(--card-alt); padding:6px 12px; font-size:0.71rem; font-weight:900; color:var(--primary); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; z-index:5; }
@@ -208,11 +208,11 @@
 
     /* النوافذ المنبثقة */
     #previewModal, #scannerModal, #addCustomProductModal, #qrZoomModal, #alertsModal { position:fixed; inset:0; background:rgba(15,23,42,0.75); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:14px; }
-    .modal-box { background:var(--card-solid); color:var(--text); width:100%; max-width:450px; max-height:88vh; border-radius:22px; border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.35); }
+    .modal-box { background:var(--card-solid); color:var(--text); width:100%; max-width:460px; max-height:88vh; border-radius:22px; border:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.35); }
     .modal-head { background:var(--card-alt); padding:13px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
     .modal-body { padding:14px; overflow-y:auto; flex:1; }
     .laser-line { position:absolute; left:8%; right:8%; top:50%; height:2.5px; background:#10B981; box-shadow:0 0 12px #10B981,0 0 24px #10B981; z-index:20; pointer-events:none; animation:sweep 1.7s infinite ease-in-out; }
-    @keyframes sweep { 0%,100%{transform:translateY(-35px);} 50%{transform:translateY(35px);} }
+    @keyframes sweep { 0%,100%{transform:translateY(-45px);} 50%{transform:translateY(45px);} }
     .toast { position:fixed; top:72px; left:50%; transform:translateX(-50%); background:#0F172A; color:#FFFFFF; border:1.5px solid #0D9488; padding:10px 18px; border-radius:16px; font-size:0.8rem; font-weight:800; z-index:100000; opacity:0; pointer-events:none; transition:0.25s; white-space:nowrap; }
     .toast.show { opacity:1; }
   </style>
@@ -220,7 +220,7 @@
 <body data-theme="clinical-daylight">
   <div id="scanFlashOverlay"></div>
 
-  <!-- أيقونة الماسح الليزري القديم المعتمدة -->
+  <!-- أيقونة الماسح الليزري المعتمدة -->
   <svg style="display:none;">
     <symbol id="icon-laser-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
@@ -229,7 +229,7 @@
     </symbol>
   </svg>
 
-  <!-- 1. شاشة تسجيل الدخول (بدون رسالة مقتصر على الحسابات المخصصة) -->
+  <!-- 1. شاشة تسجيل الدخول -->
   <div id="loginOverlay">
     <div class="login-glass-box">
       <div class="fp-ring">
@@ -256,7 +256,6 @@
     <!-- الشريط العلوي الأبيض الموحد -->
     <header class="top-header">
       <div class="top-white-nav">
-        <!-- أقصى اليمين: خروج -->
         <button class="nav-circle-icon" onclick="handleLogout()" title="تسجيل الخروج">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -265,13 +264,11 @@
           </svg>
         </button>
 
-        <!-- المنتصف: شعار أوكيـــــــر / O CARE الموسع -->
         <div class="center-brand-stack">
           <div class="ar">أوكيـــــــر</div>
           <div class="en">O CARE</div>
         </div>
 
-        <!-- أقصى اليسار: التنبيهات -->
         <button class="nav-circle-icon" onclick="openAlertsModal()" title="التنبيهات">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -281,10 +278,10 @@
         </button>
       </div>
 
-      <!-- الترحيب بالخط المطابق للصورة (Lalezar) في الصفحات الهادئة فقط -->
+      <!-- الترحيب بخط Rakkas المطابق للصورة في الصفحات الهادئة فقط -->
       <div id="userGreeting" class="greeting-display-bar">مرحباً، إرشاد</div>
 
-      <!-- شريط البحث العام والماسح الليزري القديم -->
+      <!-- شريط البحث العام والماسح الليزري -->
       <div class="header-search-wrap">
         <div class="laser-bar">
           <button class="laser-btn" onclick="openScanner('search')" title="ماسح الباركود الليزري"><svg width="22" height="22"><use href="#icon-laser-scanner"></use></svg></button>
@@ -307,11 +304,8 @@
       <button class="pill-tab" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
     </div>
 
-    <!-- 1. المخزون والبحث (بدون إجمالي المخزون + مربع QR حر بدون إطار) -->
+    <!-- 1. المخزون والبحث (بدون مربع إضافة صنف + بدون إجمالي المخزون + زر السعر إيموجي 💰) -->
     <div id="view_inventory">
-      <div id="adminInventoryHeaderCard" style="display:none;padding:4px 12px 6px;">
-        <button class="btn-add-p" style="padding:8px 14px;border-radius:11px;font-size:0.78rem;" onclick="openAddCustomProductModal()">+ إضافة صنف</button>
-      </div>
       <div class="inv-stack" id="inventoryList"></div>
     </div>
 
@@ -339,7 +333,7 @@
       </div>
     </div>
 
-    <!-- 3. تواريخ الصلاحية (نفس المربعات السابقة + كتابة التاريخ نصياً + البحث والماسح) -->
+    <!-- 3. تواريخ الصلاحية -->
     <div id="view_expiry" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📅 تسجيل تواريخ الصلاحية</h3><button class="btn-add-p" onclick="openScanner('expiry')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح</button></div>
@@ -357,7 +351,7 @@
       <div class="bento-card"><div class="bento-head"><h3>الأصناف المسجلة تواريخها</h3><span class="b-chip b-exp" id="expRegisteredCount">0 صنف</span></div><div id="expRegisteredList"></div></div>
     </div>
 
-    <!-- 4. طباعة الباركود (المربعات 2x2 + البحث والماسح + طباعة Zebra 60x40mm) -->
+    <!-- 4. طباعة الباركود -->
     <div id="view_barcodeOrder" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>🏷️ طباعة الباركود</h3><button class="btn-add-p" onclick="openScanner('barcodeOrder')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
@@ -377,7 +371,7 @@
       </div>
     </div>
 
-    <!-- 5. النواقص والفروع (بدون نواقص المشتريات + البحث والماسح) -->
+    <!-- 5. النواقص والفروع -->
     <div id="view_shortages" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>🏥 النواقص والفروع</h3><button class="btn-add-p" onclick="openScanner('shortages')"><svg width="16" height="16" style="vertical-align:middle;"><use href="#icon-laser-scanner"></use></svg> مسح (+1)</button></div>
@@ -440,12 +434,15 @@
       </div>
     </div>
 
-    <!-- 7. البيانات الأساسية (مستقلة + تتضمن تعديل رقم الصنف + تعدد الباركود حتى 7) -->
+    <!-- 7. البيانات الأساسية (مستقلة + تعديل رقم الصنف + تعدد الباركود حتى 7) -->
     <div id="view_masterData" style="display:none;">
       <div class="bento-card">
         <div class="bento-head">
           <h3>🗂️ البيانات الأساسية وتعديل الأصناف</h3>
-          <span class="b-chip b-exp" id="mdEditedCountBadge">0 معدّل</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="b-chip b-exp" id="mdEditedCountBadge">0 معدّل</span>
+            <button class="btn-add-p" onclick="openAddCustomProductModal()">+ صنف جديد</button>
+          </div>
         </div>
         <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ابحث أو امسح أي صنف لتعديل رقم الصنف والاسم والباركودات (حتى 7 باركودات) والسعر:</p>
 
@@ -509,7 +506,6 @@
 
     <!-- 8. إعدادات المطور الشاملة -->
     <div id="view_settings" style="display:none;">
-      <!-- معالج التحديث الأسبوعي لملفات ICP الثلاثة (للمطور فقط) -->
       <div class="bento-card">
         <div class="bento-head"><h3>📄 التحديث الأسبوعي من تقارير ICP الثلاثة</h3></div>
         <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع الملفات الثلاثة الخام ليتم دمجها وتنظيفها وحماية أسعار (بيبي جوي، سنسوداين 10290012، ديوركس 1016122) ومزامنة الفروقات فقط:</p>
@@ -538,7 +534,6 @@
         </div>
       </div>
 
-      <!-- إدارة حسابات الزملاء المعتمدين والرموز المسموحة (للمطور فقط) -->
       <div class="bento-card">
         <div class="bento-head"><h3>👥 إدارة حسابات الزملاء والرموز المسموحة</h3></div>
         <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">إضافة وتعديل الحسابات والرموز الشخصية المسموح لها بالدخول لدى المطور فقط:</p>
@@ -551,7 +546,6 @@
         <div id="authorizedEmployeesList"></div>
       </div>
 
-      <!-- خصائص النظام والماسح الليزري (كما في الصورة تماماً) -->
       <div class="bento-card">
         <div class="bento-head"><h3>⚙️ خصائص النظام والماسح الليزري</h3></div>
         <div class="sw-row"><div><strong>🔒 حصر الدخول على الحسابات المسجلة فقط</strong><small>منع أي موظف غير مضاف في القائمة أعلاه من الدخول</small></div><label class="sw-toggle"><input type="checkbox" id="prefStrictWhitelist" checked onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
@@ -561,7 +555,6 @@
         <div class="sw-row"><div><strong>🛠️ وضع الجرد والصيانة (قفل تعديل الموظفين)</strong><small>إيقاف الحذف أو الإضافة للموظفين مؤقتاً أثناء الجرد</small></div><label class="sw-toggle"><input type="checkbox" id="prefMaintenanceMode" onchange="saveScannerAndSystemPrefs()"><span class="sw-slider"></span></label></div>
       </div>
 
-      <!-- اختيار الثيم -->
       <div class="bento-card">
         <div class="bento-head"><h3>🎨 اختيار الثيم</h3></div>
         <div class="theme-grid">
@@ -573,7 +566,6 @@
         </div>
       </div>
 
-      <!-- ربط الأسماء الإنجليزية للأصناف من قاعدة البيانات بملف إكسل -->
       <div class="bento-card">
         <div class="bento-head"><h3>🌐 ربط الأسماء الإنجليزية للأصناف (بملف إكسل)</h3></div>
         <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على <strong>رقم الصنف</strong> و<strong>الاسم الإنجليزي</strong> ليتم ربطها بالأصناف الموجودة تلقائياً ومزامنتها لجميع الموظفين:</p>
@@ -581,7 +573,6 @@
         <div id="linkedEnglishNamesBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
-      <!-- إضافة الأصناف الجديدة بملف إكسل -->
       <div class="bento-card">
         <div class="bento-head"><h3>📦 إضافة أصناف جديدة بملف إكسل (تُضم للمنتجات القديمة)</h3></div>
         <p style="font-size:0.71rem;color:var(--muted);margin-bottom:8px;">ارفع ملف الإكسل المحتوي على الأصناف الجديدة ليتم دمجها تلقائياً مع المخزون ومزامنتها فوراً لدى جميع الموظفين:</p>
@@ -589,14 +580,12 @@
         <div id="mergedNewProductsBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
-      <!-- ربط صور الأصناف -->
       <div class="bento-card">
         <div class="bento-head"><h3>🖼️ ربط صور الأصناف من المتجر الإلكتروني</h3></div>
         <input type="file" accept=".xlsx,.xls,.csv" onchange="handleStoreImagesUpload(event)" style="width:100%;padding:8px;border-radius:10px;border:1px dashed var(--primary);background:var(--card-alt);color:var(--text);font-size:0.75rem;">
         <div id="linkedImagesCountBadge" style="font-size:0.73rem;color:var(--primary);font-weight:800;margin-top:6px;"></div>
       </div>
 
-      <!-- التحكم بالرموز السرية -->
       <div class="bento-card">
         <div class="bento-head"><h3>🔐 التحكم بالرموز السرية</h3></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -606,7 +595,6 @@
         <button class="btn-glow" onclick="saveSecuritySettings()">💾 حفظ الرموز السرية</button>
       </div>
 
-      <!-- سجل الرقابة وتنزيل الإكسل الكامل -->
       <div class="bento-card">
         <div class="bento-head"><h3>🕵️ سجل الرقابة (Audit Log)</h3><button class="btn-sub" onclick="clearAuditLogs()">مسح</button></div>
         <div id="auditLogsContainer" style="max-height:150px;overflow-y:auto;font-size:0.73rem;margin-bottom:10px;"></div>
@@ -672,7 +660,7 @@
     </div>
   </div>
 
-  <!-- نافذة الماسح الليزري عالي الدقة + التقريب + الكشاف -->
+  <!-- نافذة الماسح الليزري عالي الدقة (بنفس أبعاد الكود الأصلي السريع 310px) -->
   <div id="scannerModal">
     <div class="modal-box" style="background:#000;color:#fff;">
       <div class="modal-head" style="background:#0B1218;border-color:rgba(255,255,255,0.12);">
@@ -682,9 +670,9 @@
           <button onclick="stopScanner()" style="background:transparent;border:none;color:#fff;font-size:1.2rem;cursor:pointer;">✕</button>
         </div>
       </div>
-      <div onclick="refocusScannerCamera()" style="position:relative;width:100%;height:210px;overflow:hidden;background:#000;cursor:pointer;">
+      <div onclick="refocusScannerCamera()" style="position:relative;width:100%;min-height:310px;overflow:hidden;background:#000;cursor:pointer;">
         <div class="laser-line"></div>
-        <div id="reader" style="width:100%;height:210px;"></div>
+        <div id="reader" style="width:100%;min-height:310px;"></div>
         <div style="position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:0.68rem;color:rgba(255,255,255,0.75);pointer-events:none;z-index:25;">اضغط على الشاشة لإعادة التركيز (Focus)</div>
       </div>
       <div id="scannerZoomControls" style="display:flex;justify-content:center;gap:8px;padding:10px;background:#0B1218;border-top:1px solid rgba(255,255,255,0.12);">
@@ -1122,7 +1110,6 @@
     function updateGreetingVisibility(tab) {
       const gEl = document.getElementById('userGreeting');
       if (!gEl || !currentUser) return;
-      // إظهار الترحيب بالخط الجميل في الصفحات الهادئة فقط وإخفاؤه في الصفحات المزدحمة
       const calmTabs = ['pricing', 'expiry', 'barcodeOrder', 'reports', 'masterData', 'settings'];
       gEl.innerText = `مرحباً، ${currentUser.name}`;
       gEl.style.display = calmTabs.includes(tab) ? 'block' : 'none';
@@ -1131,7 +1118,6 @@
     function applyPermissionsUI() {
       if (!currentUser) return;
       const isAdm = currentUser.role === 'admin';
-      document.getElementById('adminInventoryHeaderCard').style.display = isAdm ? 'block' : 'none';
       document.getElementById('tabBtn_masterData').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('tabBtn_settings').style.display = isAdm ? 'flex' : 'none';
       document.getElementById('btnClearPrintedBO').style.display = isAdm ? 'inline-block' : 'none';
@@ -1226,7 +1212,7 @@
       win.document.close();
     }
 
-    // --- صفحة البيانات الأساسية (تتضمن تعديل رقم الصنف + تعدد الباركود حتى 7) ---
+    // --- صفحة البيانات الأساسية ---
     function updateMasterEditedBadge() {
       const badge = document.getElementById('mdEditedCountBadge');
       if (badge) badge.innerText = `${Object.keys(masterEdits || {}).length} معدّل`;
@@ -1371,7 +1357,6 @@
         updatedBy: currentUser.name
       };
 
-      // تحديث رقم الصنف في المصدر الأساسي محلياً أيضاً لعدم الازدواج
       activeMasterItem.item_number = newItemNumber;
       const baseMatch = baseExcelProducts.find(x => x.uid === activeMasterItem.uid);
       if (baseMatch) baseMatch.item_number = newItemNumber;
@@ -1393,7 +1378,7 @@
       showToast('✅ تم حفظ التعديلات ومزامنتها فوراً');
     }
 
-    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة (مع حماية أسعار بيبي جوي وسنسوداين وديوركس) ---
+    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة ---
     const icpThreeBuffers = { price: null, barcode: null, english: null };
     let pendingIcpDeltas = {};
     let pendingIcpEnglishMap = {};
@@ -1884,7 +1869,7 @@
       writeStyledExcelWorkbook(rows, 'المخزون', 'مخزون_أوكير_الكامل.xlsx');
     }
 
-    // --- عرض المخزون (مربع QR حر بدون قالب + اسم عربي وإنجليزي كامل + إخفاء الإجمالي) ---
+    // --- عرض المخزون (مربع QR حر بدون قالب + زر السعر إيموجي 💰 + بدون مربع إضافة صنف) ---
     function renderInventory() {
       const qInp = document.getElementById('mainSearch');
       const qRaw = String((qInp && qInp.value) || '').trim();
@@ -1909,7 +1894,6 @@
         const scanCode = String(p.barcode || p.item_number || '').trim();
 
         return `<div class="inv-bento">
-          <!-- مربع QR حر بدون قالب مربع -->
           <div class="inv-qr-free" id="inv_qr_${idx}" data-qr="${escapeHtmlSafe(scanCode)}" onclick="openQrZoomModal('${p.uid}')" title="اضغط لتكبير الباركود ومسحه"></div>
           <div class="inv-info">
             <div class="inv-title ${primaryIsEn ? 'en-title' : ''}">${highlightSearchMatch(dispPrimary, qRaw)}</div>
@@ -1919,10 +1903,10 @@
           </div>
           <div class="inv-left">
             <div class="price-tag">${Number(p.price || 0).toFixed(2)} ر.س</div>
-            <div style="display:flex;gap:4px;">
-              <button class="btn-add-p" onclick="addToPriceCalc('${p.uid}')">+ للأسعار</button>
-              <button class="btn-sub" onclick="quickSendToExpiry('${p.uid}')">📅</button>
-              <button class="btn-sub" onclick="addItemToBarcodeOrder('${p.uid}')">🏷️</button>
+            <div style="display:flex;gap:5px;">
+              <button class="btn-add-p" onclick="addToPriceCalc('${p.uid}')" title="إضافة لعرض السعر" style="padding:6px 9px;font-size:0.8rem;">💰</button>
+              <button class="btn-sub" onclick="quickSendToExpiry('${p.uid}')" title="تاريخ الصلاحية">📅</button>
+              <button class="btn-sub" onclick="addItemToBarcodeOrder('${p.uid}')" title="طباعة الباركود">🏷️</button>
             </div>
           </div>
         </div>`;
@@ -1977,7 +1961,7 @@
       const box = document.getElementById('priceCalcList'), totalEl = document.getElementById('priceCalcTotal'), subEl = document.getElementById('priceCalcSubCount');
       if (!box || !totalEl) return;
       if (!priceCart.length) {
-        box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">السلة فارغة. اضغط "+ للأسعار" أو امسح بالليزر.</div>`;
+        box.innerHTML = `<div style="text-align:center;padding:18px;color:var(--muted);font-size:0.8rem;">السلة فارغة. اضغط "💰" أو امسح بالليزر.</div>`;
         totalEl.innerText = '0.00'; if (subEl) subEl.innerText = '(0 أصناف - شامل الضريبة)'; return;
       }
       let sum = 0;
@@ -2002,7 +1986,7 @@
       else { navigator.clipboard.writeText(text); showToast('📋 تم نسخ الفاتورة'); }
     }
 
-    // --- تواريخ الصلاحية (كتابة التاريخ نصياً + المربعات المعتمدة) ---
+    // --- تواريخ الصلاحية ---
     function saveBatchesToStorage() {
       const map = {};
       allProducts.forEach(p => { if (p.batches && p.batches.length > 0) map[String(p.barcode || p.item_number || p.uid).replace(/[.#$\[\]\/]/g, '_')] = p.batches; });
@@ -2107,7 +2091,7 @@
     function deleteBOItem(uid, grp) { barcodeOrders = barcodeOrders.filter(x => !(x.uid === uid && x.group === grp)); syncBarcodeOrders(); }
     function clearPrintedBarcodeOrders() { barcodeOrders = barcodeOrders.filter(x => !x.done); syncBarcodeOrders(); }
 
-    // --- النواقص والفروع (بدون نواقص المشتريات) ---
+    // --- النواقص والفروع ---
     function syncShortages() { localStorage.setItem('ocare_shortages_list', JSON.stringify(shortagesList)); pushDataToFirebase('shortagesList', shortagesList); renderShortages(); }
 
     function addItemToShortages(uid) {
@@ -2287,7 +2271,7 @@
       else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
-    // --- الماسح الليزري المدمج ---
+    // --- الماسح الليزري عالي الدقة والسرعة (نفس إعدادات الكود الأصلي) ---
     function applyCameraHardwareEnhancements(targetZoom) {
       try {
         const video = document.querySelector("#reader video");
@@ -2327,10 +2311,14 @@
         if (!video || !video.srcObject) return;
         const track = video.srcObject.getVideoTracks()[0];
         const caps = track.getCapabilities ? track.getCapabilities() : {};
-        if (caps.focusMode && caps.focusMode.includes('single-shot')) {
-          track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] }).then(() => {
-            if (caps.focusMode.includes('continuous')) setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {}), 400);
-          }).catch(() => {});
+        if (caps.focusMode) {
+          if (caps.focusMode.includes('single-shot')) {
+            track.applyConstraints({ advanced: [{ focusMode: 'single-shot' }] }).then(() => {
+              if (caps.focusMode.includes('continuous')) setTimeout(() => track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {}), 400);
+            }).catch(() => {});
+          } else if (caps.focusMode.includes('continuous')) {
+            track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
+          }
         }
         showToast('🎯 تم تحديث التركيز');
       } catch (e) {}
@@ -2345,8 +2333,15 @@
 
       const scanConfig = {
         fps: 25,
-        qrbox: (vw, vh) => ({ width: Math.min(Math.floor(vw * 0.86), 340), height: Math.min(Math.floor(vh * 0.65), 145) }),
-        videoConstraints: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+        qrbox: (vw, vh) => ({
+          width: Math.min(Math.floor(vw * 0.86), 340),
+          height: Math.min(Math.floor(vh * 0.45), 185)
+        }),
+        videoConstraints: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
       };
 
       scannerInstance.start({ facingMode: "environment" }, scanConfig, (decoded) => {
