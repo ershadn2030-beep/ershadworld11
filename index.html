@@ -10,7 +10,8 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Lalezar&display=swap" rel="stylesheet">  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Lalezar&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
@@ -92,8 +93,8 @@
     .center-brand-stack .ar { font-size:1.68rem; font-weight:900; color:#0B1957; line-height:1.05; }
     .center-brand-stack .en { font-size:0.62rem; font-weight:800; color:#475569; letter-spacing:3.8px; margin-top:1px; }
 
-    /* الترحيب بخط Rakkas المطابق للصورة في الصفحات الهادئة فقط */
- .greeting-display-bar {
+    /* الترحيب بخط Lalezar في الصفحات الهادئة فقط */
+    .greeting-display-bar {
       display:none;
       text-align:right;
       padding:6px 16px 2px;
@@ -277,7 +278,7 @@
         </button>
       </div>
 
-      <!-- الترحيب بخط Rakkas المطابق للصورة في الصفحات الهادئة فقط -->
+      <!-- الترحيب بخط Lalezar في الصفحات الهادئة فقط -->
       <div id="userGreeting" class="greeting-display-bar">مرحباً، إرشاد</div>
 
       <!-- شريط البحث العام والماسح الليزري -->
@@ -303,12 +304,12 @@
       <button class="pill-tab" id="tabBtn_settings" style="display:none;" onclick="switchTab('settings')">⚙️ الإعدادات</button>
     </div>
 
-    <!-- 1. المخزون والبحث (بدون مربع إضافة صنف + بدون إجمالي المخزون + زر السعر إيموجي 💰) -->
+    <!-- 1. المخزون والبحث -->
     <div id="view_inventory">
       <div class="inv-stack" id="inventoryList"></div>
     </div>
 
-    <!-- 2. عرض السعر (حاسبة الأسعار الكلاسيكية + البحث والماسح) -->
+    <!-- 2. عرض السعر -->
     <div id="view_pricing" style="display:none;">
       <div class="gold-banner">
         <div style="font-size:0.82rem;font-weight:800;">إجمالي السعر:</div>
@@ -507,7 +508,7 @@
     <div id="view_settings" style="display:none;">
       <div class="bento-card">
         <div class="bento-head"><h3>📄 التحديث الأسبوعي من تقارير ICP الثلاثة</h3></div>
-        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع الملفات الثلاثة الخام ليتم دمجها وتنظيفها وحماية أسعار (بيبي جوي، سنسوداين 10290012، ديوركس 1016122) ومزامنة الفروقات فقط:</p>
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;">ارفع ملفات ICP الخام مباشرة (يتجاهل أي أعمدة زائدة تلقائياً) ويعرض الفروقات قبل الاعتماد:</p>
 
         <div class="icp-slot" id="icpSlotPrice">
           <div><strong style="font-size:0.78rem;">1. ملف الأسعار (.xlsx)</strong><div id="icpStatusPrice" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
@@ -522,6 +523,19 @@
         <div class="icp-slot" id="icpSlotEnglish">
           <div><strong style="font-size:0.78rem;">3. ملف الأسماء الإنجليزية (.xlsx)</strong><div id="icpStatusEnglish" style="font-size:0.69rem;color:var(--muted);">لم يتم الاختيار</div></div>
           <label class="icp-pick-btn">اختيار ملف<input type="file" accept=".xlsx,.xls,.csv" hidden onchange="handleIcpThreeFiles('english', this)"></label>
+        </div>
+
+        <!-- مربع الاستثناءات التفاعلي لحماية الأسعار -->
+        <div style="background:var(--card-alt);border:1.5px solid var(--border);border-radius:14px;padding:11px;margin:10px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <strong style="font-size:0.78rem;color:var(--text);">🛡️ مربع الاستثناءات (محمية من تغيير السعر)</strong>
+            <span class="b-chip b-exp" id="excludedCountBadge">0 مستثنى</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <input type="text" id="newExclusionInp" placeholder="اكتب اسم شركة أو صنف أو رقم صنف..." onkeydown="if(event.key==='Enter'){event.preventDefault();addPriceExclusionRule();}" style="flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--card-solid);color:var(--text);font-size:0.76rem;outline:none;">
+            <button type="button" class="btn-add-p" onclick="addPriceExclusionRule()" style="padding:0 12px;border-radius:10px;">+ استثناء</button>
+          </div>
+          <div id="excludedRulesContainer" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
         </div>
 
         <button type="button" class="btn-sub" style="width:100%;padding:10px;margin-top:4px;font-weight:900;color:var(--primary);border-color:var(--primary);" onclick="previewIcpWeeklyMerge()">🔍 معالجة ومعاينة الفروقات</button>
@@ -659,7 +673,7 @@
     </div>
   </div>
 
-  <!-- نافذة الماسح الليزري عالي الدقة (بنفس أبعاد الكود الأصلي السريع 310px) -->
+  <!-- نافذة الماسح الليزري عالي الدقة (310px) -->
   <div id="scannerModal">
     <div class="modal-box" style="background:#000;color:#fff;">
       <div class="modal-head" style="background:#0B1218;border-color:rgba(255,255,255,0.12);">
@@ -978,6 +992,11 @@
         if (data.masterEdits !== undefined) {
           masterEdits = cleanMasterEditsMap(data.masterEdits);
           localStorage.setItem('ocare_master_edits', JSON.stringify(masterEdits));
+        }
+        if (data.excludedPriceList) {
+          excludedPriceList = cleanArray(data.excludedPriceList);
+          localStorage.setItem('ocare_excluded_prices', JSON.stringify(excludedPriceList));
+          if (currentUser && currentUser.role === 'admin') renderExcludedRulesUI();
         }
         customCloudProducts = cleanArray(data.customProducts);
         localStorage.setItem('ocare_custom_products', JSON.stringify(customCloudProducts));
@@ -1377,18 +1396,132 @@
       showToast('✅ تم حفظ التعديلات ومزامنتها فوراً');
     }
 
-    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة ---
+    // --- معالج التحديث الأسبوعي لملفات ICP الثلاثة + مربع الاستثناءات التفاعلي ---
     const icpThreeBuffers = { price: null, barcode: null, english: null };
     let pendingIcpDeltas = {};
     let pendingIcpEnglishMap = {};
-    const PROTECTED_PRICE_KEYWORDS = ['بيبي جوي', 'baby joy', 'babyjoy', 'سنسوداين', 'sensodyne', 'ديوركس', 'durex'];
-    const PROTECTED_PRICE_CODES = new Set(['10290012', '1016122']);
+
+    const DEFAULT_EXCLUDED_PRICES = ['بيبي جوي', 'سنسوداين', 'ديوركس', '10290012', '1016122'];
+    let excludedPriceList = safeGetStorage('ocare_excluded_prices', null) || [...DEFAULT_EXCLUDED_PRICES];
+
+    const AUTO_BILINGUAL_ALIASES = {
+      'بيبي جوي': ['baby joy', 'babyjoy'],
+      'سنسوداين': ['sensodyne'],
+      'ديوركس': ['durex']
+    };
+
+    function renderExcludedRulesUI() {
+      const box = document.getElementById('excludedRulesContainer');
+      const badge = document.getElementById('excludedCountBadge');
+      if (badge) badge.innerText = `${excludedPriceList.length} مستثنى`;
+      if (!box) return;
+      if (!excludedPriceList.length) {
+        box.innerHTML = `<span style="font-size:0.71rem;color:var(--muted);">لا توجد استثناءات حالياً.</span>`;
+        return;
+      }
+      box.innerHTML = excludedPriceList.map((rule, idx) => `
+        <span class="md-barcode-pill" style="font-size:0.73rem;padding:4px 9px;background:var(--card-solid);">
+          <span>🛡️ ${escapeHtmlSafe(rule)}</span>
+          <button type="button" onclick="removePriceExclusionRule(${idx})" title="إزالة الاستثناء" style="border:none;background:transparent;color:var(--danger);font-weight:900;cursor:pointer;margin-right:3px;">✕</button>
+        </span>
+      `).join('');
+    }
+
+    function addPriceExclusionRule() {
+      const inp = document.getElementById('newExclusionInp');
+      const val = String((inp && inp.value) || '').trim();
+      if (!val) return;
+      if (excludedPriceList.some(r => r.toLowerCase() === val.toLowerCase())) {
+        showToast('⚠️ هذا الاستثناء مضاف مسبقاً');
+        inp.value = '';
+        return;
+      }
+      excludedPriceList.push(val);
+      inp.value = '';
+      localStorage.setItem('ocare_excluded_prices', JSON.stringify(excludedPriceList));
+      pushDataToFirebase('excludedPriceList', excludedPriceList);
+      renderExcludedRulesUI();
+      showToast(`🛡️ تمت إضافة (${val}) للاستثناءات`);
+    }
+
+    function removePriceExclusionRule(idx) {
+      excludedPriceList.splice(idx, 1);
+      localStorage.setItem('ocare_excluded_prices', JSON.stringify(excludedPriceList));
+      pushDataToFirebase('excludedPriceList', excludedPriceList);
+      renderExcludedRulesUI();
+    }
 
     function isProtectedPriceProduct(item) {
-      const code = String(item.item_number || '').trim();
-      if (PROTECTED_PRICE_CODES.has(code)) return true;
+      const code = String(item.item_number || '').trim().toLowerCase();
+      const bc = String(item.barcode || '').trim().toLowerCase();
       const fullTxt = `${item.name || ''} ${item.name_en || ''}`.toLowerCase();
-      return PROTECTED_PRICE_KEYWORDS.some(k => fullTxt.includes(k));
+
+      return excludedPriceList.some(ruleRaw => {
+        const rule = String(ruleRaw || '').trim().toLowerCase();
+        if (!rule) return false;
+        if (code === rule || bc === rule) return true;
+        if (fullTxt.includes(rule)) return true;
+        const aliases = AUTO_BILINGUAL_ALIASES[rule] || [];
+        return aliases.some(al => fullTxt.includes(al));
+      });
+    }
+
+    // قراءة ذكية تتخطى ترويسة تقارير ICP وتتجاهل أي أعمدة زائدة تلقائياً
+    function parseSmartIcpSheet(wb) {
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const matrix = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      if (!matrix || !matrix.length) return [];
+
+      const headerKeywords = ['رقم الصنف', 'كود الصنف', 'رمز الصنف', 'اسم الصنف', 'سعر', 'باركود', 'الفئة', 'القسم', 'item', 'code', 'price', 'barcode', 'name'];
+      let headerRowIdx = 0;
+      let bestScore = 0;
+
+      for (let r = 0; r < Math.min(matrix.length, 15); r++) {
+        const rowCells = (matrix[r] || []).map(c => String(c || '').trim().toLowerCase());
+        let score = 0;
+        rowCells.forEach(cell => {
+          if (cell && headerKeywords.some(kw => cell.includes(kw))) score++;
+        });
+        if (score > bestScore) {
+          bestScore = score;
+          headerRowIdx = r;
+        }
+      }
+
+      const rawHeaders = (matrix[headerRowIdx] || []).map((h, i) => String(h || '').trim() || `col_${i}`);
+      const records = [];
+      for (let r = headerRowIdx + 1; r < matrix.length; r++) {
+        const rowArr = matrix[r] || [];
+        if (!rowArr.some(v => String(v || '').trim() !== '')) continue;
+        const obj = {};
+        rawHeaders.forEach((h, i) => {
+          obj[h] = rowArr[i] !== undefined ? rowArr[i] : '';
+        });
+        records.push(obj);
+      }
+      return records;
+    }
+
+    function getFlexCol(row, exactList, partialInclude = [], partialExclude = []) {
+      const keys = Object.keys(row);
+      for (const target of exactList) {
+        const tLow = target.toLowerCase();
+        const foundKey = keys.find(k => k.trim().toLowerCase() === tLow);
+        if (foundKey !== undefined && String(row[foundKey]).trim() !== '') {
+          return String(row[foundKey]).trim();
+        }
+      }
+      for (const inc of partialInclude) {
+        const iLow = inc.toLowerCase();
+        const foundKey = keys.find(k => {
+          const kl = k.trim().toLowerCase();
+          return kl.includes(iLow) && !partialExclude.some(ex => kl.includes(ex.toLowerCase()));
+        });
+        if (foundKey !== undefined && String(row[foundKey]).trim() !== '') {
+          return String(row[foundKey]).trim();
+        }
+      }
+      return '';
     }
 
     function handleIcpThreeFiles(slot, input) {
@@ -1398,7 +1531,7 @@
       reader.onload = (e) => {
         try {
           const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '' });
+          const rows = parseSmartIcpSheet(wb);
           icpThreeBuffers[slot] = rows;
           const cap = slot.charAt(0).toUpperCase() + slot.slice(1);
           document.getElementById('icpSlot' + cap).classList.add('loaded');
@@ -1411,49 +1544,86 @@
     }
 
     function previewIcpWeeklyMerge() {
-      if (!icpThreeBuffers.price && !icpThreeBuffers.barcode && !icpThreeBuffers.english) {
-        return alert('يرجى رفع ملف واحد على الأقل من تقارير ICP الثلاثة أولاً');
+      const allUploadedRows = [
+        ...(icpThreeBuffers.price || []),
+        ...(icpThreeBuffers.barcode || []),
+        ...(icpThreeBuffers.english || [])
+      ];
+      if (!allUploadedRows.length) {
+        return alert('يرجى رفع ملف واحد على الأقل من تقارير ICP أولاً');
       }
-      const existingByCode = new Map(allProducts.map(p => [String(p.item_number || '').trim(), p]));
+
+      const existingByCode = new Map(allProducts.map(p => [String(p.item_number || '').replace(/\.0$/, '').trim(), p]));
       const incoming = new Map();
+      pendingIcpEnglishMap = {};
 
-      (icpThreeBuffers.price || []).forEach(r => {
-        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
-        if (!code) return;
-        const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
-        const price = Number((parseFloat(r['سعر البيع'] || r['السعر'] || r['Price']) || 0).toFixed(2));
-        incoming.set(code, { ...(incoming.get(code) || {}), item_number: code, name, price });
-      });
+      allUploadedRows.forEach(r => {
+        let code = getFlexCol(
+          r,
+          ['رقم الصنف', 'كود الصنف', 'رمز الصنف', 'الكود', 'رقم', 'Item Code', 'Item No', 'Item Number', 'Code', 'SKU'],
+          ['رقم الصنف', 'كود الصنف', 'item code', 'item no'],
+          ['المرجع', 'المورد', 'الباركود', 'الرصيد', 'الكمية', 'barcode', 'qty', 'stock']
+        ).replace(/\.0$/, '').trim();
 
-      (icpThreeBuffers.barcode || []).forEach(r => {
-        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
-        if (!code) return;
-        const name = String(r['اسم الصنف '] || r['اسم الصنف'] || r['الاسم'] || r['Name'] || '').trim();
-        const bc = String(r['الباركود '] || r['الباركود'] || r['باركود'] || r['Barcode'] || '').replace(/\.0$/, '').trim();
-        const fia = String(r['الفئة'] || r['الفئة '] || r['القسم'] || r['Category'] || '').trim();
-        const cur = incoming.get(code) || { item_number: code, barcodes: [] };
-        if (name && !cur.name) cur.name = name;
-        if (fia) cur.fia = fia;
-        if (bc) {
-          cur.barcodes = [...new Set([...(cur.barcodes || []), bc])].slice(0, 7);
+        const bc = getFlexCol(
+          r,
+          ['الباركود', 'باركود', 'Barcode'],
+          ['باركود', 'barcode']
+        ).replace(/\.0$/, '').trim();
+
+        if (!code && bc) {
+          const byBc = findProductSmart(bc);
+          if (byBc && byBc.item_number) code = String(byBc.item_number).trim();
         }
+        if (!code) return;
+
+        const name = getFlexCol(
+          r,
+          ['اسم الصنف', 'الاسم', 'بيان الصنف', 'اسم الصنف عربي', 'Name', 'Arabic Name'],
+          ['اسم الصنف', 'بيان الصنف'],
+          ['انجليزي', 'إنجليزية', 'english', 'en', 'المورد']
+        );
+
+        const nameEn = getFlexCol(
+          r,
+          ['Item Name En', 'الاسم الانجليزي', 'الاسم بالإنجليزية', 'اسم الصنف بالانجليزي', 'English Name', 'Name En'],
+          ['انجليزي', 'إنجليزية', 'english', 'name en']
+        );
+
+        const rawPriceStr = getFlexCol(
+          r,
+          ['سعر البيع', 'السعر', 'سعر الجمهور', 'السعر شامل الضريبة', 'Retail Price', 'Sale Price', 'Selling Price', 'Price'],
+          ['سعر البيع', 'سعر الجمهور', 'السعر', 'price'],
+          ['التكلفة', 'تكلفة', 'الشراء', 'شراء', 'بدون ضريبة', 'cost', 'purchase', 'net']
+        ).replace(/,/g, '').replace(/[^\d.]/g, '');
+        const parsedPrice = rawPriceStr ? Number((parseFloat(rawPriceStr) || 0).toFixed(2)) : null;
+
+        const fia = getFlexCol(
+          r,
+          ['الفئة', 'القسم', 'المجموعة', 'Category'],
+          ['الفئة', 'القسم', 'category']
+        );
+
+        const cur = incoming.get(code) || { item_number: code, barcodes: [] };
+        if (name) cur.name = name;
+        if (nameEn) {
+          cur.name_en = nameEn;
+          pendingIcpEnglishMap[code] = nameEn;
+        }
+        if (parsedPrice !== null && parsedPrice > 0) cur.price = parsedPrice;
+        if (fia) cur.fia = fia;
+        if (bc) cur.barcodes = [...new Set([...(cur.barcodes || []), bc])].slice(0, 7);
+
         incoming.set(code, cur);
       });
 
-      pendingIcpEnglishMap = {};
-      (icpThreeBuffers.english || []).forEach(r => {
-        const code = String(r['رقم الصنف '] || r['رقم الصنف'] || r['رقم'] || r['Item Code'] || r['Code'] || '').replace(/\.0$/, '').trim();
-        const en = String(r['Item Name En'] || r['الاسم الانجليزي'] || r['الاسم بالإنجليزية'] || r['English Name'] || r['Name En'] || '').trim();
-        if (code && en) {
-          pendingIcpEnglishMap[code] = en;
-          const cur = incoming.get(code) || { item_number: code };
-          cur.name_en = en;
-          incoming.set(code, cur);
-        }
-      });
+      if (incoming.size === 0) {
+        const sampleCols = Object.keys(allUploadedRows[0] || {}).join(' | ');
+        return alert(`⚠️ لم يتم التعرف على عمود "رقم الصنف" في الملف.\nالأعمدة المكتشفة هي:\n${sampleCols}`);
+      }
 
       pendingIcpDeltas = {};
-      let newCnt = 0, priceCnt = 0, protectedCnt = 0;
+      let newCnt = 0, priceCnt = 0, fiaCnt = 0, protectedCnt = 0;
       const lines = [];
 
       incoming.forEach((inc, code) => {
@@ -1478,13 +1648,25 @@
             name: old.name,
             name_en: inc.name_en || old.name_en || '',
             price: old.price,
-            fia: inc.fia || old.fia,
+            fia: old.fia,
             barcodes: getProductAllBarcodes(old)
           };
+
           if (inc.barcodes && inc.barcodes.length) {
-            patch.barcodes = [...new Set([...patch.barcodes, ...inc.barcodes])].slice(0, 7);
+            const mergedBc = [...new Set([...patch.barcodes, ...inc.barcodes])].slice(0, 7);
+            if (mergedBc.length > patch.barcodes.length) {
+              patch.barcodes = mergedBc;
+              changed = true;
+            }
           }
-          if (typeof inc.price === 'number' && inc.price > 0 && Math.abs(inc.price - old.price) > 0.009) {
+
+          if (inc.fia && inc.fia !== old.fia) {
+            patch.fia = inc.fia;
+            fiaCnt++;
+            changed = true;
+          }
+
+          if (typeof inc.price === 'number' && inc.price > 0 && Math.abs(inc.price - Number(old.price || 0)) > 0.009) {
             if (isProtectedPriceProduct(old) || isProtectedPriceProduct(inc)) {
               protectedCnt++;
             } else {
@@ -1494,6 +1676,7 @@
               lines.push(`💰 <b>تحديث سعر:</b> ${escapeHtmlSafe(old.name)} (${old.price} ← ${inc.price})`);
             }
           }
+
           if (inc.name_en && inc.name_en !== old.name_en) changed = true;
           if (changed) {
             const mKey = code.replace(/[.#$\[\]\/]/g, '_');
@@ -1504,9 +1687,9 @@
 
       document.getElementById('icpDeltaPreviewBox').style.display = 'block';
       document.getElementById('icpDeltaSummary').innerText =
-        `ملخص الفروقات: 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🌐 ${Object.keys(pendingIcpEnglishMap).length} إنجليزي | 🛡️ ${protectedCnt} محمي`;
+        `ملخص الفروقات (من ${incoming.size} صنف): 🆕 ${newCnt} جديد | 💰 ${priceCnt} تعديل سعر | 🏷️ ${fiaCnt} فئة | 🛡️ ${protectedCnt} محمي`;
       document.getElementById('icpDeltaDetails').innerHTML =
-        lines.length ? lines.slice(0, 60).join('<br>') : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
+        lines.length ? lines.slice(0, 80).join('<br>') : 'البيانات محدثة ولا توجد فروقات أسعار جديدة.';
     }
 
     function applyAndSyncIcpDeltas() {
@@ -1868,7 +2051,7 @@
       writeStyledExcelWorkbook(rows, 'المخزون', 'مخزون_أوكير_الكامل.xlsx');
     }
 
-    // --- عرض المخزون (مربع QR حر بدون قالب + زر السعر إيموجي 💰 + بدون مربع إضافة صنف) ---
+    // --- عرض المخزون ---
     function renderInventory() {
       const qInp = document.getElementById('mainSearch');
       const qRaw = String((qInp && qInp.value) || '').trim();
@@ -1943,7 +2126,7 @@
       document.getElementById('qrZoomModal').style.display = 'flex';
     }
 
-    // --- عرض السعر (حاسبة الأسعار) ---
+    // --- عرض السعر ---
     function addToPriceCalc(uid) {
       const p = allProducts.find(x => x.uid === uid);
       if (!p) return;
@@ -2270,7 +2453,7 @@
       else if (mod === 'shortages') { addItemToShortages(uid); document.getElementById('shortSearchResults').style.display = 'none'; document.getElementById('shortSearchInp').value = ''; }
     }
 
-    // --- الماسح الليزري عالي الدقة والسرعة (نفس إعدادات الكود الأصلي) ---
+    // --- الماسح الليزري عالي الدقة والسرعة (310px) ---
     function applyCameraHardwareEnhancements(targetZoom) {
       try {
         const video = document.querySelector("#reader video");
@@ -2429,6 +2612,7 @@
       document.getElementById('prefMaintenanceMode').checked = Boolean(appConfig.maintenanceMode);
       changeSystemTheme(appConfig.activeTheme || 'clinical-daylight', false);
       renderAuditLogs();
+      renderExcludedRulesUI();
       const enBadge = document.getElementById('linkedEnglishNamesBadge');
       const enCount = Object.keys(englishNamesMap || {}).length;
       if (enBadge && enCount > 0) enBadge.innerText = `🌐 إجمالي الأسماء الإنجليزية المربوطة سحابياً: ${enCount} صنف`;
